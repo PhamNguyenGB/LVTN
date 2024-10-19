@@ -1,8 +1,6 @@
-@media (min-width: 1025px) {
-    .h-custom {
-        height: 100vh !important;
-    }
-}
+// @media (min-width: 1025px) {
+//     .h-custom {}
+// }
 
 .card-registration .select-input.form-control[readonly]:not([disabled]) {
     font-size: 1rem;
@@ -13,6 +11,23 @@
 
 .card-registration .select-arrow {
     top: 13px;
+}
+
+.payment-method {
+    .payment {
+        border: 1px solid #ccc;
+        cursor: pointer;
+    }
+
+    .active {
+        border: 1px solid #e54b00;
+        color: #e54b00;
+    }
+
+    .payment:hover {
+        border: 1px solid #e54b00;
+        color: #e54b00;
+    }
 }
 
 .bg-grey {

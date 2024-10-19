@@ -109,9 +109,22 @@ const deleteRegionService = async (regionId) => {
     }
 };
 
+const fetchAllRegionService = async () => {
+    try {
+        const data = await db.Region.findAll({
+            attributes: ['id', 'name', 'deliveryFee']
+        });
+        return data;
+    } catch (error) {
+        console.log(error);
+        return error.message;
+    }
+};
+
 module.exports = {
     createRegionService,
     getAllRegionService,
     updateRegionService,
     deleteRegionService,
+    fetchAllRegionService,
 };

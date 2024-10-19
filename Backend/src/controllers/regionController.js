@@ -85,9 +85,20 @@ const deleteRegion = async (req, res) => {
     }
 };
 
+const fetchAllRegion = async (req, res) => {
+    try {
+        const request = await RegionService.fetchAllRegionService();
+        return response.status(200).json(request);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json('error fetching all regions')
+    }
+};
+
 module.exports = {
     createRegion,
     getAllRegion,
     updateRegion,
     deleteRegion,
+    fetchAllRegion,
 };

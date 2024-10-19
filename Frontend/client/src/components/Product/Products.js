@@ -13,6 +13,7 @@ import { fetchAllListProducts, filterProductsByBrandAndSize } from "../../api/pr
 import ReactPaginate from "react-paginate";
 import notFoundProduct from '../../assets/images/no_product.png';
 import { MdStarRate } from "react-icons/md";
+import { RotatingLines } from 'react-loader-spinner';
 
 
 const Products = () => {
@@ -22,6 +23,8 @@ const Products = () => {
     const [sizeFilter, setSizeFilter] = useState('');
     const [dataBrandFilter, setDataBrandFilter] = useState('');
     const [dataSizeFilter, setDataSizeFilter] = useState('');
+
+    const [isLoadingFilter, setIsLoadingFilter] = useState(false);
 
     const productSlice = useSelector(state => state.product.products);
 
@@ -148,10 +151,26 @@ const Products = () => {
     };
 
     useEffect(() => {
-        if (dataBrandFilter || dataSizeFilter)
-            filterProductsBrandAndSize();
-        else
+        setProducts('');
+        setIsLoadingFilter(true);
+        setTimeout(() => {
             fetAllProducts();
+            setIsLoadingFilter(false);
+
+        }, 700);
+    }, [type]);
+
+    useEffect(() => {
+        setProducts('');
+        setIsLoadingFilter(true);
+        setTimeout(() => {
+            if (dataBrandFilter || dataSizeFilter)
+                filterProductsBrandAndSize();
+            else
+                fetAllProducts();
+            setIsLoadingFilter(false);
+
+        }, 700);
     }, [type, currentPage, dataBrandFilter, dataSizeFilter]);
 
     const handlePageClick = async (event) => {
@@ -317,11 +336,30 @@ const Products = () => {
                                 })}
                             </>
                             :
-                            <div className="not-found">
-                                <img className="img-not-f" src={notFoundProduct}
-                                    style={{}}
-                                />
-                                <span>Không tìm thấy sản phẩm</span>
+                            <div className="not-found mt-5">
+                                {
+                                    isLoadingFilter === true ?
+                                        <>
+                                            <RotatingLines
+                                                visible={true}
+                                                height="96"
+                                                width="96"
+                                                color="grey"
+                                                strokeWidth="5"
+                                                animationDuration="0.75"
+                                                ariaLabel="rotating-lines-loading"
+                                                wrapperStyle={{}}
+                                                wrapperClass=""
+                                            />
+                                        </>
+                                        :
+                                        <>
+                                            <img className="img-not-f" src={notFoundProduct}
+                                                style={{}}
+                                            />
+                                            <span>Không tìm thấy sản phẩm</span>
+                                        </>
+                                }
                             </div>
                         }
 

@@ -11,7 +11,7 @@ import { IoArrowBackCircle } from "react-icons/io5";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { sendOTP, register } from '../../api/userAPIs';
-import { ThreeDots } from 'react-loader-spinner'
+import { ThreeDots } from 'react-loader-spinner';
 
 const Register = () => {
     const history = useHistory();

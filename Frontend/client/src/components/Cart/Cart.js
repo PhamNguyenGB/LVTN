@@ -22,6 +22,10 @@ const Cart = () => {
     const [shipping, setShipping] = useState();
     const [error, setError] = useState(true);
     const [orderSuccess, setOrderSuccess] = useState(true);
+    const [active, setActive] = useState(false);
+
+    console.log('check cart', cart);
+
 
     const handleDeleteProduct = async (idProduct) => {
         await disPatch(deleteProductCart(idProduct));
@@ -98,7 +102,7 @@ const Cart = () => {
                                         <div className="col-lg-8">
                                             <div className="p-5">
                                                 <div className="d-flex justify-content-between align-items-center mb-5">
-                                                    <h1 className="fw-bold mb-0 text-black">Giỏ hàng</h1>
+                                                    <h2 className="fw-bold mb-0 text-black">Giỏ hàng</h2>
                                                     <h6 className="mb-0 text-muted" style={{ fontSize: '16px' }}>{quantityFromCart} sản phẩm</h6>
                                                 </div>
                                                 <hr className="my-4" />
@@ -109,7 +113,7 @@ const Cart = () => {
                                                             <div className="row mb-4 d-flex justify-content-between align-items-center">
                                                                 <div className="col-md-2 col-lg-2 col-xl-2">
                                                                     <img
-                                                                        src={item.image}
+                                                                        src={item.images[0]}
                                                                         className="img-fluid rounded-3" alt="Cotton T-shirt" />
                                                                 </div>
                                                                 <div className="col-md-3 col-lg-3 col-xl-3">
@@ -133,7 +137,7 @@ const Cart = () => {
                                                                     </button>
                                                                 </div>
                                                                 <div className="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                                                    <h6 className="mb-0" style={{ fontSize: '16px' }}>{formatNumber(item.price * item.quantity)} đ</h6>
+                                                                    <span className="mb-0" style={{ fontSize: '16px' }}>{formatNumber(item.price * item.quantity)} đ</span>
                                                                 </div>
                                                                 <div role='button' className=" col-md-1 col-lg-1 col-xl-1 text-end" onClick={() => handleDeleteProduct(item.id)} >
                                                                     <i className="fa fa-times" aria-hidden="true"></i>
@@ -152,60 +156,100 @@ const Cart = () => {
                                         </div>
                                         <div className="col-lg-4 bg-grey">
                                             <div className="p-5">
-                                                <h3 className="fw-bold mb-5 mt-2 pt-1">Thanh toán</h3>
+                                                <h4 className="fw-bold mb-5 mt-2 pt-1">Thanh toán</h4>
                                                 <hr className="my-4" />
 
                                                 <div className="d-flex justify-content-between mb-4">
-                                                    <h5 className="text-uppercase">Tổng sản phẩm {quantityFromCart}</h5>
-                                                    <h5>{formatNumber(amount)} đ</h5>
+                                                    <span className="text-uppercase">Tổng tiền hàng ({quantityFromCart})</span>
+                                                    <span>{formatNumber(amount)} đ</span>
                                                 </div>
 
-                                                <h5 className="text-uppercase mb-3">Phí vận chuyển</h5>
+                                                <span className="text-uppercase mb-3">Khu vực giao hàng </span>
 
                                                 <div className="mb-4 pb-2 d-flex justify-content-between">
-                                                    <select className="select" onChange={(e) => handleTotalAmout(e.target.value)}>
+                                                    <select className="select p-1" onChange={(e) => handleTotalAmout(e.target.value)}>
                                                         <option value="0">Chọn phương thức giao hàng</option>
                                                         <option value="1">Giao bình thường</option>
                                                         <option value="2">Giao hàng nhanh</option>
                                                         <option value="3">Giao hàng siêu tốc</option>
                                                     </select>
-                                                    <h5>{formatNumber(shipping)} đ</h5>
+                                                    <span>{formatNumber(shipping)} đ</span>
                                                 </div>
 
-                                                <h5 className="text-uppercase mb-3">Địa chỉ giao hàng</h5>
+                                                <span className="text-uppercase mb-3">Địa chỉ giao hàng</span>
 
-                                                <div className="mb-5">
+                                                <div className="mb-3">
                                                     <div className="form-outline">
-                                                        <input type="text" id="form3Examplea2" className="form-control form-control-lg" value={address}
+                                                        <textarea name="message" className='form-control form-control-md' rows="4" cols="50"
+                                                            placeholder="Địa chỉ cụ thể"
+                                                            value={address}
                                                             onChange={(e) => handleOnChangeAddress(e.target.value)}
-                                                        />
+                                                        ></textarea>
                                                     </div>
                                                 </div>
 
-                                                <h5 className="text-uppercase mb-3">Số điện thoại</h5>
+                                                <span className="text-uppercase mb-3">Số điện thoại</span>
 
-                                                <div className="mb-5">
+                                                <div className="mb-3">
                                                     <div className="form-outline">
-                                                        <input type="text" id="form3Examplea2" className="form-control form-control-lg" value={phone}
+                                                        <input type="text" id="form3Examplea2" placeholder='Số điện thoại' className="form-control form-control-md" value={phone}
                                                             onChange={(e) => handleOnChangePhone(e.target.value)}
                                                         />
                                                     </div>
                                                 </div>
 
                                                 <div className='text-danger' hidden={error}>Bạn chưa điền đủ thông tin để thanh toán!!</div>
+                                                <hr className="my-4" />
+                                                <div>
+                                                    <span className="text-uppercase mb-3">Mã giảm giá</span>
+
+                                                    <div class="input-group mb-3">
+                                                        <input type="text" class="form-control" placeholder="Tìm kiếm" />
+                                                        <button class="btn btn-success" type="submit">Go</button>
+                                                    </div>
+                                                </div>
 
                                                 <hr className="my-4" />
+                                                <div className='payment-method'>
+                                                    <span className="text-uppercase mb-3">Phương thức thanh toán</span>
+
+                                                    <div class="input-group mb-3">
+                                                        <span class="payment m-1 p-2" >Nhận hàng thanh toán</span>
+                                                        <span class="payment m-1 p-2">ZaloPay</span>
+                                                        <span class="payment m-1 p-2">VNPay</span>
+
+                                                    </div>
+                                                </div>
+
+
+
+                                                <hr className="my-4" />
+                                                <div className="d-flex justify-content-between mb-1">
+                                                    <span className="text-uppercase">Tổng giảm giá</span>
+                                                    <span>{formatNumber(totalAmout)} đ</span>
+                                                </div>
+                                                <div className="d-flex justify-content-between mb-1">
+                                                    <span className="text-uppercase">Tổng phí vận chuyển</span>
+                                                    <span>{formatNumber(totalAmout)} đ</span>
+                                                </div>
 
                                                 <div className="d-flex justify-content-between mb-5">
-                                                    <h5 className="text-uppercase">Tổng số tiền</h5>
-                                                    <h5>{formatNumber(totalAmout)} đ</h5>
+                                                    <span className="text-uppercase">Tổng thanh toán</span>
+                                                    <span>{formatNumber(totalAmout)} đ</span>
                                                 </div>
 
                                                 <div className='text-success' hidden={orderSuccess}>Đặt hàng thành công</div>
 
-                                                <button type="button" className="btn btn-primary btn-block btn-lg h1"
-                                                    onClick={() => handleClickOrder(cart)}
-                                                    data-mdb-ripple-color="dark">Đặt hàng</button>
+                                                <div style={{ position: 'relative' }}>
+                                                    <button type="button" className="btn btn-primary p-2 "
+                                                        onClick={() => handleClickOrder(cart)}
+                                                        data-mdb-ripple-color="dark"
+                                                        style={{ fontWeight: '500', position: 'absolute', right: '-20px', minWidth: '150px' }}
+                                                    >
+                                                        Đặt hàng
+                                                    </button>
+                                                </div>
+                                                <br />
 
                                             </div>
                                         </div>

@@ -12,7 +12,6 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { loginGoogle } from '../../api/userAPIs';
 import { loginUser, loginForm } from '../../redux/slices/userSlice';
 import FacebookLogin from 'react-facebook-login';
-import { Environments } from '../../environment/environment';
 
 const Login = () => {
     const history = useHistory();

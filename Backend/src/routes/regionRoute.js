@@ -10,6 +10,9 @@ const RegionRoute = (app) => {
     router.put('/update', checkVerifyTokenAdmin, RegionController.updateRegion);
     router.delete('/delete/:id', checkVerifyTokenAdmin, RegionController.deleteRegion);
 
+    //users
+    router.get('/all', RegionController.fetchAllRegion);
+
     return app.use('/api/region', router);
 };
 
