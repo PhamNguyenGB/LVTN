@@ -1,0 +1,167 @@
+.home {
+    text-decoration: none;
+    font-size: 14px;
+    color: #000;
+    margin-right: 10px;
+}
+
+.home:hover {
+    color: #4e4ffa;
+    font-size: 15px;
+}
+
+.type {
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+.product-detail {
+
+    .font-20 {
+        font-size: 20px;
+    }
+
+    div {
+
+        aside {
+
+            .box-image {
+                position: relative;
+
+                .carousel {
+
+                    .carousel-inner {
+
+                        .carousel-item {
+                            img {
+                                height: 70vh;
+                                margin: auto;
+                            }
+                        }
+
+                    }
+                }
+
+            }
+
+            .description-1 {
+                width: auto;
+            }
+        }
+    }
+
+    .description-2 {
+        display: none;
+    }
+
+}
+
+.review {
+    .avatar {
+        width: 70px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .rep-comment {
+        background-color: #dfdfe6;
+        margin-left: 10px;
+        margin-top: 10px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+    }
+
+    .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        justify-content: flex-start;
+
+
+        ul {
+            margin: 0;
+        }
+
+        li {
+            margin: 0 2px;
+        }
+
+        a {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        .selected a {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        a:hover {
+            background-color: #ddd;
+        }
+
+    }
+}
+
+
+.similar-products {
+    .similar-product {
+        border: 1px solid #ccc;
+        margin: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+    }
+
+    .title {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        /* number of lines to show */
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+}
+
+@media (max-width: 992px) {
+    .product-detail {
+
+        .font-20 {
+            font-size: 20px;
+        }
+
+        div {
+
+            aside {
+
+                .box-image {
+                    position: relative;
+
+                    .carousel {
+
+                        .carousel-inner {
+
+                            .carousel-item {
+                                height: 60vh;
+                            }
+
+                        }
+                    }
+                }
+
+                .description-1 {
+                    display: none;
+                }
+            }
+        }
+
+        .description-2 {
+            display: block;
+        }
+
+    }
+}

@@ -1,0 +1,23 @@
+import express from 'express';
+import UserController from '../controllers/userController';
+import { payOnline, callBack } from '../controllers/payOnlineController';
+import { checkVerifyTokenUser, checkVerifyTokenAdmin } from '../middleware/AuthStaff';
+import SendOTPController from '../controllers/sendOTPController';
+
+const router = express.Router();
+
+const UserRoute = (app) => {
+    router.post('/sendOTP', SendOTPController.sendOTPCL);
+    router.post('/register', UserController.register);
+    router.post('/login', UserController.loginUser);
+    router.post('/auth/google', UserController.verifyGoogleToken);
+    router.post('/refresh', UserController.refreshToken);
+    router.get('/statictis/users', checkVerifyTokenAdmin, UserController.statisticUsers);
+    router.get('/statictis/getAllUsers', checkVerifyTokenAdmin, UserController.getAllUsers);
+    router.post('/payOnline', payOnline);
+    router.post('/callback', callBack);
+
+    return app.use('/api/user', router);
+};
+
+export default UserRoute;

@@ -1,0 +1,78 @@
+.home-page {
+    margin: 0 auto;
+    padding: 0;
+}
+
+#into-jumbotron {
+    background: #159957;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to bottom,
+            #283041,
+            #0f1420);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to bottom,
+            #283041,
+            #0f1420);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+@media (max-width: 991.98px) {
+    #into-jumbotron .border-right {
+        border: none !important;
+    }
+}
+
+.card-p-home {
+
+    .single-featured-cars {
+        background: #d59073;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+
+
+        .featured-img-box {
+            .featured-cars-img {
+                background: #fff;
+                height: 100%;
+            }
+        }
+
+        .featured-cars-txt {
+            margin-left: 10px;
+
+            .name-cars {
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                /* Giới hạn hiển thị 2 dòng */
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                height: 3em;
+                /* Đặt chiều cao tương ứng với số dòng */
+                line-height: 1.5em;
+            }
+
+            .add-cart {
+                background-color: #362f36;
+                border: 1px solid #d59073;
+                color: #fff;
+                width: auto;
+                margin: 0 auto;
+                margin-bottom: 10px;
+                font-size: 18px;
+                font-weight: 400;
+                border-radius: 20px;
+                font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            }
+
+            .add-cart:hover {
+                background-color: #d59073;
+                color: #362f36;
+            }
+        }
+
+    }
+
+
+}
