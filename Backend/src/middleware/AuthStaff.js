@@ -39,7 +39,7 @@ const checkVerifyTokenUser = (req, res, next) => {
             next();
         } else {
             return res.status(403).json({
-                Mess: 'Tài khoản hoặc mật khẩu không chính xác!!',
+                Mess: 'Bạn chưa đăng nhập',
                 ErrC: 1,
             })
         }

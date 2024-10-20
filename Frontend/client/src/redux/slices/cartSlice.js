@@ -61,13 +61,22 @@ const cartSlice = createSlice({
             .addCase(addCart.fulfilled, (state, action) => {
                 const itemIndex = state.cart.findIndex(item => item.id === action.payload.product.id);
                 if (itemIndex >= 0) {
-                    state.cart[itemIndex].quantity += action.payload.quantity;
-                    state.amount += action.payload.product.price * action.payload.quantity;
+                    if (action.payload.product.discount && action.payload.product.discount > 0) {
+                        state.cart[itemIndex].quantity += action.payload.quantity;
+                        state.amount += action.payload.product.discount * action.payload.quantity;
+                    } else {
+                        state.cart[itemIndex].quantity += action.payload.quantity;
+                        state.amount += action.payload.product.price * action.payload.quantity;
+                    }
                 } else {
                     const tempProduct = { ...action.payload.product, quantity: action.payload.quantity };
                     state.cart.push(tempProduct);
-                    state.amount += action.payload.product.price;
                     state.quantity += 1;
+                    if (action.payload.product.discount && action.payload.product.discount > 0) {
+                        state.amount += (action.payload.product.discount * action.payload.quantity);
+                    } else {
+                        state.amount += (action.payload.product.price * action.payload.quantity);
+                    }
                 }
                 // state.cart = [];
                 // state.quantity = 0;
@@ -90,7 +99,12 @@ const cartSlice = createSlice({
                 state.error = null;
                 const itemIndex = state.cart.findIndex((element => element.id === action.payload));
                 if (itemIndex !== -1) {
-                    state.amount -= state.cart[itemIndex].price * state.cart[itemIndex].quantity;
+                    if (state.cart[itemIndex].discount && state.cart[itemIndex].discount > 0) {
+                        state.amount -= (state.cart[itemIndex].discount * state.cart[itemIndex].quantity);
+                    } else {
+                        state.amount -= (state.cart[itemIndex].price * state.cart[itemIndex].quantity);
+                    }
+                    // state.amount -= state.cart[itemIndex].price * state.cart[itemIndex].quantity;
                     state.cart.splice(itemIndex, 1);
                     state.quantity -= 1;
                 }
@@ -110,8 +124,13 @@ const cartSlice = createSlice({
                 state.error = null;
                 const itemIndex = state.cart.findIndex((element => element.id === action.payload));
                 if (itemIndex !== -1) {
+                    if (state.cart[itemIndex].discount && state.cart[itemIndex].discount > 0) {
+                        state.amount += state.cart[itemIndex].discount;
+                    } else {
+                        state.amount += state.cart[itemIndex].price;
+                    }
                     state.cart[itemIndex].quantity += 1;
-                    state.amount += state.cart[itemIndex].price;
+                    // state.amount += state.cart[itemIndex].price;
                 }
             })
             .addCase(increaseQuantity.rejected, (state) => {
@@ -129,10 +148,20 @@ const cartSlice = createSlice({
                 state.error = null;
                 const itemIndex = state.cart.findIndex((element => element.id === action.payload));
                 if (state.cart[itemIndex].quantity > 1) {
+                    if (state.cart[itemIndex].discount && state.cart[itemIndex].discount > 0) {
+                        state.amount -= state.cart[itemIndex].discount;
+                    } else {
+                        state.amount -= state.cart[itemIndex].price;
+                    }
                     state.cart[itemIndex].quantity -= 1;
-                    state.amount -= state.cart[itemIndex].price;
+                    // state.amount -= state.cart[itemIndex].price;
                 } else {
-                    state.amount -= state.cart[itemIndex].price;
+                    if (state.cart[itemIndex].discount && state.cart[itemIndex].discount > 0) {
+                        state.amount -= state.cart[itemIndex].discount;
+                    } else {
+                        state.amount -= state.cart[itemIndex].price;
+                    }
+                    // state.amount -= state.cart[itemIndex].price;
                     state.cart.splice(itemIndex, 1);
                     state.quantity -= 1;
                 }

@@ -4,24 +4,26 @@ import { Op, fn, col, or } from 'sequelize';
 const addOrderService = async (data) => {
     try {
         await db.Order.create({
-            userId: data.userId,
             address: data.address,
             phone: data.phone,
+            userId: data.userId,
             totalCost: data.totalAmout,
-            pay: data.shipping,
+            regionId: data.regionId,
+            point: data.point,
+            paymentMethod: data.paymentMethod,
+            eventId: data.eventId,
+            note: data.note,
             status: 'Chưa xác nhận',
         })
         return {
-            Mess: 'Đặt hàng thành công',
-            ErrC: 0,
-            Data: '',
+            mess: 'Đặt hàng thành công',
+            status: 0,
         }
     } catch (error) {
         console.log(error);
         return {
-            EM: 'error add cart',
-            EC: 1,
-            DT: '',
+            mess: 'error add cart',
+            status: 1,
         };
     }
 }

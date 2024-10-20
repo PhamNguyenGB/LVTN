@@ -30,16 +30,19 @@ export const loginForm = createAsyncThunk(
 
 export const logout = createAsyncThunk(
     'user/logout',
-    async (access_token) => {
-        const request = await axios.post('http://localhost:8080/api/user/logout', {}, {
-            headers: {
-                token: `Bearer ${access_token}`,
-            },
-        });
-        localStorage.removeItem('user');
-        return request.data;
+    async () => {
+        // const request = await axiosClient.post('/user/logout', {});
+        return;
     }
 )
+
+// export const updatePointUser = createAsyncThunk(
+//     'user/update/point',
+//     async ({ increasePoint, decreasePoint, email }) => {
+//         const request = await axiosClient.post('/user/update/point', { increasePoint, decreasePoint, email });
+//         return request;
+//     }
+// )
 
 const userSlice = createSlice({
     name: 'user',
@@ -86,13 +89,13 @@ const userSlice = createSlice({
             })
             .addCase(logout.fulfilled, (state, action) => {
                 state.loading = false;
-                state.error = action.payload?.Mess;
+                state.error = null;
                 state.user = null;
             })
 
             .addCase(logout.rejected, (state, action) => {
                 state.loading = true;
-                state.error = action.payload?.Mess;
+                state.error = 'Lỗi đăng xuất';
             })
 
     }

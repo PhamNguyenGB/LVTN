@@ -87,9 +87,32 @@ const deleteEvent = async (req, res) => {
     }
 };
 
+const findEventByName = async (req, res) => {
+    try {
+        const request = await EventService.findEventByNameSevice(req.params.nameEvent);
+        if (request.status === 0)
+            return res.status(200).json({
+                status: 0,
+                data: request?.data,
+                mess: request.mess
+            });
+        return res.status(500).json({
+            mess: request.mess,
+            status: -1,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            mess: 'error find event',
+            status: -1,
+        });
+    }
+};
+
 module.exports = {
     createEvent,
     getAllEvent,
     updateEvent,
     deleteEvent,
+    findEventByName,
 };

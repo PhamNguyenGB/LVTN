@@ -83,7 +83,7 @@ const ProductDetail = () => {
     };
 
     const handleClickAddCart = async (product) => {
-        if (quantity > product[0].quantity) {
+        if (quantity > product.quantity) {
             toast.error('Sản phẩm không đủ số lượng');
             return;
         } else {
@@ -258,7 +258,12 @@ const ProductDetail = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <button className="btn btn-primary shadow-0 font-20 m-2 p-3 " disabled={product[0].quantity === 0 ? true : false} style={{ width: '100%' }} onClick={() => handleClickAddCart(product)}>
+                                        <button
+                                            className="btn btn-primary shadow-0 font-20 m-2 p-3 "
+                                            disabled={product[0].quantity === 0 ? true : false}
+                                            style={{ width: '100%' }}
+                                            onClick={() => handleClickAddCart(product[0])}
+                                        >
                                             {product[0].quantity === 0 ? 'Sản phẩm đã hết hàng' : 'Thêm vào giỏ hàng'}
                                         </button>
 

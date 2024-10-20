@@ -12,6 +12,9 @@ const UserRoute = (app) => {
     router.post('/login', UserController.loginUser);
     router.post('/auth/google', UserController.verifyGoogleToken);
     router.post('/refresh', UserController.refreshToken);
+    router.post('/update/point', checkVerifyTokenUser, UserController.updatePointUser);
+
+
     router.get('/statictis/users', checkVerifyTokenAdmin, UserController.statisticUsers);
     router.get('/statictis/getAllUsers', checkVerifyTokenAdmin, UserController.getAllUsers);
     router.post('/payOnline', payOnline);

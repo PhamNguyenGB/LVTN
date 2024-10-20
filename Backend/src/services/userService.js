@@ -109,6 +109,8 @@ const loginUser = async (email, password) => {
                 let payload = {
                     fullname: user.dataValues.fullname,
                     email: user.dataValues.email,
+                    role: 'user',
+                    id: user.dataValues.id,
                 }
                 let token = createJWT(payload);
                 let refresh_token = refreshToken(payload);
@@ -119,6 +121,7 @@ const loginUser = async (email, password) => {
                     email: user.dataValues.email,
                     refreshToken: refresh_token,
                     avatar: user.dataValues.avatar,
+                    point: user.dataValues.point,
                 }
                 return {
                     data: data,
@@ -188,6 +191,36 @@ const getAllUsersService = async () => {
     }
 };
 
+const updatePointUserSv = async (increasePoint, decreasePoint, email) => {
+    try {
+        const user = await db.User.findOne({
+            where: { email: email }
+        });
+        if (user) {
+            const newPoint = user.point - decreasePoint + increasePoint;
+            user.update({
+                point: newPoint,
+            });
+            return {
+                status: 0,
+                data: newPoint,
+                mess: 'Cập nhật điểm thành công'
+            };
+        }
+        return {
+            status: -1,
+            mess: 'Không tìm thấy user',
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            status: -1,
+            mess: 'Lỗi cập nhật điểm'
+        }
+
+    }
+};
+
 
 module.exports = {
     registerUser,
@@ -198,4 +231,5 @@ module.exports = {
     getAllUsersService,
     checkEmailUser,
     checkUserPhone,
+    updatePointUserSv,
 }

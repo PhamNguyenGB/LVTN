@@ -1,5 +1,8 @@
 import axios from "axios";
 import queryString from "query-string";
+import { logout } from "../redux/slices/userSlice";
+import { useDispatch } from 'react-redux';
+
 
 const axiosClient = axios.create({
     baseURL: "http://localhost:8080/api",
@@ -35,6 +38,8 @@ axiosClient.interceptors.response.use(
                 }
             } else if (error.response.data.error_code === 2) {
                 localStorage.clear();
+                const disPatch = useDispatch();
+                await disPatch(logout());
                 window.location.href = '/';
             }
             axiosClient.defaults.headers["token"] = null;
@@ -49,7 +54,7 @@ axiosClient.interceptors.response.use(
 
 const refreshToken = async (refresh_token) => {
     try {
-        const res = await axiosClient.post('/staff/refresh',
+        const res = await axiosClient.post('/user/refresh',
             {
                 refresh_token,
             });

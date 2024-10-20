@@ -14,6 +14,8 @@ const loginUserSocial = async (email, name, image) => {
             let payload = {
                 fullname: user.fullname,
                 email: user.email,
+                role: 'user',
+                id: user.id,
             }
 
             let token = createJWT(payload);
@@ -25,7 +27,8 @@ const loginUserSocial = async (email, name, image) => {
                 email: user.dataValues.email,
                 refreshToken: refresh_token,
                 avatar: user.dataValues?.avatar,
-                imgGG: image
+                imgGG: image,
+                point: user.dataValues.point,
             }
             return {
                 data: data,
@@ -34,7 +37,7 @@ const loginUserSocial = async (email, name, image) => {
             };
 
         } else {
-            await db.User.create({
+            const newUser = await db.User.create({
                 fullname: name,
                 email: email,
                 point: 0,
@@ -43,6 +46,8 @@ const loginUserSocial = async (email, name, image) => {
             let payload = {
                 fullname: name,
                 email: email,
+                role: 'user',
+                id: newUser.id,
             }
 
             let token = createJWT(payload);
@@ -53,7 +58,8 @@ const loginUserSocial = async (email, name, image) => {
                 fullname: name,
                 email: email,
                 refreshToken: refresh_token,
-                imgGG: image
+                imgGG: image,
+                point: 0,
             }
             return {
                 data: data,

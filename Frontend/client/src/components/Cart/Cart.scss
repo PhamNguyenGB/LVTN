@@ -17,11 +17,22 @@
     .payment {
         border: 1px solid #ccc;
         cursor: pointer;
+        position: relative;
+
+        .tick {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            color: #e54b00;
+            top: 22px;
+        }
     }
 
     .active {
-        border: 1px solid #e54b00;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         color: #e54b00;
+        border: 1px solid #e54b00;
+
     }
 
     .payment:hover {

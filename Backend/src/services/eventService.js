@@ -111,9 +111,44 @@ const deleteEventService = async (eventId) => {
     }
 };
 
+const findEventByNameSevice = async (eventName) => {
+    try {
+        const currentDate = new Date();
+
+        const data = await db.Event.findOne({
+            where: { name: eventName },
+            attributes: ['name', 'discount', 'expiryDate']
+        })
+        if (data) {
+            if (data.expiryDate < currentDate)
+                return {
+                    status: 0,
+                    mess: 'Mã giảm giá đã hết hạn'
+                }
+
+            return {
+                status: 0,
+                data: data,
+                mess: 'Áp dụng mã giảm giá thành công'
+            }
+        }
+        return {
+            status: 0,
+            mess: 'Mã giảm giá không tồn tại'
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            status: -1,
+            mess: 'Lỗi tìm mã giảm giá'
+        }
+    }
+}
+
 module.exports = {
     createEventService,
     getAllEventService,
     UpdateEventService,
     deleteEventService,
+    findEventByNameSevice,
 }

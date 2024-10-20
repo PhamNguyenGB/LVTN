@@ -109,6 +109,8 @@ const deletePointService = async (pointId) => {
     }
 };
 
+
+
 module.exports = {
     createPointService,
     getAllPointService,

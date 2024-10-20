@@ -10,7 +10,7 @@ const Footer = () => {
                             <div className="col-md-3 col-sm-6">
                                 <div className="single-footer-widget">
                                     <div className="footer-logo">
-                                        <a href="index.html">carvilla</a>
+                                        <a href="/">TOYMODEL</a>
                                     </div>
                                     <p>
                                         Ased do eiusm tempor incidi ut labore et dolore magnaian aliqua. Ut enim ad minim veniam.

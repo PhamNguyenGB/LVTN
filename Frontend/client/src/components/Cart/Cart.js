@@ -2,10 +2,16 @@ import './Cart.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { increaseQuantity, decreaseQuantity, clearCart, deleteProductCart } from "../../redux/slices/cartSlice";
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { addOrder } from '../../redux/slices/orderSlice';
 import { addOrderDetail } from '../../redux/slices/orderDetailSlice';
 import numeral from 'numeral';
+import { fetchAllRegion } from '../../api/regionAPIs';
+import { IoIosCheckmark } from "react-icons/io";
+import { findEventByName } from '../../api/eventAPIs';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import { toast } from 'react-toastify';
 
 const Cart = () => {
 
@@ -16,16 +22,48 @@ const Cart = () => {
     const quantityFromCart = useSelector((state) => state.cart.quantity);
     const user = useSelector((state) => state.user.user);
 
-    const [address, setAddress] = useState(user.address);
-    const [phone, setPhone] = useState(user.phone);
+    const [address, setAddress] = useState('');
+    const [phone, setPhone] = useState('');
+
     const [totalAmout, setTotalAmout] = useState(amount);
-    const [shipping, setShipping] = useState();
-    const [error, setError] = useState(true);
+    const [shipping, setShipping] = useState(0);
+    const [idShipping, setIdShipping] = useState('');
+
     const [orderSuccess, setOrderSuccess] = useState(true);
-    const [active, setActive] = useState(false);
 
-    console.log('check cart', cart);
+    const [active, setActive] = useState('');
+    const [event, setEvent] = useState('');
+    const [nameEvent, setNameEvent] = useState('');
+    const [totalDiscount, setTotalDiscount] = useState(0);
 
+    const [tickPoint, setTickPoint] = useState(false);
+    const [usePoint, setUsePoint] = useState(0);
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+
+    const handleShow = () => {
+        if (shipping === 0 || address === '' || phone === '' || active === '') {
+            toast.error('Bạn chưa điền đủ thông tin');
+            return;
+
+        } else {
+            setShow(true);
+        }
+    }
+
+
+    const [region, setRegion] = useState('');
+
+    const getAllRegion = async () => {
+        const data = await fetchAllRegion();
+        setRegion(data);
+    };
+
+    useEffect(() => {
+        getAllRegion();
+    }, []);
 
     const handleDeleteProduct = async (idProduct) => {
         await disPatch(deleteProductCart(idProduct));
@@ -39,56 +77,75 @@ const Cart = () => {
         await disPatch(decreaseQuantity(productId));
     };
 
-    const handleQuantity = async (quantity) => {
+    const handleQuantity = (quantity) => {
 
     };
 
-    const handleOnChangeAddress = async (newAddress) => {
+    const handleOnChangeAddress = (newAddress) => {
         setAddress(newAddress);
     };
 
-    const handleOnChangePhone = async (newPhone) => {
+    const handleOnChangePhone = (newPhone) => {
         setPhone(newPhone);
     };
 
-    const handleTotalAmout = async (shipping) => {
-        if (shipping === '1') {
-            setShipping(30000);
-            setTotalAmout(amount + 30000);
-        } else if (shipping === '2') {
-            setShipping(50000);
-            setTotalAmout(amount + 50000);
-        } else if (shipping === '3') {
-            setShipping(80000);
-            setTotalAmout(amount + 80000);
-        } else {
-            setShipping();
-            setTotalAmout(amount);
-        }
+    const handleTotalAmout = (value) => {
+        const selectedRegion = JSON.parse(value);
+
+        setShipping(selectedRegion.deliveryFee);
+        setIdShipping(selectedRegion.id);
+
     };
 
     const handleClickOrder = async (data) => {
-        if (!shipping || !address || !phone) {
-            setError(false);
-            setTimeout(() => {
-                setError(true);
-            }, 5000);
-            return;
-        } else {
-            await disPatch(addOrder({ userId: user.id, address, phone, shipping, totalAmout }));
-            await disPatch(addOrderDetail({ userId: user.id, products: cart }));
-            await disPatch(clearCart());
-            setTotalAmout(0);
-            setOrderSuccess(false);
-            setTimeout(() => {
-                setOrderSuccess(true);
-            }, 5000);
-        }
+        // await disPatch(addOrder({ userId: user.id, address, phone, regionId: idShipping, totalAmout }));
+        // await disPatch(addOrderDetail({ userId: user.id, products: cart }));
+        // await disPatch(clearCart());
+        // setTotalAmout(0);
+        setOrderSuccess(false);
+        setTimeout(() => {
+            setOrderSuccess(true);
+        }, 5000);
+
     }
 
     const formatNumber = (number) => {
         return numeral(number).format('0,0');
     }
+
+    const deliveryFee = useMemo(() => {
+        return (
+            <div>{formatNumber(shipping)} đ</div>
+        )
+    }, [shipping]);
+
+    const clickPaymentMethod = (paymentMethod) => {
+        setActive(paymentMethod);
+    }
+
+    const handleClickEvent = async (nameEvent) => {
+        const data = await findEventByName(nameEvent);
+        if (data.status === 0) {
+            setEvent(data);
+            if (data.data)
+                setTotalDiscount(data.data.discount / 100);
+            else
+                setTotalDiscount();
+
+        }
+    }
+
+    const handleUsePoint = async (value) => {
+        if (tickPoint === false) {
+            setTickPoint(true);
+            setUsePoint(value);
+        } else {
+            setTickPoint(false);
+            setUsePoint(0);
+        }
+
+    }
+
 
     return (
         <>
@@ -113,33 +170,53 @@ const Cart = () => {
                                                             <div className="row mb-4 d-flex justify-content-between align-items-center">
                                                                 <div className="col-md-2 col-lg-2 col-xl-2">
                                                                     <img
-                                                                        src={item.images[0]}
+                                                                        src={item?.images ? item.images[0] : ''}
                                                                         className="img-fluid rounded-3" alt="Cotton T-shirt" />
                                                                 </div>
                                                                 <div className="col-md-3 col-lg-3 col-xl-3">
                                                                     <h6 className="text-black mb-0" style={{ fontSize: '16px' }}>{item.name}</h6>
                                                                 </div>
                                                                 <div className="col-md-3 col-lg-3 col-xl-2 d-flex">
-                                                                    <button className="btn btn-link px-2">
+                                                                    <button className="btn px-2" style={{ color: '#e54b00' }}
+                                                                        onClick={() => decrease(item.id)}
+                                                                    >
                                                                         <i className="fa fa-minus" aria-hidden="true" style={{ fontSize: '16px' }}
-                                                                            onClick={() => decrease(item.id)}
+
                                                                         ></i>
                                                                     </button>
 
                                                                     <input min="0" name="quantity" value={item.quantity} type="text"
                                                                         onChange={(e) => handleQuantity(e.target.value)}
-                                                                        className="form-control form-control-sm" />
+                                                                        className="form-control form-control-sm"
+                                                                        style={{ width: '60px' }}
+                                                                    />
 
-                                                                    <button className="btn btn-link px-2">
+                                                                    <button className="btn  px-2" style={{ color: '#e54b00' }}
+                                                                        onClick={(e) => increase(item.id)}
+                                                                    >
                                                                         <i className="fa fa-plus" aria-hidden="true" style={{ fontSize: '16px' }}
-                                                                            onClick={(e) => increase(item.id)}
+
                                                                         ></i>
                                                                     </button>
                                                                 </div>
                                                                 <div className="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                                                    <span className="mb-0" style={{ fontSize: '16px' }}>{formatNumber(item.price * item.quantity)} đ</span>
+                                                                    <span
+                                                                        className="mb-0"
+                                                                        style={{ fontSize: '16px' }}
+                                                                    >
+                                                                        {item.discount && item.discount > 0 ?
+                                                                            formatNumber(item.discount * item.quantity)
+                                                                            :
+                                                                            formatNumber(item.price * item.quantity)
+                                                                        } đ
+                                                                    </span>
                                                                 </div>
-                                                                <div role='button' className=" col-md-1 col-lg-1 col-xl-1 text-end" onClick={() => handleDeleteProduct(item.id)} >
+                                                                <div
+                                                                    role='button'
+                                                                    className=" col-md-1 col-lg-1 col-xl-1 text-end"
+                                                                    onClick={() => handleDeleteProduct(item.id)}
+                                                                    style={{ color: '#dc3545' }}
+                                                                >
                                                                     <i className="fa fa-times" aria-hidden="true"></i>
                                                                 </div>
                                                             </div>
@@ -166,14 +243,21 @@ const Cart = () => {
 
                                                 <span className="text-uppercase mb-3">Khu vực giao hàng </span>
 
-                                                <div className="mb-4 pb-2 d-flex justify-content-between">
+                                                <div className="mb-1 pb-2 d-flex justify-content-between">
                                                     <select className="select p-1" onChange={(e) => handleTotalAmout(e.target.value)}>
-                                                        <option value="0">Chọn phương thức giao hàng</option>
-                                                        <option value="1">Giao bình thường</option>
-                                                        <option value="2">Giao hàng nhanh</option>
-                                                        <option value="3">Giao hàng siêu tốc</option>
+                                                        <option value="0">Chọn khu vực</option>
+                                                        {
+                                                            region ? region.map((item, index) => {
+                                                                return (
+                                                                    <option key={`regionFee-${index}`} value={JSON.stringify(item)} >{item.name}</option>
+                                                                )
+                                                            })
+                                                                :
+                                                                <>
+                                                                </>
+                                                        }
                                                     </select>
-                                                    <span>{formatNumber(shipping)} đ</span>
+                                                    {deliveryFee}
                                                 </div>
 
                                                 <span className="text-uppercase mb-3">Địa chỉ giao hàng</span>
@@ -198,14 +282,29 @@ const Cart = () => {
                                                     </div>
                                                 </div>
 
-                                                <div className='text-danger' hidden={error}>Bạn chưa điền đủ thông tin để thanh toán!!</div>
                                                 <hr className="my-4" />
-                                                <div>
+                                                <div className='mb-3'>
                                                     <span className="text-uppercase mb-3">Mã giảm giá</span>
 
-                                                    <div class="input-group mb-3">
-                                                        <input type="text" class="form-control" placeholder="Tìm kiếm" />
-                                                        <button class="btn btn-success" type="submit">Go</button>
+                                                    <div className="input-group mb-1">
+                                                        <input type="text" className="form-control" placeholder="Tìm kiếm" value={nameEvent} onChange={(e) => setNameEvent(e.target.value)} />
+                                                        <button onClick={() => handleClickEvent(nameEvent)} className="btn" style={{ backgroundColor: '#e54b00', color: '#FFF' }} type="submit">Nhập</button>
+                                                    </div>
+                                                    <span className={event.data ? 'text-success' : 'text-danger'}>{event.data ? `Đơn hàng được giảm giá ${event.data.discount}%` : event.mess}</span>
+                                                </div>
+
+                                                <div>
+                                                    <span className="text-uppercase mb-3">Số điểm của bạn</span>
+
+                                                    <div className="input-group mb-3 justify-content-between">
+                                                        <span>{user.point} Coin</span>
+                                                        <input
+                                                            disabled={user.point === 0 ? true : false}
+                                                            type="checkbox"
+                                                            className='form-checkbox'
+                                                            value={tickPoint}
+                                                            onChange={() => handleUsePoint(user.point)}
+                                                        />
                                                     </div>
                                                 </div>
 
@@ -213,10 +312,30 @@ const Cart = () => {
                                                 <div className='payment-method'>
                                                     <span className="text-uppercase mb-3">Phương thức thanh toán</span>
 
-                                                    <div class="input-group mb-3">
-                                                        <span class="payment m-1 p-2" >Nhận hàng thanh toán</span>
-                                                        <span class="payment m-1 p-2">ZaloPay</span>
-                                                        <span class="payment m-1 p-2">VNPay</span>
+                                                    <div className="input-group mb-3">
+                                                        <span
+                                                            className={active === 'home' ? "payment m-1 p-2 active" : "payment m-1 p-2"}
+                                                            onClick={() => clickPaymentMethod('home')}
+                                                        >
+                                                            Nhận hàng thanh toán
+                                                            {active === 'home' ? <IoIosCheckmark className='tick' fontSize={18} /> : <></>}
+
+                                                        </span>
+                                                        <span
+                                                            className={active === 'zaloPay' ? "payment m-1 p-2 active" : "payment m-1 p-2"}
+                                                            onClick={() => clickPaymentMethod('zaloPay')}
+                                                        >
+                                                            ZaloPay
+                                                            {active === 'zaloPay' ? <IoIosCheckmark className='tick' fontSize={18} /> : <></>}
+                                                        </span>
+                                                        <span
+                                                            className={active === 'vnPay' ? "payment m-1 p-2 active" : "payment m-1 p-2"}
+                                                            onClick={() => clickPaymentMethod('vnPay')}
+                                                        >
+                                                            VNPay
+                                                            {active === 'vnPay' ? <IoIosCheckmark className='tick' fontSize={18} /> : <></>}
+
+                                                        </span>
 
                                                     </div>
                                                 </div>
@@ -226,25 +345,25 @@ const Cart = () => {
                                                 <hr className="my-4" />
                                                 <div className="d-flex justify-content-between mb-1">
                                                     <span className="text-uppercase">Tổng giảm giá</span>
-                                                    <span>{formatNumber(totalAmout)} đ</span>
+                                                    <span>{formatNumber((totalDiscount * amount) + usePoint)} đ</span>
                                                 </div>
                                                 <div className="d-flex justify-content-between mb-1">
                                                     <span className="text-uppercase">Tổng phí vận chuyển</span>
-                                                    <span>{formatNumber(totalAmout)} đ</span>
+                                                    <span>{formatNumber(shipping)} đ</span>
                                                 </div>
 
                                                 <div className="d-flex justify-content-between mb-5">
                                                     <span className="text-uppercase">Tổng thanh toán</span>
-                                                    <span>{formatNumber(totalAmout)} đ</span>
+                                                    <span>{formatNumber(amount - ((totalDiscount * amount) + usePoint))} đ</span>
                                                 </div>
 
                                                 <div className='text-success' hidden={orderSuccess}>Đặt hàng thành công</div>
 
                                                 <div style={{ position: 'relative' }}>
-                                                    <button type="button" className="btn btn-primary p-2 "
-                                                        onClick={() => handleClickOrder(cart)}
+                                                    <button type="button" className="btn p-2 "
+                                                        onClick={() => handleShow()}
                                                         data-mdb-ripple-color="dark"
-                                                        style={{ fontWeight: '500', position: 'absolute', right: '-20px', minWidth: '150px' }}
+                                                        style={{ fontWeight: '500', position: 'absolute', right: '-20px', minWidth: '150px', backgroundColor: '#e54b00', color: '#fff' }}
                                                     >
                                                         Đặt hàng
                                                     </button>
@@ -259,7 +378,29 @@ const Cart = () => {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
+
+            {show === true ?
+                <Modal show={show} onHide={handleClose} centered >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Xác nhận mua hàng</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <h6>Bạn sẽ được cộng thêm  Coin vào tài khoản sau khi nhận hàng</h6>
+
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Đóng
+                        </Button>
+                        <Button variant="primary" onClick={() => handleClickOrder(cart)} >
+                            Xác thực
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+                :
+                <></>
+            }
         </>
     )
 }

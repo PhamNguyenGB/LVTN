@@ -10,6 +10,7 @@ const PointRoute = (app) => {
     router.put('/update', checkVerifyTokenAdmin, PointController.updatePoint);
     router.delete('/delete/:id', checkVerifyTokenAdmin, PointController.deletePoint);
 
+
     return app.use('/api/point', router);
 };
 

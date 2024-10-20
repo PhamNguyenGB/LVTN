@@ -51,41 +51,30 @@ const refreshToken = async (req, res) => {
                 ErrC: 1,
             });
         }
-        if (!refreshTokensArr.includes(refreshToken)) {
-            return res.status(403).json({
-                Mess: 'Lỗi đăng nhập',
-            })
-        }
+
         jwt.verify(refreshToken, process.env.JWT_SECRET_REFRESH, (err, user) => {
             if (err) {
-                console.log(err);
+                return res.status(401).json({ error_code: 2 })
             }
             refreshTokensArr = refreshTokensArr.filter(
                 (token) => token !== refreshToken
             );
             // create new access token
             let payload = {
-                id: user.id,
-                username: user.username,
-                address: user.address,
-                phone: user.phone,
-                role: user.role,
+                fullname: user.fullname,
+                email: user.email,
+                role: 'user',
             }
             const newAccessToken = UserService.createJWT(payload);
-            const newFrefreshToken = UserService.refreshToken(payload);
-            refreshTokensArr.push(newFrefreshToken);
-            res.cookie("refresh_token", newFrefreshToken, {
-                httpOnly: true,
-                secure: false,
-                sameSite: "strict",
-            });
+            // const newFrefreshToken = UserService.refreshToken(payload);
+
             return res.status(200).json({
                 access_token: newAccessToken,
             });
         });
     } catch (error) {
         console.log(error);
-        res.status(200).json({
+        res.status(500).json({
             Mess: 'Error from refresh',
             ErrC: -1,
         })
@@ -142,6 +131,33 @@ const verifyGoogleToken = async (req, res) => {
     }
 };
 
+const updatePointUser = async (req, res) => {
+    try {
+        const decreasePoint = req.body.decreasePoint;
+        const increasePoint = req.body.increasePoint;
+        const email = req.body.email;
+
+        const request = await UserService.updatePointUserSv(increasePoint, decreasePoint, email);
+        if (request.status === 0)
+            return res.status(200).json({
+                status: 0,
+                data: request.data,
+                mess: request.mess
+            });
+        return res.status(500).json({
+            status: -1,
+            mess: request.mess
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: -1,
+            mess: 'Lỗi cập nhật điểm thưởng'
+        });
+    }
+};
+
 module.exports = {
     register,
     loginUser,
@@ -150,4 +166,5 @@ module.exports = {
     statisticUsers,
     getAllUsers,
     verifyGoogleToken,
+    updatePointUser,
 }

@@ -9,6 +9,7 @@ const EventRoute = (app) => {
     router.post('/create', checkVerifyTokenAdmin, EventController.createEvent);
     router.put('/update', checkVerifyTokenAdmin, EventController.updateEvent);
     router.delete('/delete/:id', checkVerifyTokenAdmin, EventController.deleteEvent);
+    router.get('/findOne/:nameEvent', EventController.findEventByName);
 
     return app.use('/api/event', router);
 };
