@@ -62,6 +62,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      orderCode: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      payOnlineCode: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

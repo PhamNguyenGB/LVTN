@@ -1,42 +1,39 @@
 import db from '../models/index';
 
-const addOrderDetailService = async (data) => {
+const addOrderDetailService = async (data, user) => {
     try {
-        let yourOrder = await db.Order.findOne({
-            where: { userId: data.userId }
+        // let yourOrder = await db.Order.findOne({
+        //     where: { userId: user.id }
+        // });
+        // if (yourOrder) {
+        let newYourOrder = await db.Order.findOne({
+            where: { userId: user.id },
+            order: [['createdAt', 'DESC']],
         });
-        if (yourOrder) {
-            let newYourOrder = await db.Order.findOne({
-                where: { userId: yourOrder.dataValues.userId },
-                order: [['createdAt', 'DESC']],
-            });
-            if (newYourOrder) {
-                data.products.map(async (item) => {
-                    await db.Order_Detail.create({
-                        orderId: newYourOrder.id,
-                        ProductId: item.id,
-                        price: item.price,
-                        quantity: item.quantity,
-                    });
+        if (newYourOrder) {
+            data.products.map(async (item) => {
+                await db.Order_Detail.create({
+                    orderId: newYourOrder.id,
+                    ProductId: item.id,
+                    totalCost: (item.discount && item.discount > 0) ? item.discount : item.price,
+                    quantity: item.quantity,
                 });
-                return {
-                    Mess: 'Added order detail successfully',
-                    ErrC: 0,
-                    Data: '',
-                }
+            });
+            return {
+                mess: 'Added order detail successfully',
+                status: 0,
             }
         }
+        // }
         return {
-            Mess: 'error add order detail',
-            ErrC: 1,
-            Data: '',
+            mess: 'error add order detail',
+            status: -1,
         };
     } catch (error) {
         console.log(error);
         return {
-            Mess: 'error add order detail',
-            ErrC: -1,
-            Data: '',
+            mess: 'error add order detail',
+            status: -1,
         };
     }
 };

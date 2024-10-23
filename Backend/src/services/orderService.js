@@ -1,20 +1,34 @@
 import db, { sequelize } from '../models/index';
 import { Op, fn, col, or } from 'sequelize';
 
-const addOrderService = async (data) => {
+const addOrderService = async (data, user) => {
+    const timestamp = Date.now(); // Lấy timestamp hiện tại
+    const random = Math.floor(Math.random() * 100000); // Tạo một số ngẫu nhiên
+
+    console.log('check data', data.payOnlineCode);
+
     try {
         await db.Order.create({
             address: data.address,
             phone: data.phone,
-            userId: data.userId,
+            userId: user.id,
             totalCost: data.totalAmout,
             regionId: data.regionId,
             point: data.point,
             paymentMethod: data.paymentMethod,
-            eventId: data.eventId,
+            eventId: data?.eventId,
             note: data.note,
             status: 'Chưa xác nhận',
+            orderCode: `${timestamp}${random}`,
+            payOnlineCode: data.payOnlineCode,
         })
+
+        if (data?.eventId !== null) {
+            await db.Used_Event.create({
+                userId: user.id,
+                eventId: data?.eventId,
+            })
+        }
         return {
             mess: 'Đặt hàng thành công',
             status: 0,

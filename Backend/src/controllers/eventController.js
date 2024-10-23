@@ -89,7 +89,7 @@ const deleteEvent = async (req, res) => {
 
 const findEventByName = async (req, res) => {
     try {
-        const request = await EventService.findEventByNameSevice(req.params.nameEvent);
+        const request = await EventService.findEventByNameSevice(req.params.nameEvent, req.user);
         if (request.status === 0)
             return res.status(200).json({
                 status: 0,

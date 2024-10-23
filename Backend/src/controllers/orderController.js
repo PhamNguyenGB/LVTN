@@ -2,14 +2,12 @@ import OrderService from '../services/orderService';
 
 const addCart = async (req, res) => {
     try {
-        console.log('check data', req.body);
-
-        // let data = await OrderService.addOrderService(req.body);
-        // return res.status(200).json({
-        //     mess: data.mess,
-        //     status: data.status,
-        //     data: data.data,
-        // });
+        let data = await OrderService.addOrderService(req.body, req.user);
+        return res.status(200).json({
+            mess: data.mess,
+            status: data.status,
+            data: data.data,
+        });
     } catch (error) {
         console.log(error);
         return res.status(500).json({

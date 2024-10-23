@@ -6,7 +6,6 @@ import axiosClient from "../../api/axiosClient"
 export const loginUser = createAsyncThunk(
     'user/loginGoogle',
     async (userCredentials) => {
-        console.log('check cai data', userCredentials);
         const data = await axiosClient.post('/social/auth/google/login', userCredentials);
         axiosClient.defaults.headers["token"] = `Bear ${data.data.access_token}`;
         window.localStorage.setItem('token', data.data.access_token);

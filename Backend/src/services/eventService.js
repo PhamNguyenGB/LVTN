@@ -111,13 +111,13 @@ const deleteEventService = async (eventId) => {
     }
 };
 
-const findEventByNameSevice = async (eventName) => {
+const findEventByNameSevice = async (eventName, user) => {
     try {
         const currentDate = new Date();
 
         const data = await db.Event.findOne({
             where: { name: eventName },
-            attributes: ['name', 'discount', 'expiryDate']
+            attributes: ['id', 'name', 'discount', 'expiryDate']
         })
         if (data) {
             if (data.expiryDate < currentDate)
@@ -125,6 +125,20 @@ const findEventByNameSevice = async (eventName) => {
                     status: 0,
                     mess: 'Mã giảm giá đã hết hạn'
                 }
+
+            const used_event = await db.Used_Event.findOne({
+                where: {
+                    eventId: data.id,
+                    userId: user.id,
+                }
+            });
+
+            if (used_event)
+                return {
+                    status: 0,
+                    mess: 'Bạn đã sử dụng mã giảm giá này rồi'
+                }
+
 
             return {
                 status: 0,

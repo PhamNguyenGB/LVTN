@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { increaseQuantity, decreaseQuantity, clearCart, deleteProductCart } from "../../redux/slices/cartSlice";
 import { useEffect, useMemo, useState } from 'react';
-import { addOrder } from '../../redux/slices/orderSlice';
-import { addOrderDetail } from '../../redux/slices/orderDetailSlice';
+// import { addOrder } from '../../redux/slices/orderSlice';
+// import { addOrderDetail } from '../../redux/slices/orderDetailSlice';
 import numeral from 'numeral';
 import { fetchAllRegion } from '../../api/regionAPIs';
 import { IoIosCheckmark } from "react-icons/io";
@@ -12,6 +12,9 @@ import { findEventByName } from '../../api/eventAPIs';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { toast } from 'react-toastify';
+import { pointsRedemption } from '../../api/pointAPIs';
+import { addOrder, addOrderDetail } from '../../api/orderAPIs';
+import { zaloPay } from '../../api/paymentOnlineAPIs';
 
 const Cart = () => {
 
@@ -23,6 +26,7 @@ const Cart = () => {
     const user = useSelector((state) => state.user.user);
 
     const [address, setAddress] = useState('');
+    const [note, setNote] = useState('');
     const [phone, setPhone] = useState('');
 
     const [totalAmout, setTotalAmout] = useState(amount);
@@ -32,23 +36,34 @@ const Cart = () => {
     const [orderSuccess, setOrderSuccess] = useState(true);
 
     const [active, setActive] = useState('');
+
     const [event, setEvent] = useState('');
     const [nameEvent, setNameEvent] = useState('');
+    const [eventId, setEventId] = useState(null);
+
     const [totalDiscount, setTotalDiscount] = useState(0);
 
     const [tickPoint, setTickPoint] = useState(false);
     const [usePoint, setUsePoint] = useState(0);
 
     const [show, setShow] = useState(false);
+    const [currency, setCurrency] = useState();
 
     const handleClose = () => setShow(false);
 
-    const handleShow = () => {
+    const handleShow = async () => {
         if (shipping === 0 || address === '' || phone === '' || active === '') {
             toast.error('Bạn chưa điền đủ thông tin');
             return;
 
         } else {
+            setTotalAmout(amount - ((totalDiscount * amount) + usePoint));
+            const total = amount - ((totalDiscount * amount) + usePoint);
+            const data = await pointsRedemption(total);
+
+            if (data.status === 0)
+                setCurrency(data.data);
+
             setShow(true);
         }
     }
@@ -97,11 +112,19 @@ const Cart = () => {
 
     };
 
-    const handleClickOrder = async (data) => {
-        // await disPatch(addOrder({ userId: user.id, address, phone, regionId: idShipping, totalAmout }));
-        // await disPatch(addOrderDetail({ userId: user.id, products: cart }));
-        // await disPatch(clearCart());
-        // setTotalAmout(0);
+    const handleClickOrder = async () => {
+        let payOnlineCode = null;
+        if (active === 'zaloPay') {
+            const request = await zaloPay({ totalAmout });
+            payOnlineCode = request.payCode;
+            window.open(request.data.order_url, '_blank');
+        }
+
+        await addOrder({ address, phone, regionId: idShipping, totalAmout, point: currency, paymentMethod: active, eventId, note, payOnlineCode });
+        await addOrderDetail({ products: cart });
+        await disPatch(clearCart());
+        setTotalAmout(0);
+        setShow(false);
         setOrderSuccess(false);
         setTimeout(() => {
             setOrderSuccess(true);
@@ -127,10 +150,13 @@ const Cart = () => {
         const data = await findEventByName(nameEvent);
         if (data.status === 0) {
             setEvent(data);
-            if (data.data)
+            if (data.data) {
                 setTotalDiscount(data.data.discount / 100);
-            else
-                setTotalDiscount();
+                setEventId(data.data.id);
+            } else {
+                setEventId(null);
+                setTotalDiscount(0);
+            }
 
         }
     }
@@ -272,6 +298,18 @@ const Cart = () => {
                                                     </div>
                                                 </div>
 
+                                                <span className="text-uppercase mb-3">Ghi chú</span>
+
+                                                <div className="mb-3">
+                                                    <div className="form-outline">
+                                                        <textarea name="message" className='form-control form-control-md' rows="4" cols="50"
+                                                            placeholder="Ghi chú cho người giao hàng"
+                                                            value={note}
+                                                            onChange={(e) => setNote(e.target.value)}
+                                                        ></textarea>
+                                                    </div>
+                                                </div>
+
                                                 <span className="text-uppercase mb-3">Số điện thoại</span>
 
                                                 <div className="mb-3">
@@ -386,7 +424,7 @@ const Cart = () => {
                         <Modal.Title>Xác nhận mua hàng</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <h6>Bạn sẽ được cộng thêm  Coin vào tài khoản sau khi nhận hàng</h6>
+                        <span>Bạn sẽ được cộng thêm {formatNumber(currency)} Coin vào tài khoản sau khi nhận hàng và đánh giá</span>
 
                     </Modal.Body>
                     <Modal.Footer>
@@ -394,7 +432,7 @@ const Cart = () => {
                             Đóng
                         </Button>
                         <Button variant="primary" onClick={() => handleClickOrder(cart)} >
-                            Xác thực
+                            Xác nhận
                         </Button>
                     </Modal.Footer>
                 </Modal>

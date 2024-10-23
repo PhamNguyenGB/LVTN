@@ -48,8 +48,8 @@ const refreshToken = async (req, res) => {
         const refreshToken = req.body.refresh_token;
         if (!refreshToken) {
             return res.status(401).json({
-                Mess: 'Bạn chưa đăng nhập',
-                ErrC: 1,
+                mess: 'Bạn chưa đăng nhập',
+                status: 1,
             });
         }
 

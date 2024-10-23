@@ -28,6 +28,7 @@ const loginUserSocial = async (email, name, image) => {
                 refreshToken: refresh_token,
                 avatar: user.dataValues?.avatar,
                 imgGG: image,
+                role: 'user',
                 point: user.dataValues.point,
             }
             return {
@@ -59,6 +60,7 @@ const loginUserSocial = async (email, name, image) => {
                 email: email,
                 refreshToken: refresh_token,
                 imgGG: image,
+                role: 'user',
                 point: 0,
             }
             return {

@@ -1,6 +1,5 @@
 import express from 'express';
 import UserController from '../controllers/userController';
-import { payOnline, callBack } from '../controllers/payOnlineController';
 import { checkVerifyTokenUser, checkVerifyTokenAdmin } from '../middleware/AuthStaff';
 import SendOTPController from '../controllers/sendOTPController';
 
@@ -17,8 +16,6 @@ const UserRoute = (app) => {
 
     router.get('/statictis/users', checkVerifyTokenAdmin, UserController.statisticUsers);
     router.get('/statictis/getAllUsers', checkVerifyTokenAdmin, UserController.getAllUsers);
-    router.post('/payOnline', payOnline);
-    router.post('/callback', callBack);
 
     return app.use('/api/user', router);
 };

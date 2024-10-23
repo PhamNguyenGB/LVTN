@@ -121,6 +121,7 @@ const loginUser = async (email, password) => {
                     email: user.dataValues.email,
                     refreshToken: refresh_token,
                     avatar: user.dataValues.avatar,
+                    role: 'user',
                     point: user.dataValues.point,
                 }
                 return {

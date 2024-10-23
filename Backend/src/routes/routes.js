@@ -9,6 +9,7 @@ import PointRoute from "./pointRoute";
 import RegionRoute from "./regionRoute";
 import SocialRoute from "./socialRoute";
 import CommentReviewRoute from "./commentReviewRoute";
+import PaymentOnlineRoute from "./paymentOnlineRoute";
 
 
 export const routes = (app) => {
@@ -16,11 +17,12 @@ export const routes = (app) => {
     StaffRoute(app);
     ProductRoute(app);
     OrderRoute(app);
-    // OrderDetailRoute(app);
+    OrderDetailRoute(app);
     ListProductRoute(app);
     EventRoute(app);
     PointRoute(app);
     RegionRoute(app);
     SocialRoute(app);
     CommentReviewRoute(app);
+    PaymentOnlineRoute(app);
 };

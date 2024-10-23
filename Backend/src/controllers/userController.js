@@ -44,11 +44,11 @@ const loginUser = async (req, res) => {
 
 const refreshToken = async (req, res) => {
     try {
-        const refreshToken = req.cookies.refresh_token;
+        const refreshToken = req.body.refresh_token;
         if (!refreshToken) {
             return res.status(401).json({
-                Mess: 'Bạn chưa đăng nhập',
-                ErrC: 1,
+                mess: 'Bạn chưa đăng nhập',
+                status: 1,
             });
         }
 
@@ -63,11 +63,11 @@ const refreshToken = async (req, res) => {
             let payload = {
                 fullname: user.fullname,
                 email: user.email,
+                id: user.id,
                 role: 'user',
             }
             const newAccessToken = UserService.createJWT(payload);
             // const newFrefreshToken = UserService.refreshToken(payload);
-
             return res.status(200).json({
                 access_token: newAccessToken,
             });

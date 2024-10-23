@@ -32,7 +32,6 @@ const Home = () => {
     useEffect(() => {
         getNew4Products();
     }, []);
-    console.log('check products', newFourProducts);
 
     return (
         <>

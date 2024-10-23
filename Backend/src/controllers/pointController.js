@@ -87,9 +87,33 @@ const deletePoint = async (req, res) => {
     }
 };
 
+const pointsRedemption = async (req, res) => {
+    try {
+        const currency = req.params.currency;
+
+        const request = await PointService.pointsRedemptionService(+currency);
+        if (request.status === 0)
+            return res.status(200).json({
+                status: 0,
+                data: request.data,
+            });
+        return res.status(500).json({
+            status: -1,
+            mess: request.mess,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: -1,
+            mess: 'error redemption',
+        });
+    }
+};
+
 module.exports = {
     createPoint,
     getAllPoint,
     updatePoint,
     deletePoint,
+    pointsRedemption,
 };

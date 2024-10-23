@@ -109,6 +109,28 @@ const deletePointService = async (pointId) => {
     }
 };
 
+const pointsRedemptionService = async (currency) => {
+    try {
+        const points = await db.Point.findAll();
+        let coin = 0;
+        points.forEach((point) => {
+            if (point.price <= currency) {
+                coin = point.point;
+            }
+        })
+        return {
+            status: 0,
+            data: coin,
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            status: -1,
+            mess: error.message,
+        }
+    }
+};
+
 
 
 module.exports = {
@@ -116,4 +138,5 @@ module.exports = {
     getAllPointService,
     UpdatePointService,
     deletePointService,
+    pointsRedemptionService,
 }

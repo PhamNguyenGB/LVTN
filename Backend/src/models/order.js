@@ -32,6 +32,8 @@ module.exports = (sequelize, DataTypes) => {
     eventId: DataTypes.INTEGER,
     note: DataTypes.STRING,
     status: DataTypes.STRING,
+    orderCode: DataTypes.STRING,
+    payOnlineCode: DataTypes.STRING,
   }, {
     sequelize,
     freezeTableName: true,
