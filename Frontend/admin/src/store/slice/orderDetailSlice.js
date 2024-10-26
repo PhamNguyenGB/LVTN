@@ -4,7 +4,7 @@ import axios from "axios";
 export const getOrderDetail = createAsyncThunk(
     'orderDetail/fetAll',
     async ({ orderId, shipping, status }) => {
-        let request = await axios.get(`http://localhost:8080/api/Details/getOrderDetail/${orderId}`);
+        let request = await axios.get(`http://localhost:8080/api/Details/staff/orderDetail/${orderId}`);
         return { ...request.data, shipping, status };
     }
 )

@@ -19,14 +19,14 @@ import { RotatingLines } from 'react-loader-spinner';
 const Products = () => {
     const { type } = useParams();
     const [products, setProducts] = useState('');
+
     const [brandFilter, setBrandFilter] = useState('');
+    const [brand, setBrand] = useState('');
     const [sizeFilter, setSizeFilter] = useState('');
     const [dataBrandFilter, setDataBrandFilter] = useState('');
     const [dataSizeFilter, setDataSizeFilter] = useState('');
 
     const [isLoadingFilter, setIsLoadingFilter] = useState(false);
-
-    const productSlice = useSelector(state => state.product.products);
 
     const history = useHistory();
     const disPatch = useDispatch();
@@ -37,6 +37,9 @@ const Products = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [currentLimit, setCurrentLimit] = useState(12);
     const [totalPages, setTotalPages] = useState(0);
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const [timeoutId, setTimeoutId] = useState(null);
 
 
     const handleClickCart = async (idProduct) => {
@@ -56,6 +59,35 @@ const Products = () => {
                 return [...prevSelected, data];
             }
         })
+    };
+
+    const handleSortProducts = async (value) => {
+        const sortedProducts = [...products];
+
+        // setIsLoadingFilter(true);
+        // setTimeout(() => {
+        //     setIsLoadingFilter(false);
+
+        // }, 700);
+
+        switch (value) {
+            case 'increase':
+                sortedProducts.sort((a, b) => a.price - b.price);
+                break;
+            case 'decrease':
+                sortedProducts.sort((a, b) => b.price - a.price);
+                break;
+            case 'A-Z':
+                sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+                break;
+            case 'Z-A':
+                sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
+                break;
+            default:
+                sortedProducts.sort((a, b) => a.id - b.id);
+                break;
+        }
+        setProducts(sortedProducts); // Cập nhật lại danh sách sản phẩm
     };
 
     const handleFillterSize = async (data) => {
@@ -144,6 +176,7 @@ const Products = () => {
                 }
             });
             setBrandFilter(GetAllBrand);
+            setBrand(GetAllBrand);
             setSizeFilter(GetAllSize);
         } catch (error) {
             console.log(error);
@@ -177,6 +210,31 @@ const Products = () => {
         setCurrentPage(+event.selected + 1);
     };
 
+    const handleSearchBrand = async (value) => {
+        setSearchTerm(value);
+
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+
+        const newTimeoutId = setTimeout(() => {
+            // Thực hiện tìm kiếm sau khi ngừng gõ 0,5s
+            performSearch(value);
+        }, 500);
+
+        setTimeoutId(newTimeoutId);
+
+    }
+
+    const performSearch = (query) => {
+        if (query) {
+            const data = brandFilter.filter(brand => brand.toLowerCase().includes(query.toLowerCase()));
+            setBrandFilter(data);
+        } else {
+            setBrandFilter(brand);
+        }
+    };
+
     return (
         <>
             <div className="container mt-3 body-content">
@@ -190,23 +248,23 @@ const Products = () => {
                         <div className="filter">
                             <span>Xếp theo:</span>
                             <span className="option">
-                                <input type="radio" name="sỉze" className="m-2" autocomplete="on" defaultValue={500000} onClick={(e) => handleFillterBrand(e.target.defaultValue)} />
+                                <input type="radio" name="sỉze" className="m-2" autocomplete="on" defaultValue={'none'} onClick={(e) => handleSortProducts(e.target.defaultValue)} />
                                 <label style={{ fontSize: '12px' }}>Mặc định</label>
                             </span>
                             <span className="option">
-                                <input type="radio" name="sỉze" className="m-2" autocomplete="on" defaultValue={500000} onClick={(e) => handleFillterBrand(e.target.defaultValue)} />
+                                <input type="radio" name="sỉze" className="m-2" autocomplete="on" defaultValue={'increase'} onClick={(e) => handleSortProducts(e.target.defaultValue)} />
                                 <label style={{ fontSize: '12px' }}>Giá tăng</label>
                             </span>
                             <span className="option">
-                                <input type="radio" name="sỉze" className="m-2" autocomplete="on" defaultValue={500000} onClick={(e) => handleFillterBrand(e.target.defaultValue)} />
+                                <input type="radio" name="sỉze" className="m-2" autocomplete="on" defaultValue={'decrease'} onClick={(e) => handleSortProducts(e.target.defaultValue)} />
                                 <label style={{ fontSize: '12px' }}>Giá giảm</label>
                             </span>
                             <span className="option">
-                                <input type="radio" name="sỉze" className="m-2" autocomplete="on" defaultValue={500000} onClick={(e) => handleFillterBrand(e.target.defaultValue)} />
+                                <input type="radio" name="sỉze" className="m-2" autocomplete="on" defaultValue={'A-Z'} onClick={(e) => handleSortProducts(e.target.defaultValue)} />
                                 <label style={{ fontSize: '12px' }}>Tiêu đề A-Z</label>
                             </span>
                             <span className="option">
-                                <input type="radio" name="sỉze" className="m-2" autocomplete="on" defaultValue={500000} onClick={(e) => handleFillterBrand(e.target.defaultValue)} />
+                                <input type="radio" name="sỉze" className="m-2" autocomplete="on" defaultValue={'Z-A'} onClick={(e) => handleSortProducts(e.target.defaultValue)} />
                                 <label style={{ fontSize: '12px' }}>Tiêu đề Z-A</label>
                             </span>
                             <span className="option-phone">
@@ -367,9 +425,9 @@ const Products = () => {
 
                     <div className="col-3">
                         <div className='filter-product card col-3 m-3'>
-                            <h4 className="m-2">THƯƠNG HIỆU/LOẠI</h4>
+                            <h5 className="m-2">THƯƠNG HIỆU/LOẠI</h5>
                             <div className="search-type">
-                                <input className="search" autocomplete="on" placeholder="Tên thương hiệu..." type="search" />
+                                <input className="search" placeholder="Tên thương hiệu..." type="text" onChange={(e) => handleSearchBrand(e.target.value)} />
                                 <IoMdSearch size={22} className="icon-search-type" />
                             </div>
                             <div className="row">
@@ -388,7 +446,7 @@ const Products = () => {
                                 }
                             </div>
                             <hr />
-                            <h4 className="m-2">TỶ LỆ</h4>
+                            <h5 className="m-2">TỶ LỆ</h5>
                             <div className="row">
                                 {
                                     sizeFilter ? sizeFilter.map((item, index) => {

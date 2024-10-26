@@ -108,7 +108,7 @@ const Header = () => {
                                                 <Dropdown>
                                                     <Dropdown.Toggle variant="light" id="dropdown-basic" style={{ fontSize: '16px' }}>
                                                         <span className='m-2'>  {user.fullname}</span>
-                                                        <img className='m-2' src={user.avatar ? user.avatar : (user.imgGG ? user.imgGG : imgUser)} style={{ width: '30px', borderRadius: '50%' }} />
+                                                        <img className='m-2' src={user.avatar ? user.avatar : (user.imgGG ? user.imgGG : imgUser)} style={{ width: '30px', height: '30px', borderRadius: '50%' }} />
                                                     </Dropdown.Toggle>
 
                                                     <Dropdown.Menu style={{ width: '200px' }}>

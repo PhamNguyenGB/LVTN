@@ -6,7 +6,8 @@ const router = express.Router();
 
 const OrderDetailRoute = (app) => {
     router.post('/addOrderDetail', checkVerifyTokenUser, OrderDetailController.addOrderDetail);
-    router.get('/getOrderDetail/:id', checkVerifyTokenUser, OrderDetailController.getOrderDetail);
+    router.get('/staff/orderDetail/:id', checkVerifyTokenAdmin, OrderDetailController.getOrderDetail);
+    router.get('/user/orderDetail/:id', checkVerifyTokenUser, OrderDetailController.getOrderDetail);
     router.get('/totalQuantity', checkVerifyTokenAdmin, OrderDetailController.totalQuantity);
 
     return app.use('/api/Details', router);

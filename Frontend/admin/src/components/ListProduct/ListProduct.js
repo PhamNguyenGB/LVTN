@@ -82,8 +82,6 @@ const ListProduct = () => {
         try {
             fetAllListProduct().then((res) => {
                 if (res.status === 0) {
-                    console.log('check product', res.data);
-
                     setData(res.data);
                 }
             });

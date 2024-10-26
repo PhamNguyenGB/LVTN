@@ -42,19 +42,40 @@ const getOrderDetailService = async (idOrder) => {
     try {
         const data = await db.Order_Detail.findAll({
             where: { orderId: idOrder },
-            include: { model: db.Product }
+            include: [
+                {
+                    model: db.Product
+                },
+                {
+                    model: db.Order,
+                    include: [
+                        {
+                            model: db.User,
+                            attributes: ['email'],
+                        },
+                        {
+                            model: db.Region,
+                            attributes: ['name', 'deliveryFee'],
+                        },
+                        {
+                            model: db.Event,
+                            attributes: ['discount', 'expiryDate', 'name'],
+                        },
+                    ]
+                }
+            ]
         });
         return {
-            Mess: 'Get all idOrder detail successfully',
-            ErrC: 0,
-            Data: data,
+            mess: 'Lây chi tiết đơn hàng thành công',
+            status: 0,
+            data: data,
         }
     } catch (error) {
         console.log(error);
         return {
-            Mess: 'error get all idOrder detail',
-            ErrC: 1,
-            Data: '',
+            mess: 'Lỗi lấy chi tiết đơn hàng',
+            status: -1,
+            data: '',
         }
     }
 };

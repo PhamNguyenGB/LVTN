@@ -5,8 +5,6 @@ const addOrderService = async (data, user) => {
     const timestamp = Date.now(); // Lấy timestamp hiện tại
     const random = Math.floor(Math.random() * 100000); // Tạo một số ngẫu nhiên
 
-    console.log('check data', data.payOnlineCode);
-
     try {
         await db.Order.create({
             address: data.address,

@@ -3,6 +3,7 @@ const axios = require('axios').default;
 const CryptoJS = require('crypto-js');
 const moment = require('moment');
 const qs = require('qs');
+// const crypto = require('crypto');
 
 const config = {
     app_id: process.env.APP_ID,
@@ -114,8 +115,77 @@ const UpdateOrderStatus = async (req, res) => {
     }
 };
 
+// const vnpayConfig = {
+//     tmnCode: 'U21ZAOO1', // mã website của bạn
+//     secretKey: '36J5UK5VEZENECTTARLM8O50RPKC89UW', // khóa bí mật dùng để tạo chữ ký
+//     vnpUrl: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html', // url của VNPay (sandbox hoặc production)
+//     returnUrl: 'https://yourdomain.com/vnpay_return' // URL nhận kết quả thanh toán
+// };
+
+// const VNPayOnline = (req, res) => {
+//     const { orderId, amount, orderInfo } = req.body;
+
+//     let createDate = formatDateVNPay();
+
+//     const vnp_Params = {
+//         vnp_Version: '2.1.0',
+//         vnp_Command: 'pay',
+//         vnp_TmnCode: vnpayConfig.tmnCode,
+//         vnp_Locale: 'vn',
+//         vnp_CurrCode: 'VND',
+//         vnp_TxnRef: orderId,
+//         vnp_OrderInfo: orderInfo,
+//         vnp_OrderType: 'billpayment',
+//         vnp_Amount: amount * 100, // số tiền * 100 theo yêu cầu của VNPay
+//         vnp_ReturnUrl: vnpayConfig.returnUrl,
+//         vnp_IpAddr: req.ip,
+//         vnp_CreateDate: createDate,
+//     };
+
+//     // Sắp xếp theo thứ tự a-z trước khi mã hóa
+//     const sortedParams = sortObject(vnp_Params);
+
+//     // Tạo URL query string
+//     const signData = Object.keys(sortedParams).map(key => `${key}=${sortedParams[key]}`).join('&');
+
+//     // Tạo chữ ký
+//     const hmac = crypto.createHmac('sha512', vnpayConfig.secretKey);
+//     const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
+//     sortedParams.vnp_SecureHash = signed;
+
+//     const paymentUrl = `${vnpayConfig.vnpUrl}?${qs.stringify(sortedParams, { encode: false })}`;
+//     console.log('checking payment', paymentUrl);
+
+
+//     res.status(200).json({ paymentUrl });
+// };
+
+// // Hàm sắp xếp các tham số
+// const sortObject = (obj) => {
+//     const sorted = {};
+//     const keys = Object.keys(obj).sort();
+//     keys.forEach(key => {
+//         sorted[key] = obj[key];
+//     });
+//     return sorted;
+// };
+// // Vui lòng tham khảo thêm tại code demo
+
+// const formatDateVNPay = () => {
+//     const now = new Date();
+//     const year = now.getFullYear();
+//     const month = (`0${now.getMonth() + 1}`).slice(-2); // Tháng từ 0-11 nên cần cộng 1
+//     const day = (`0${now.getDate()}`).slice(-2);
+//     const hours = (`0${now.getHours()}`).slice(-2);
+//     const minutes = (`0${now.getMinutes()}`).slice(-2);
+//     const seconds = (`0${now.getSeconds()}`).slice(-2);
+
+//     return `${year}${month}${day}${hours}${minutes}${seconds}`;
+// };
+
 module.exports = {
     payOnline,
     callBack,
     UpdateOrderStatus,
+    // VNPayOnline,
 }

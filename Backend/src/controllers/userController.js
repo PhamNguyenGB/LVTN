@@ -100,6 +100,51 @@ const logout = async (req, res) => {
     }
 };
 
+const updateAvatar = async (req, res) => {
+    try {
+        const request = await UserService.updateAvatar(req.file, req.user.id);
+        if (request.status === 0)
+            return res.status(200).json({
+                status: 0,
+                mess: request.mess,
+                data: request.data,
+            })
+        return res.status(500).json({
+            status: -1,
+            mess: request.mess,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: -1,
+            mess: 'error from update avatar',
+        });
+    }
+};
+
+const updateInfoUser = async (req, res) => {
+    try {
+        const request = await UserService.updateInfo(req.body, req.user.id);
+        if (request.status === 0)
+            return res.status(200).json({
+                status: 0,
+                mess: request.mess,
+                data: request.data,
+            });
+        return res.status(500).json({
+            status: -1,
+            mess: request.mess,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: -1,
+            mess: 'error from update info staff',
+        });
+
+    }
+};
+
 const statisticUsers = async (req, res) => {
     try {
         const totalUsers = await UserService.statisticUsers();
@@ -167,4 +212,6 @@ module.exports = {
     getAllUsers,
     verifyGoogleToken,
     updatePointUser,
+    updateAvatar,
+    updateInfoUser
 }

@@ -9,6 +9,7 @@ const PaymentOnlineRoute = (app) => {
     router.post('/zaloPay', checkVerifyTokenUser, payOnline);
     router.post('/zaloPay/update/status', UpdateOrderStatus);
     router.post('/zaloPay/callback', callBack);
+    // router.post('/create_payment_url', VNPayOnline);
 
     return app.use('/api/payment/online', router);
 };

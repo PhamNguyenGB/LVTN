@@ -3,7 +3,8 @@ import db from '../models/index';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { getStoredOtp, deleteStoredOtp } from './sendOTPService';
-
+import fs from 'fs';
+import path from 'path';
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -119,6 +120,8 @@ const loginUser = async (email, password) => {
                     access_token: token,
                     fullname: user.dataValues.fullname,
                     email: user.dataValues.email,
+                    phone: user.dataValues.phone,
+                    address: user.dataValues.address,
                     refreshToken: refresh_token,
                     avatar: user.dataValues.avatar,
                     role: 'user',
@@ -167,6 +170,91 @@ const refreshToken = (payload) => {
     }
     return refreshToken;
 };
+
+const updateAvatar = async (file, userId) => {
+    try {
+        const user = await db.User.findOne({
+            where: { id: userId }
+        });
+        if (user) {
+
+            await deleteFile(user.avatar);
+
+            user.update({
+                avatar: 'http://localhost:8080/image/' + file.filename
+            })
+            return {
+                status: 0,
+                mess: 'Cập nhật ảnh đại diện thành công',
+                data: 'http://localhost:8080/image/' + file.filename,
+            }
+        }
+        return {
+            status: -1,
+            mess: 'Không tìm thấy nhân viên',
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            status: -1,
+            mess: 'Lỗi cập nhật ảnh đại diện',
+        }
+    }
+};
+
+const deleteFile = async (images) => {
+    try {
+        const pathName = path.join(__dirname, '../assets/image/');
+        const fileName = images.split('/')[4];
+
+        await fs.unlink(pathName + fileName, (err) => console.log(err));
+
+        return {
+            mess: 'Xóa file hình ảnh thành công',
+            status: 0,
+        };
+    } catch (error) {
+        console.log(error);
+        return {
+            mess: 'error delete file',
+            status: -1,
+        };
+    }
+}
+
+const updateInfo = async (data, userId) => {
+    try {
+        const user = await db.User.findOne({
+            where: { id: userId },
+        });
+        if (user) {
+            user.update({
+                fullname: data.fullname,
+                phone: data.phone,
+                address: data.address,
+            });
+            return {
+                status: 0,
+                mess: 'Cập nhật thông tin thành công',
+                data: {
+                    fullname: data.fullname,
+                    phone: data.phone,
+                    address: data.address,
+                }
+            }
+        }
+        return {
+            status: -1,
+            mess: 'Không tìm thấy thông tin nhân viên',
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            status: -1,
+            mess: 'Cập nhật thông tin thất bại',
+        }
+    }
+}
 
 const statisticUsers = async () => {
     try {
@@ -233,4 +321,6 @@ module.exports = {
     checkEmailUser,
     checkUserPhone,
     updatePointUserSv,
+    updateAvatar,
+    updateInfo,
 }

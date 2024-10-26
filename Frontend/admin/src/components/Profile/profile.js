@@ -47,6 +47,7 @@ const Profile = () => {
     const UpdateInfo = () => {
         dispath(updateInfo({ fullname, phone, address }));
         toast.success('Cập nhật thông tin thành công');
+        setShow(false);
     };
 
     return (

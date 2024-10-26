@@ -1,7 +1,9 @@
 import { fetAllOrder } from '../../api/OrderAPIs';
 import Navigation from '../Navigation/Navigation';
 import { useEffect, useState } from "react";
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import numeral from 'numeral';
+import moment from 'moment';
 import FilterCol from '../Filter/FilterCol';
 import { FaSort, FaSortAmountDown, FaSortAmountDownAlt } from "react-icons/fa";
 import Pagination from '../Pagination/Pagination';
@@ -14,6 +16,10 @@ import {
     flexRender,
 } from '@tanstack/react-table';
 
+const formatNumber = (number) => {
+    return numeral(number).format('0,0');
+}
+
 const columns = [
     {
         accessorKey: 'index',
@@ -24,17 +30,16 @@ const columns = [
         searchHidden: true,
     },
     {
-        accessorKey: 'address',
-        header: 'Địa chỉ',
+        accessorKey: 'orderCode',
+        header: 'Mã đơn hàng',
         cell: (props) => <p>{props.getValue()}</p>,
         searchHidden: false,
     },
     {
-        accessorKey: 'phone',
-        header: 'Số điện thoại',
+        accessorKey: 'payOnlineCode',
+        header: 'Mã thanh toán',
         cell: (props) => <p>{props.getValue()}</p>,
         searchHidden: false,
-
     },
     {
         accessorKey: 'User',
@@ -45,14 +50,14 @@ const columns = [
     {
         accessorKey: 'Region',
         header: 'Phí vận chuyển',
-        cell: (props) => <p>{props.getValue()}</p>,
+        cell: (props) => <p>{formatNumber(props.getValue().deliveryFee)}</p>,
         searchHidden: true,
     },
     {
-        accessorKey: 'Point',
-        header: 'Điểm',
-        cell: (props) => <p>{props.getValue()?.point}</p>,
-        searchHidden: false,
+        accessorKey: 'point',
+        header: 'Coin',
+        cell: (props) => <p>{formatNumber(props.getValue())}</p>,
+        searchHidden: true,
 
     },
     {
@@ -72,21 +77,14 @@ const columns = [
     {
         accessorKey: 'Event',
         header: 'Giảm giá',
-        cell: (props) => <p>{props.getValue()?.discount}</p>,
+        cell: (props) => <p>{props.getValue()?.discount + '%'}</p>,
         searchHidden: true,
-
-    },
-    {
-        accessorKey: 'note',
-        header: 'Ghi chú',
-        cell: (props) => <p>{props.getValue()}</p>,
-        searchHidden: false,
 
     },
     {
         accessorKey: 'totalCost',
         header: 'Tổng tiền',
-        cell: (props) => <p>{props.getValue()}</p>,
+        cell: (props) => <p>{formatNumber(props.getValue())}</p>,
         searchHidden: true,
 
     },
@@ -107,16 +105,23 @@ const columns = [
     {
         accessorKey: 'createdAt',
         header: 'Ngày lập đơn',
-        cell: (props) => <p>{props.getValue()}</p>,
+        cell: (props) => <p>{moment(props.getValue()).format('DD/MM/YYYY HH:mm:ss')}</p>,
+        searchHidden: true,
+
+    },
+    {
+        accessorKey: 'updatedAt',
+        header: 'Ngày cập nhật',
+        cell: (props) => <p>{moment(props.getValue()).format('DD/MM/YYYY HH:mm:ss')}</p>,
         searchHidden: true,
 
     },
 ]
 
-
 const Order = () => {
 
     // const dispatch = useDispatch();
+    const history = useHistory();
 
     // const orders = useSelector((state) => state.order.orders);
     // const staff = useSelector((state) => state.staff.staff);
@@ -131,12 +136,8 @@ const Order = () => {
     const GetAllOrder = async () => {
         try {
             await fetAllOrder().then((res) => {
-                console.log('check res', res);
-
                 if (res.status === 0)
                     setData(res.data);
-                console.log('check res', res.data);
-
             })
         } catch (error) {
             console.log(error);
@@ -172,9 +173,10 @@ const Order = () => {
         onPaginationChange: setPagination,
     });
 
-    const formatNumber = (number) => {
-        return numeral(number).format('0,0');
-    }
+    const handleViewDetail = (order) => {
+        console.log('check order', order);
+        history.push(`/orderDetail/${order.id}`)
+    };
 
     return (
         <>
@@ -278,12 +280,9 @@ const Order = () => {
                                                                     ))}
                                                                     <td style={{ width: "200px" }}>
                                                                         <span>
-                                                                            <button className=" btn btn-success ml-5">
+                                                                            <button className=" btn btn-success ml-5" onClick={() => handleViewDetail(row.original)}>
                                                                                 Xem chi tiết
                                                                             </button>
-                                                                            {/* <button className=" btn btn-danger ml-3" onClick={() => handleDeleteProduct(row.original)}>
-                                                                                <i className="fa fa-solid fa-trash"></i>
-                                                                            </button> */}
                                                                         </span>
                                                                     </td>
 
