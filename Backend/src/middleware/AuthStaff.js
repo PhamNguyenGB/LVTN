@@ -33,9 +33,35 @@ const checkVerifyTokenAdmin = (req, res, next) => {
     });
 };
 
+const checkVerifyTokenAd = (req, res, next) => {
+    verifyToken(req, res, () => {
+        if (req.user.role == 'admin') {
+            next();
+        } else {
+            return res.status(403).json({
+                Mess: 'Bạn không có quyền truy cập',
+                ErrC: 1,
+            });
+        }
+    });
+};
+
 const checkVerifyTokenUser = (req, res, next) => {
     verifyToken(req, res, () => {
         if (req.user.role == 'user') {
+            next();
+        } else {
+            return res.status(403).json({
+                Mess: 'Bạn chưa đăng nhập',
+                ErrC: 1,
+            })
+        }
+    })
+};
+
+const checkVerifyTokenShipper = (req, res, next) => {
+    verifyToken(req, res, () => {
+        if (req.user.role == 'shipper') {
             next();
         } else {
             return res.status(403).json({
@@ -51,4 +77,6 @@ module.exports = {
     verifyToken,
     checkVerifyTokenAdmin,
     checkVerifyTokenUser,
+    checkVerifyTokenAd,
+    checkVerifyTokenShipper,
 };

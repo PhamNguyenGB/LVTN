@@ -1,6 +1,6 @@
 import express from 'express';
 import OrderController from '../controllers/orderController';
-import { checkVerifyTokenUser, checkVerifyTokenAdmin } from '../middleware/AuthStaff';
+import { checkVerifyTokenUser, checkVerifyTokenAdmin, checkVerifyTokenShipper } from '../middleware/AuthStaff';
 
 const router = express.Router();
 
@@ -14,6 +14,11 @@ const OrderRoute = (app) => {
     // router.post('/getData/moneyMonth', OrderController.getDataStatisticMoneyMonth);
     // router.post('/getData/moneyYear', OrderController.getDataStatisticMoneyYear);
 
+    //Shipper
+    router.get('/storage', checkVerifyTokenShipper, OrderController.getOrderInStorage);
+    router.get('/transit', checkVerifyTokenShipper, OrderController.getOrderInTransit);
+    router.post('/shipper/update/status', checkVerifyTokenShipper, OrderController.updateStatusShipper);
+    router.get('/transited', checkVerifyTokenShipper, OrderController.getAllOrderTransited);
 
     return app.use('/api/order', router);
 };

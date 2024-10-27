@@ -19,6 +19,7 @@ const addOrderService = async (data, user) => {
             status: 'Chưa xác nhận',
             orderCode: `${timestamp}${random}`,
             payOnlineCode: data.payOnlineCode,
+            statusPay: data.statusPay,
         })
 
         if (data?.eventId !== null) {
@@ -237,6 +238,113 @@ const getDataStatisticMoneyYear = async (year) => {
     }
 };
 
+const getOrderInStorage = async () => {
+    try {
+        let data = await db.Order.findAll({
+            where: { status: 'Đang vận chuyển' },
+            attributes: ['address', 'phone', 'totalCost', 'note', 'createdAt', 'updatedAt', 'status', 'id'],
+            include: {
+                model: db.User, attributes: ['fullname']
+            }
+        });
+        if (data)
+            return {
+                status: 0,
+                mess: 'Lấy đơn đang vận chuyển thành công',
+                data: data,
+            }
+        return {
+            status: -1,
+            mess: 'Lấy đơn đang vận chuyển thất bại',
+        }
+    } catch (error) {
+        return {
+            status: -1,
+            mess: 'Lỗi lấy đơn đang vận chuyển',
+        }
+    }
+}
+
+const getOrderInTransit = async (shipper) => {
+    try {
+        let data = await db.Order.findAll({
+            where: {
+                status: 'Đang giao hàng',
+                shipperId: shipper.id,
+            },
+            attributes: ['address', 'phone', 'totalCost', 'note', 'createdAt', 'updatedAt', 'status', 'id'],
+            include: {
+                model: db.User, attributes: ['fullname']
+            }
+        });
+        if (data)
+            return {
+                status: 0,
+                mess: 'Lấy đơn đang đang giao thành công',
+                data: data,
+            }
+        return {
+            status: -1,
+            mess: 'Lấy đơn đang đang giao thất bại',
+        }
+    } catch (error) {
+        return {
+            status: -1,
+            mess: 'Lỗi lấy đơn đang giao',
+        }
+    }
+}
+
+const updateStatusShipper = async (orderId, status, shipper) => {
+    try {
+        let order = await db.Order.findOne({
+            where: { id: orderId }
+        });
+        if (order) {
+            order.update({
+                status: status,
+                shipperId: shipper.id,
+            });
+        }
+        return {
+            status: 0,
+            mess: 'Cập nhật trạng thái đơn hàng thành công',
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            status: -1,
+            mess: 'Cập nhật trạng thái đơn hàng thất bại',
+        }
+    }
+}
+
+const getAllOrderTransited = async (shipper) => {
+    try {
+        let data = await db.Order.findAll({
+            where: {
+                status: 'Hoàn thành',
+                shipperId: shipper.id,
+            },
+            attributes: ['address', 'phone', 'totalCost', 'note', 'createdAt', 'updatedAt', 'status', 'id'],
+            include: {
+                model: db.User, attributes: ['fullname']
+            }
+        })
+        return {
+            status: 0,
+            data: data,
+            mess: 'Lấy các đơn đã giao thành công'
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            status: -1,
+            mess: 'Lỗi lấy các đơn đã giao'
+        }
+    }
+}
+
 
 module.exports = {
     addOrderService,
@@ -247,4 +355,8 @@ module.exports = {
     statisticMoneyYear,
     getDataStatisticMoneyMonth,
     getDataStatisticMoneyYear,
+    getOrderInStorage,
+    getOrderInTransit,
+    updateStatusShipper,
+    getAllOrderTransited,
 }

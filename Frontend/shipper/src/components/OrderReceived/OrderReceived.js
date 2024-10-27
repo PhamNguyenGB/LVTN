@@ -1,10 +1,11 @@
-import { getOrderInStorage, updateStatus } from '../../api/orderAPIs';
+// import { fetAllOrder } from '../../api/OrderAPIs';
 import { useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import numeral from 'numeral';
 import moment from 'moment';
 import FilterCol from '../Filter/FilterCol';
 import { FaSort, FaSortAmountDown, FaSortAmountDownAlt } from "react-icons/fa";
+import { getOrderInTransit, updateStatus } from "../../api/orderAPIs";
 import Pagination from '../Pagination/Pagination';
 import {
     useReactTable,
@@ -82,7 +83,7 @@ const columns = [
     },
 ]
 
-const Order = () => {
+const OrderReceived = () => {
 
     // const dispatch = useDispatch();
     const history = useHistory();
@@ -99,7 +100,7 @@ const Order = () => {
 
     const GetAllOrder = async () => {
         try {
-            const request = await getOrderInStorage();
+            const request = await getOrderInTransit();
             if (request.status === 0)
                 setData(request.data);
 
@@ -114,7 +115,7 @@ const Order = () => {
     }, []);
 
     const GetOrderDetail = async (order) => {
-        await updateStatus({ orderId: order.id, status: 'Đang giao hàng' });
+        await updateStatus({ orderId: order.id, status: 'Hoàn thành' });
         GetAllOrder();
     }
 
@@ -138,6 +139,11 @@ const Order = () => {
         onPaginationChange: setPagination,
     });
 
+    const handleViewDetail = (order) => {
+        console.log('check order', order);
+        history.push(`/orderDetail/${order.id}`)
+    };
+
     return (
         <>
             <div id="page-top position-relative">
@@ -155,7 +161,7 @@ const Order = () => {
                             <div className="container-fluid mt-5">
 
                                 {/* <!-- Page Heading --> */}
-                                <h1 className="h3 mb-2 text-gray-800">ĐƠN HÀNG</h1>
+                                <h1 className="h3 mb-2 text-gray-800">ĐƠN HÀNG ĐÃ NHẬN</h1>
 
                                 {/* <!-- DataTales Example --> */}
                                 <div className="card shadow mb-4 mt-5">
@@ -240,7 +246,7 @@ const Order = () => {
                                                                     <td style={{ width: "200px" }}>
                                                                         <span>
                                                                             <button className=" btn btn-success ml-5" onClick={() => GetOrderDetail(row.original)}>
-                                                                                Nhận đơn
+                                                                                Đã giao
                                                                             </button>
                                                                         </span>
                                                                     </td>
@@ -281,4 +287,4 @@ const Order = () => {
     )
 }
 
-export default Order;
+export default OrderReceived;

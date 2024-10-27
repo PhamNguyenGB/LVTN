@@ -1,4 +1,4 @@
-import { getOrderInStorage, updateStatus } from '../../api/orderAPIs';
+import { getOrderInTransited } from "../../api/orderAPIs";
 import { useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import numeral from 'numeral';
@@ -82,7 +82,7 @@ const columns = [
     },
 ]
 
-const Order = () => {
+const OrderDelivered = () => {
 
     // const dispatch = useDispatch();
     const history = useHistory();
@@ -99,7 +99,7 @@ const Order = () => {
 
     const GetAllOrder = async () => {
         try {
-            const request = await getOrderInStorage();
+            const request = await getOrderInTransited();
             if (request.status === 0)
                 setData(request.data);
 
@@ -113,10 +113,9 @@ const Order = () => {
         GetAllOrder();
     }, []);
 
-    const GetOrderDetail = async (order) => {
-        await updateStatus({ orderId: order.id, status: 'Đang giao hàng' });
-        GetAllOrder();
-    }
+    // const GetOrderDetail = async (orderId, shipping, status) => {
+    //     await dispatch(getOrderDetail({ orderId, shipping, status }));
+    // }
 
     const tableInstance = useReactTable({
         columns,
@@ -138,6 +137,11 @@ const Order = () => {
         onPaginationChange: setPagination,
     });
 
+    const handleViewDetail = (order) => {
+        console.log('check order', order);
+        history.push(`/orderDetail/${order.id}`)
+    };
+
     return (
         <>
             <div id="page-top position-relative">
@@ -155,7 +159,7 @@ const Order = () => {
                             <div className="container-fluid mt-5">
 
                                 {/* <!-- Page Heading --> */}
-                                <h1 className="h3 mb-2 text-gray-800">ĐƠN HÀNG</h1>
+                                <h1 className="h3 mb-2 text-gray-800">ĐƠN HÀNG ĐÃ GIAO</h1>
 
                                 {/* <!-- DataTales Example --> */}
                                 <div className="card shadow mb-4 mt-5">
@@ -237,13 +241,13 @@ const Order = () => {
                                                                             {flexRender(cell.column.columnDef?.cell, cell?.getContext())}
                                                                         </td>
                                                                     ))}
-                                                                    <td style={{ width: "200px" }}>
+                                                                    {/* <td style={{ width: "200px" }}>
                                                                         <span>
-                                                                            <button className=" btn btn-success ml-5" onClick={() => GetOrderDetail(row.original)}>
-                                                                                Nhận đơn
+                                                                            <button className=" btn btn-success ml-5" onClick={() => handleViewDetail(row.original)}>
+                                                                                Xem chi tiết
                                                                             </button>
                                                                         </span>
-                                                                    </td>
+                                                                    </td> */}
 
                                                                 </tr>
                                                             ))}
@@ -281,4 +285,4 @@ const Order = () => {
     )
 }
 
-export default Order;
+export default OrderDelivered;

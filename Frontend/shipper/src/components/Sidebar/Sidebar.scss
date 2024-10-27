@@ -120,19 +120,20 @@
                 padding: .4rem 1.2rem;
                 line-height: 1.8rem;
                 z-index: 20;
-                opacity: 0;
+                display: none;
+                width: 110px;
             }
         }
 
         li:hover {
             .toolTip {
-                opacity: 1;
+                display: block;
             }
         }
     }
 }
 
-.active {
+.active-sidebar {
     width: 250px;
 
     .top {
@@ -182,26 +183,32 @@
                 display: none;
             }
         }
-    }
-}
 
-.sidebar {
-    &.active {
-        ~.main-content {
-            position: absolute;
-            left: 250px;
-            width: calc(100% - 250px);
+        li:hover {
+            .toolTip {
+                display: none;
+            }
         }
     }
 }
 
-.main-content {
-    position: relative;
-    background-color: #eee;
-    min-height: 100vh;
-    top: 0;
-    left: 80px;
-    transition: all 0.5s ease;
-    width: calc(100% - 80px);
-    padding: 1rem;
-}
+// .sidebar {
+//     &.active {
+//         ~.main-content {
+//             position: absolute;
+//             left: 250px;
+//             width: calc(100% - 250px);
+//         }
+//     }
+// }
+
+// .main-content {
+//     position: relative;
+//     background-color: #eee;
+//     min-height: 100vh;
+//     top: 0;
+//     left: 80px;
+//     transition: all 0.5s ease;
+//     width: calc(100% - 80px);
+//     padding: 1rem;
+// }

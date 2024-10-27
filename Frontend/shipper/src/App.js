@@ -5,10 +5,12 @@ import ShipperRoute from "./routes/shipperRoute";
 import Sidebar from "../src/components/Sidebar/Sidebar";
 import React, { useState } from 'react';
 import './App.scss';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from "react-redux";
 
 const App = () => {
-  // const staff = useSelector((state) => state.staff.staff);
+  const shipper = useSelector((state) => state.shipper.shipper);
 
   const [isSidebarActive, setIsSidebarActive] = useState(false);
 
@@ -18,20 +20,20 @@ const App = () => {
 
   return (
     <Router>
-      {/* {staff ? */}
-      <div className="App-header">
-        {/* <Nav /> */}
-        <Sidebar onToggleSidebar={handleToggleSidebar} />
+      {shipper ?
+        <div className="App-header">
+          {/* <Nav /> */}
+          <Sidebar onToggleSidebar={handleToggleSidebar} />
 
-      </div>
-      {/* :
+        </div>
+        :
         <>
         </>
-      } */}
-      <div className={`App-body ${isSidebarActive === true ? 'body-with-sidebar' : 'body'}`}>
+      }
+      <div className={`App-body ${shipper ? (isSidebarActive === true ? 'body-with-sidebar' : 'body') : ''}`}>
         <ShipperRoute />
       </div>
-      {/* <ToastContainer
+      <ToastContainer
         position="top-center"
         autoClose={5000}
         hideProgressBar={false}
@@ -42,7 +44,7 @@ const App = () => {
         draggable
         pauseOnHover
         theme="light"
-      /> */}
+      />
     </Router >
   );
 }

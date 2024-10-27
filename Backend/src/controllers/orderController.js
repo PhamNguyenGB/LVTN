@@ -1,3 +1,4 @@
+import { where } from 'sequelize';
 import OrderService from '../services/orderService';
 
 const addCart = async (req, res) => {
@@ -143,6 +144,56 @@ const getDataStatisticMoneyYear = async (req, res) => {
     }
 };
 
+
+const getOrderInStorage = async (req, res) => {
+    try {
+        let data = await OrderService.getOrderInStorage();
+        return res.status(200).json(data);
+    } catch (error) {
+        return res.status(500).json({
+            status: -1,
+            mess: 'error get order in storage'
+        });
+    }
+};
+
+const getOrderInTransit = async (req, res) => {
+    try {
+        let data = await OrderService.getOrderInTransit(req.user);
+        return res.status(200).json(data);
+    } catch (error) {
+        return res.status(500).json({
+            status: -1,
+            mess: 'error get order in transit'
+        });
+    }
+};
+
+const updateStatusShipper = async (req, res) => {
+    try {
+        console.log('check status', req.body, req.user);
+        let data = await OrderService.updateStatusShipper(req.body.orderId, req.body.status, req.user);
+        return res.status(200).json(data);
+    } catch (error) {
+        return res.status(500).json({
+            status: -1,
+            mess: 'error get order in update status shipper'
+        });
+    }
+}
+
+const getAllOrderTransited = async (req, res) => {
+    try {
+        let data = await OrderService.getAllOrderTransited(req.user);
+        return res.status(200).json(data);
+    } catch (error) {
+        return res.status(500).json({
+            status: -1,
+            mess: 'error get order in get transited of shipper'
+        });
+    }
+}
+
 module.exports = {
     addCart,
     getAllOrdersStaff,
@@ -152,4 +203,8 @@ module.exports = {
     statisticMoneyYear,
     getDataStatisticMoneyMonth,
     getDataStatisticMoneyYear,
+    getOrderInStorage,
+    getOrderInTransit,
+    updateStatusShipper,
+    getAllOrderTransited,
 }
