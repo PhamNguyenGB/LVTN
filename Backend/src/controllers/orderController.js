@@ -41,9 +41,9 @@ const getAllOrdersStaff = async (req, res) => {
     }
 };
 
-const updateStautsOrder = async (req, res) => {
+const updateStautsOrderStaff = async (req, res) => {
     try {
-        let data = await OrderService.updateStatusOrderServie(req.body.orderId, req.body.status);
+        let data = await OrderService.updateStatusOrderStaff(req.body.orderId, req.body.status, req.user);
         if (data.status === 0)
             return res.status(200).json({
                 mess: data.mess,
@@ -64,7 +64,7 @@ const updateStautsOrder = async (req, res) => {
 
 const getOrderById = async (req, res) => {
     try {
-        let data = await OrderService.findOrderById(req.user.id);
+        let data = await OrderService.findOrderById(req.user);
         if (data.status === 0)
             return res.status(200).json({
                 mess: data.mess,
@@ -197,7 +197,7 @@ const getAllOrderTransited = async (req, res) => {
 module.exports = {
     addCart,
     getAllOrdersStaff,
-    updateStautsOrder,
+    updateStautsOrderStaff,
     statisticMoneyMonth,
     getOrderById,
     statisticMoneyYear,

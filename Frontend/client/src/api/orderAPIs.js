@@ -5,6 +5,11 @@ export const addOrder = async (data) => {
     return request;
 };
 
+export const getOrderById = async () => {
+    const request = await axiosClient.get('/order/getOrderById');
+    return request;
+};
+
 
 // ORDER DETAIL
 export const addOrderDetail = async (data) => {

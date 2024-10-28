@@ -270,7 +270,13 @@ const Cart = () => {
                                                 <span className="text-uppercase mb-3">Khu vực giao hàng </span>
 
                                                 <div className="mb-1 pb-2 d-flex justify-content-between">
-                                                    <select className="select p-1" onChange={(e) => handleTotalAmout(e.target.value)}>
+                                                    <select
+                                                        className="select p-1"
+                                                        // onChange={(e) => handleTotalAmout(e.target.value)}
+                                                        // style={{ maxHeight: '50px', overflowY: 'auto' }}
+                                                        display="anchored"
+                                                        touchUi={false}
+                                                    >
                                                         <option value="0">Chọn khu vực</option>
                                                         {
                                                             region ? region.map((item, index) => {

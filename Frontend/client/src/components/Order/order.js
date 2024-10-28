@@ -2,23 +2,34 @@ import './order.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
-import { getOrderById } from '../../redux/slices/orderSlice';
+// import { getOrderById } from '../../redux/slices/orderSlice';
+import { getOrderById } from '../../api/orderAPIs';
 import { NavLink, useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import numeral from 'numeral';
 
 const Order = () => {
 
-    const history = useHistory();
-    const disPatch = useDispatch();
-    const user = useSelector((state) => state.user.user);
+    // const history = useHistory();
+    // const disPatch = useDispatch();
+    // const user = useSelector((state) => state.user.user);
 
+    const [yourOrder, setYourOrder] = useState('');
+
+    const fetchAllOrderById = async () => {
+        try {
+            const data = await getOrderById();
+            if (data.status === 0)
+                setYourOrder(data.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
 
     useEffect(() => {
-        disPatch(getOrderById(user.access_token));
+        fetchAllOrderById();
     }, []);
 
-    const yourOrder = useSelector((state) => state.order.yourOrder);
 
     const formattedDate = (date) => {
         return moment(date).format('DD/MM/YYYY HH:mm:ss');
@@ -34,78 +45,98 @@ const Order = () => {
 
 
     return (
-        <>
+        <div style={{ minHeight: '400px', backgroundColor: "#eee" }}>
             {yourOrder ?
                 <>
                     {isEmpty(yourOrder) === false ?
                         <>
                             {yourOrder?.map((item, index) => {
                                 return (
-                                    <section className="h-100 h-custom" style={{ backgroundColor: "#eee" }}>
-                                        <div className="container py-5 h-100">
+                                    <section className=" h-custom" >
+                                        <div className="container mt-5">
                                             <div className="row d-flex justify-content-center align-items-center h-100">
-                                                <div className="col-lg-8 col-xl-6">
+                                                <div className="col-lg-8 col-xl-6" style={{ width: '100%' }}>
                                                     <div className="card border-top border-bottom border-3" style={{ borderColor: "#f37a27 !important" }}>
                                                         <div className="card-body p-5">
-
-                                                            <p className="lead fw-bold mb-5" style={{ color: "#f37a27" }}>Purchase Reciept</p>
+                                                            <p className="lead fw-bold" style={{ color: "#f37a27" }}>Đơn hàng</p>
 
                                                             <div className="row">
-                                                                <div className="col mb-3">
-                                                                    <p className="small text-muted mb-1">Date</p>
+                                                                <div className="col">
+                                                                    <p className=" mb-1">Ngày mua</p>
                                                                     <p>{formattedDate(item.createdAt)}</p>
                                                                 </div>
-                                                                <div className="col mb-3">
-                                                                    <p className="small text-muted mb-1">Order No.</p>
-                                                                    <p>012j1gvs356c</p>
+                                                                <div className="col">
+                                                                    <p className=" mb-1">Mã đơn</p>
+                                                                    <p>{item.orderCode}</p>
                                                                 </div>
                                                             </div>
 
-                                                            <div className="mx-n5 px-5 py-4" style={{ backgroundColor: "#f2f2f2" }}>
+                                                            {/* <div className="mx-n5 px-5 py-2" style={{ backgroundColor: "#f2f2f2" }}>
                                                                 <div className="row">
                                                                     <div className="col-md-8 col-lg-9">
                                                                         <p>Tổng giá tiền của sản phẩm</p>
                                                                     </div>
                                                                     <div className="col-md-4 col-lg-3">
-                                                                        <p>{formatNumber(item.totalCost - item.pay)} đ</p>
+                                                                        <p>{formatNumber(item.totalCost)} đ</p>
                                                                     </div>
                                                                 </div>
                                                                 <div className="row">
                                                                     <div className="col-md-8 col-lg-9">
-                                                                        <p className="mb-0">Shipping</p>
+                                                                        <p className="mb-0">Trạng thái thanh toán</p>
                                                                     </div>
                                                                     <div className="col-md-4 col-lg-3">
-                                                                        <p className="mb-0">{formatNumber(item.pay)} đ</p>
+                                                                        <p className="mb-0">{item.statusPay === 'true' ? 'Đã thanh toán' : 'Chưa thanh toán'}</p>
                                                                     </div>
+                                                                </div>
+                                                            </div> */}
+
+                                                            <div className=" my-1">
+                                                                <div className="">
+                                                                    <div className="">
+                                                                        <p className="mb-0 fw-bold lead text-dark">Tổng tiền: {formatNumber(item.totalCost)} đ</p>
+                                                                    </div>
+                                                                    {/* <div className="col-md-4 col-lg-3">
+                                                                        <p className="mb-0 fw-bold lead text-dark" ></p>
+                                                                    </div> */}
                                                                 </div>
                                                             </div>
 
-                                                            <div className="row my-4">
-                                                                <div className="row">
-                                                                    <div className="col-md-8 col-lg-9">
-                                                                        <p className="mb-0 fw-bold lead text-dark">Tổng tiền</p>
+                                                            <div className=" my-1">
+                                                                <div className="">
+                                                                    <div className="">
+                                                                        <p className="mb-0 fw-bold lead text-dark">Địa chỉ: {item.address}</p>
                                                                     </div>
-                                                                    <div className="col-md-4 col-lg-3">
-                                                                        <p className="mb-0 fw-bold lead text-dark" >{formatNumber(item.totalCost)} đ</p>
-                                                                    </div>
+                                                                    {/* <div className="col-md-4 col-lg-3">
+                                                                        <p className="mb-0 fw-bold lead text-dark" ></p>
+                                                                    </div> */}
                                                                 </div>
                                                             </div>
 
-                                                            <p className="lead fw-bold mb-4 pb-2 text-dark">Địa chỉ: {item.address}</p>
-                                                            <p className="lead fw-bold mb-4 pb-2 text-dark">Số điện thoại: {item.phone}</p>
-                                                            <p className="lead fw-bold mb-4 pb-2 text-dark">{item.status}</p>
-
-                                                            <div className="row">
-                                                                <div className="col-lg-12">
-
-                                                                    <div className="horizontal-timeline">
-
+                                                            <div className=" my-1">
+                                                                <div className="">
+                                                                    <div className="">
+                                                                        <p className="mb-0 fw-bold lead text-dark">Số điện thoại: {item.phone}</p>
                                                                     </div>
-
+                                                                    {/* <div className="col-md-4 col-lg-3">
+                                                                        <p className="mb-0 fw-bold lead text-dark" ></p>
+                                                                    </div> */}
                                                                 </div>
                                                             </div>
 
-                                                            <p className="mt-4 pt-2 mb-0">
+                                                            <div className=" my-1">
+                                                                <div className="">
+                                                                    <div className="">
+                                                                        <p className="mb-0 fw-bold lead text-dark">{item.status}</p>
+                                                                    </div>
+                                                                    {/* <div className="col-md-4 col-lg-3">
+                                                                        <p className="mb-0 fw-bold lead text-dark" ></p>
+                                                                    </div> */}
+                                                                </div>
+                                                            </div>
+
+
+
+                                                            <p className="mt-1 pt-2">
                                                                 <NavLink to={`/order/${item.id}`} style={{ color: "#f37a27" }}>Xem chi tiết</NavLink>
                                                             </p>
 
@@ -130,7 +161,7 @@ const Order = () => {
                     ...isLoading
                 </>
             }
-        </>
+        </div>
     )
 }
 

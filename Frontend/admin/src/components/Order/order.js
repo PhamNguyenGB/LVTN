@@ -89,9 +89,23 @@ const columns = [
 
     },
     {
+        accessorKey: 'statusPay',
+        header: 'Trạng thái thanh toán',
+        cell: (props) => <p>
+            {props.getValue() === 'true' ? 'Đã thanh toán' : 'Chưa thanh toán'}
+        </p>,
+        searchHidden: true,
+
+    },
+    {
         accessorKey: 'status',
         header: 'Trạng thái đơn',
-        cell: (props) => <p>{props.getValue()}</p>,
+        cell: (props) => <p
+            className={props.getValue() === 'Chưa xác nhận' ? 'text-danger' :
+                (props.getValue() === 'Hoàn thành' ? 'text-success' : '')}
+        >
+            {props.getValue()}
+        </p>,
         searchHidden: true,
 
     },

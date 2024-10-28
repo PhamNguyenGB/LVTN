@@ -1,5 +1,12 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
+import { MdOutlineEventNote } from "react-icons/md";
+import { FaBorderAll } from "react-icons/fa6";
+import { TbBrandProducthunt } from "react-icons/tb";
+import { FcStatistics } from "react-icons/fc";
+import { HiMiniClipboardDocumentList } from "react-icons/hi2";
+import { FaRegFilePowerpoint } from "react-icons/fa";
+import { PiTrainRegionalFill } from "react-icons/pi";
 
 const Navigation = () => {
     return (
@@ -8,11 +15,11 @@ const Navigation = () => {
             < ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" >
 
                 {/* <!-- Sidebar - Brand --> */}
-                <a a className="sidebar-brand d-flex align-items-center justify-content-center" href="index.html" >
+                <a a className="sidebar-brand d-flex align-items-center justify-content-center" href="#" >
                     <div className="sidebar-brand-icon rotate-n-15">
                         <i className="fas fa-laugh-wink"></i>
                     </div>
-                    <div className="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+                    <div className="sidebar-brand-text mx-3">Model Page</div>
                 </a >
 
                 {/* <!-- Divider --> */}
@@ -21,8 +28,8 @@ const Navigation = () => {
                 {/* <!-- Nav Item - Dashboard --> */}
                 <li li className="nav-item active" >
                     <NavLink className="nav-link" to="/">
-                        <i className="fas fa-fw fa-tachometer-alt"></i>
-                        <span>Thống kê</span></NavLink>
+                        <FcStatistics fontSize={18} color='white' />
+                        <span className='ml-1'>Thống kê</span></NavLink>
                 </li >
 
                 {/* <!-- Divider --> */}
@@ -31,8 +38,8 @@ const Navigation = () => {
                 {/* <!-- Products --> */}
                 <li li className="nav-item active" >
                     <NavLink className="nav-link" to="/product">
-                        <i className="fa fa-brands fa-product-hunt"></i>
-                        <span>Quản lý sản phẩm</span></NavLink>
+                        <TbBrandProducthunt fontSize={18} />
+                        <span className='ml-1'>Quản lý sản phẩm</span></NavLink>
                 </li >
 
                 <hr className="sidebar-divider my-0" />
@@ -40,8 +47,8 @@ const Navigation = () => {
                 {/* <!-- Order --> */}
                 <li className="nav-item active">
                     <NavLink className="nav-link" to="/order">
-                        <i className="fa fa-th" aria-hidden="true"></i>
-                        <span>Quản lý đơn hàng</span></NavLink>
+                        <FaBorderAll fontSize={18} />
+                        <span className='ml-1'>Quản lý đơn hàng</span></NavLink>
                 </li>
 
                 <hr className="sidebar-divider my-0" />
@@ -49,8 +56,8 @@ const Navigation = () => {
                 {/* <!-- Event --> */}
                 <li className="nav-item active">
                     <NavLink className="nav-link" to="/event">
-                        <i className="fa fa-th" aria-hidden="true"></i>
-                        <span>Quản lý sự kiện</span></NavLink>
+                        <MdOutlineEventNote fontSize={18} />
+                        <span className='ml-1'>Quản lý sự kiện</span></NavLink>
                 </li>
 
                 <hr className="sidebar-divider my-0" />
@@ -58,8 +65,8 @@ const Navigation = () => {
                 {/* <!-- ListProduct --> */}
                 <li className="nav-item active">
                     <NavLink className="nav-link" to="/listProduct">
-                        <i className="fa fa-th" aria-hidden="true"></i>
-                        <span>Quản lý danh mục sản phẩm</span></NavLink>
+                        <HiMiniClipboardDocumentList fontSize={18} />
+                        <span className='ml-1'>Quản lý danh mục sản phẩm</span></NavLink>
                 </li>
 
                 <hr className="sidebar-divider my-0" />
@@ -67,8 +74,8 @@ const Navigation = () => {
                 {/* <!-- Point --> */}
                 <li className="nav-item active">
                     <NavLink className="nav-link" to="/point">
-                        <i className="fa fa-th" aria-hidden="true"></i>
-                        <span>Quản lý mốc điểm thưởng</span></NavLink>
+                        <FaRegFilePowerpoint fontSize={18} />
+                        <span className='ml-1'>Quản lý mốc điểm thưởng</span></NavLink>
                 </li>
 
                 <hr className="sidebar-divider my-0" />
@@ -76,14 +83,14 @@ const Navigation = () => {
                 {/* <!-- Region --> */}
                 <li className="nav-item active">
                     <NavLink className="nav-link" to="/region">
-                        <i className="fa fa-th" aria-hidden="true"></i>
-                        <span>Quản lý địa chỉ giao hàng</span></NavLink>
+                        <PiTrainRegionalFill fontSize={18} />
+                        <span className='ml-1'>Quản lý địa chỉ giao hàng</span></NavLink>
                 </li>
 
                 <hr className="sidebar-divider my-0" />
 
                 {/* <!-- Nav Item - Pages Collapse Menu --> */}
-                <li className="nav-item">
+                {/* <li className="nav-item">
                     <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                         aria-expanded="true" aria-controls="collapseTwo">
                         <i className="fas fa-fw fa-cog"></i>
@@ -96,10 +103,10 @@ const Navigation = () => {
                             <a className="collapse-item" href="cards.html">Cards</a>
                         </div>
                     </div>
-                </li>
+                </li> */}
 
                 {/* <!-- Nav Item - Utilities Collapse Menu --> */}
-                <li className="nav-item">
+                {/* <li className="nav-item">
                     <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                         aria-expanded="true" aria-controls="collapseUtilities">
                         <i className="fas fa-fw fa-wrench"></i>
@@ -115,18 +122,18 @@ const Navigation = () => {
                             <a className="collapse-item" href="utilities-other.html">Other</a>
                         </div>
                     </div>
-                </li>
+                </li> */}
 
                 {/* <!-- Divider --> */}
-                <hr className="sidebar-divider" />
+                {/* <hr className="sidebar-divider" /> */}
 
                 {/* <!-- Heading --> */}
-                <div className="sidebar-heading">
+                {/* <div className="sidebar-heading">
                     Addons
-                </div>
+                </div> */}
 
                 {/* <!-- Nav Item - Pages Collapse Menu --> */}
-                <li className="nav-item">
+                {/* <li className="nav-item">
                     <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                         aria-expanded="true" aria-controls="collapsePages">
                         <i className="fas fa-fw fa-folder"></i>
@@ -144,24 +151,24 @@ const Navigation = () => {
                             <a className="collapse-item" href="blank.html">Blank Page</a>
                         </div>
                     </div>
-                </li>
+                </li> */}
 
                 {/* <!-- Nav Item - Charts --> */}
-                <li className="nav-item">
+                {/* <li className="nav-item">
                     <a className="nav-link" href="charts.html">
                         <i className="fas fa-fw fa-chart-area"></i>
                         <span>Charts</span></a>
-                </li>
+                </li> */}
 
                 {/* <!-- Nav Item - Tables --> */}
-                <li className="nav-item">
+                {/* <li className="nav-item">
                     <a className="nav-link" href="tables.html">
                         <i className="fas fa-fw fa-table"></i>
                         <span>Tables</span></a>
-                </li>
+                </li> */}
 
                 {/* <!-- Divider --> */}
-                <hr className="sidebar-divider d-none d-md-block" />
+                {/* <hr className="sidebar-divider d-none d-md-block" /> */}
 
             </ul >
             {/* <!-- End of Sidebar --> */}

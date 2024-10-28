@@ -25,6 +25,7 @@ axiosClient.interceptors.response.use(
     },
     async (error) => {
         if (error.response?.status === 401) {
+            // const disPatch = useDispatch();
             if (error.response.data.error_code === 1) {
                 const refresh_token = localStorage.getItem('refreshToken');
                 const token = await refreshToken(refresh_token);
@@ -38,8 +39,7 @@ axiosClient.interceptors.response.use(
                 }
             } else if (error.response.data.error_code === 2) {
                 localStorage.clear();
-                const disPatch = useDispatch();
-                await disPatch(logout());
+                // await disPatch(logout());    
                 window.location.href = '/';
             }
             axiosClient.defaults.headers["token"] = null;

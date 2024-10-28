@@ -3,11 +3,12 @@ import './orderDetail.scss';
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from "react";
-import { updateStatusOrder } from '../../store/slice/orderSlice';
+// import { updateStatusOrder } from '../../store/slice/orderSlice';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import numeral from 'numeral';
 import { getOrderDetail } from '../../api/orderDetailAPIs';
+import { updateStatusOrder } from '../../api/OrderAPIs';
 
 const OrderDetail = () => {
     const history = useHistory();
@@ -71,22 +72,19 @@ const OrderDetail = () => {
 
     const handleConfirmOrder = (action) => {
         const data = { orderId: id, status: action }
-        dispatch(updateStatusOrder({ data, access_token: staff.access_token }));
-        history.goBack();
+        updateStatusOrder(data);
+        fetchOrderDetail();
     };
 
     const handleCancelOrder = (action) => {
         const data = { orderId: id, status: action }
-        dispatch(updateStatusOrder({ data, access_token: staff.access_token }));
+        updateStatusOrder(data);
         history.goBack();
     };
 
     const formatNumber = (number) => {
         return numeral(number).format('0,0');
     }
-
-    console.log('check product', info);
-
 
     return (
         <>
@@ -223,6 +221,14 @@ const OrderDetail = () => {
                                                 <div className='d-flex justify-content-end mt-3 text-white'>
                                                     {info.status}
                                                 </div>
+                                            }
+                                            {info.status === 'Đã xác nhận' ?
+                                                <div className='d-flex justify-content-end mt-3'>
+                                                    <button className='btn btn-success m-2 mb-0' onClick={() => handleConfirmOrder('Đang vận chuyển')}>Giao cho vận chuyển</button>
+                                                </div>
+                                                :
+                                                <>
+                                                </>
                                             }
                                         </div>
                                     </div>

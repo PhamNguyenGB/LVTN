@@ -1,5 +1,5 @@
 import db, { sequelize } from '../models/index';
-import { Op, fn, col, or } from 'sequelize';
+import { Op, fn, col, or, where } from 'sequelize';
 
 const addOrderService = async (data, user) => {
     const timestamp = Date.now(); // Lấy timestamp hiện tại
@@ -19,7 +19,7 @@ const addOrderService = async (data, user) => {
             status: 'Chưa xác nhận',
             orderCode: `${timestamp}${random}`,
             payOnlineCode: data.payOnlineCode,
-            statusPay: data.statusPay,
+            statusPay: 'false',
         })
 
         if (data?.eventId !== null) {
@@ -80,7 +80,7 @@ const getAllOrdersStaffService = async () => {
     }
 }
 
-const updateStatusOrderServie = async (idOrder, status) => {
+const updateStatusOrderStaff = async (idOrder, status, staff) => {
     try {
         let order = await db.Order.findOne({
             where: { id: idOrder },
@@ -88,6 +88,7 @@ const updateStatusOrderServie = async (idOrder, status) => {
         if (order) {
             await order.update({
                 status: status,
+                staffId: staff.id,
             });
         }
         return {
@@ -103,10 +104,27 @@ const updateStatusOrderServie = async (idOrder, status) => {
     }
 }
 
-const findOrderById = async (idUser) => {
+const updateStatusPay = async (payOnlineCode) => {
+    try {
+        const order = await db.Order.findOne({
+            where: { payOnlineCode: payOnlineCode }
+        });
+        if (order) {
+            await order.update({
+                statusPay: 'true',
+            })
+        }
+        return 'Cập nhật trạng thái thanh toán thành công';
+    } catch (error) {
+        console.log(error);
+        return 'Lỗi cập nhật trạng thái thanh toán';
+    }
+}
+
+const findOrderById = async (user) => {
     try {
         let order = await db.Order.findAll({
-            where: { userId: idUser, }
+            where: { userId: user.id }
         });
         return {
             mess: 'Tìm kiếm đơn của người dùng thành công',
@@ -349,7 +367,7 @@ const getAllOrderTransited = async (shipper) => {
 module.exports = {
     addOrderService,
     getAllOrdersStaffService,
-    updateStatusOrderServie,
+    updateStatusOrderStaff,
     statisticMoneyMonth,
     findOrderById,
     statisticMoneyYear,
@@ -359,4 +377,5 @@ module.exports = {
     getOrderInTransit,
     updateStatusShipper,
     getAllOrderTransited,
+    updateStatusPay,
 }

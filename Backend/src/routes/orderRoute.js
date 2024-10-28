@@ -7,8 +7,8 @@ const router = express.Router();
 const OrderRoute = (app) => {
     router.get('/staff', checkVerifyTokenAdmin, OrderController.getAllOrdersStaff);
     router.post('/addOrder', checkVerifyTokenUser, OrderController.addCart);
-    router.put('/updateStatus', checkVerifyTokenAdmin, OrderController.updateStautsOrder);
-    // router.get('/getOrderById', checkVerifyTokenUser, OrderController.getOrderById);
+    router.put('/staff/update/status', checkVerifyTokenAdmin, OrderController.updateStautsOrderStaff);
+    router.get('/getOrderById', checkVerifyTokenUser, OrderController.getOrderById);
     // router.post('/statisticsMonth', checkVerifyTokenAdmin, OrderController.statisticMoneyMonth);
     // router.post('/statisticsYear', checkVerifyTokenAdmin, OrderController.statisticMoneyYear);
     // router.post('/getData/moneyMonth', OrderController.getDataStatisticMoneyMonth);

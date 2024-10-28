@@ -4,6 +4,7 @@ const CryptoJS = require('crypto-js');
 const moment = require('moment');
 const qs = require('qs');
 // const crypto = require('crypto');
+import OrderService from '../services/orderService';
 
 const config = {
     app_id: process.env.APP_ID,
@@ -17,6 +18,8 @@ const payOnline = async (req, res) => {
         redirecturl: 'http://localhost:3000/'
     };
 
+    // const payOnlineCode = req.body?.payOnlineCode;
+
     const items = [{}];
     const transID = Math.floor(Math.random() * 1000000);
     const order = {
@@ -29,7 +32,7 @@ const payOnline = async (req, res) => {
         amount: req.body.totalAmout,
         description: `Mã giao dịch #${transID}`,
         bank_code: "",
-        callback_url: 'https://bf67-14-191-78-173.ngrok-free.app/api/user/callback'
+        callback_url: 'https://e751-14-191-78-173.ngrok-free.app/api/payment/online/zaloPay/callback'
     };
 
 
@@ -51,7 +54,7 @@ const payOnline = async (req, res) => {
 
 };
 
-const callBack = (req, res) => {
+const callBack = async (req, res) => {
     let result = {};
 
     try {
@@ -71,7 +74,7 @@ const callBack = (req, res) => {
             // merchant cập nhật trạng thái cho đơn hàng
             let dataJson = JSON.parse(dataStr, config.key2);
             console.log("update order's status = success where app_trans_id =", dataJson["app_trans_id"]);
-
+            await OrderService.updateStatusPay(dataJson["app_trans_id"]);
             result.return_code = 1;
             result.return_message = "success";
 
