@@ -14,7 +14,8 @@ import Order from "../components/Order/order";
 import OrderDetail from "../components/OrderDetail/orderDetail";
 import Search from "../components/Search/search";
 import Profile from "../components/Profile/Profile";
-import HomePage from "../components/HomePage/HomePage";
+// import HomePage from "../components/HomePage/HomePage";
+import VNPayReturn from "../components/VNPayReturn/VNPayReturn";
 
 const UserRoute = () => {
     return (
@@ -39,8 +40,8 @@ const UserRoute = () => {
                 <Route path="/login">
                     <Login />
                 </Route>
-                <Route path="/home">
-                    <HomePage />
+                <Route path="/return/vnpay">
+                    <VNPayReturn />
                 </Route>
                 <Route path="/">
                     <Home />

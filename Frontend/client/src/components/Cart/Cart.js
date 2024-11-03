@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { increaseQuantity, decreaseQuantity, clearCart, deleteProductCart } from "../../redux/slices/cartSlice";
 import { useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 // import { addOrder } from '../../redux/slices/orderSlice';
 // import { addOrderDetail } from '../../redux/slices/orderDetailSlice';
 import numeral from 'numeral';
@@ -14,26 +15,26 @@ import Modal from 'react-bootstrap/Modal';
 import { toast } from 'react-toastify';
 import { pointsRedemption } from '../../api/pointAPIs';
 import { addOrder, addOrderDetail } from '../../api/orderAPIs';
-import { zaloPay } from '../../api/paymentOnlineAPIs';
+import { zaloPay, VNPay } from '../../api/paymentOnlineAPIs';
+import { getInfoById, decreasePointUser } from '../../redux/slices/userSlice';
 
 const Cart = () => {
 
     const disPatch = useDispatch();
+    const history = useHistory();
 
     const cart = useSelector((state) => state.cart.cart);
     const amount = useSelector((state) => state.cart.amount);
     const quantityFromCart = useSelector((state) => state.cart.quantity);
     const user = useSelector((state) => state.user.user);
 
-    const [address, setAddress] = useState('');
+    const [address, setAddress] = useState(user.address);
     const [note, setNote] = useState('');
-    const [phone, setPhone] = useState('');
+    const [phone, setPhone] = useState(user.phone);
 
     const [totalAmout, setTotalAmout] = useState(amount);
     const [shipping, setShipping] = useState(0);
     const [idShipping, setIdShipping] = useState('');
-
-    const [orderSuccess, setOrderSuccess] = useState(true);
 
     const [active, setActive] = useState('');
 
@@ -74,6 +75,8 @@ const Cart = () => {
     const getAllRegion = async () => {
         const data = await fetchAllRegion();
         setRegion(data);
+        await disPatch(getInfoById());
+
     };
 
     useEffect(() => {
@@ -120,15 +123,27 @@ const Cart = () => {
             window.open(request.data.order_url, '_blank');
         }
 
+        if (active === 'vnPay') {
+            const orderDescription = 'Vui lòng thanh toán đơn hàng của bạn';
+            const request = await VNPay({ amount: totalAmout, orderDescription, orderType: 'VNPay' });
+            payOnlineCode = request.orderId;
+            window.location.href = request.vnpUrl;
+        }
+
+        if (usePoint !== 0)
+            await disPatch(decreasePointUser({ decreasePoint: usePoint, email: user.email }));
+
         await addOrder({ address, phone, regionId: idShipping, totalAmout, point: currency, paymentMethod: active, eventId, note, payOnlineCode });
         await addOrderDetail({ products: cart });
         await disPatch(clearCart());
+
         setTotalAmout(0);
         setShow(false);
-        setOrderSuccess(false);
+
+        toast.success('Đặt hàng thành công');
         setTimeout(() => {
-            setOrderSuccess(true);
-        }, 5000);
+            history.push('/');
+        }, 2000);
 
     }
 
@@ -272,10 +287,8 @@ const Cart = () => {
                                                 <div className="mb-1 pb-2 d-flex justify-content-between">
                                                     <select
                                                         className="select p-1"
-                                                        // onChange={(e) => handleTotalAmout(e.target.value)}
-                                                        // style={{ maxHeight: '50px', overflowY: 'auto' }}
-                                                        display="anchored"
-                                                        touchUi={false}
+                                                        onChange={(e) => handleTotalAmout(e.target.value)}
+                                                        style={{ maxHeight: '50px', overflowY: 'auto' }}
                                                     >
                                                         <option value="0">Chọn khu vực</option>
                                                         {
@@ -398,10 +411,8 @@ const Cart = () => {
 
                                                 <div className="d-flex justify-content-between mb-5">
                                                     <span className="text-uppercase">Tổng thanh toán</span>
-                                                    <span>{formatNumber(amount - ((totalDiscount * amount) + usePoint))} đ</span>
+                                                    <span>{formatNumber(amount - ((totalDiscount * amount) + usePoint) + shipping)} đ</span>
                                                 </div>
-
-                                                <div className='text-success' hidden={orderSuccess}>Đặt hàng thành công</div>
 
                                                 <div style={{ position: 'relative' }}>
                                                     <button type="button" className="btn p-2 "

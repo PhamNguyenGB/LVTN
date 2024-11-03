@@ -16,15 +16,26 @@ import Region from "../components/Region/region";
 import { useSelector } from "react-redux";
 import Register from "../components/Register/Register";
 import Profile from "../components/Profile/profile";
+import Review from "../components/Review/review";
 
 const StaffRoute = () => {
+    const staff = useSelector((state) => state.staff.staff);
+    const currentUrl = window.location.href;
+
+    const history = useHistory();
+
+    if (staff && currentUrl === 'http://localhost:3006/login') {
+        history.push('/');
+    }
 
     return (
         <>
             <Switch>
+
                 <Route path="/login" exact>
                     <Login />
                 </Route>
+                <PrivateRoute path="/review" component={Review} />
                 <PrivateRoute path="/region" component={Region} />
                 <PrivateRoute path="/point" component={Point} />
                 <PrivateRoute path="/listProduct" component={ListProduct} />
@@ -35,8 +46,6 @@ const StaffRoute = () => {
                 <PrivateRoute path="/profile" component={Profile} />
                 <PrivateRoute path="/register" component={Register} />
                 <PrivateRoute path="/" component={Statistic} exact />
-
-
                 <Route path="*">
                     404 not found
                 </Route>

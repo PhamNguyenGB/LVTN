@@ -233,9 +233,9 @@ const Product = () => {
                                             <table className="table table-bordered" id="dataTable" cellSpacing="0">
                                                 <thead>
                                                     {tableInstance.getHeaderGroups().map(headerGroup => (
-                                                        <tr key={headerGroup.id}>
+                                                        <tr key={`1-${headerGroup.id}`}>
                                                             {headerGroup.headers.map(header => (
-                                                                <th style={{ width: header.getSize() }} key={header.id}>
+                                                                <th style={{ width: header.getSize() }} key={`2-${header.id}`}>
                                                                     {header.isPlaceholder
                                                                         ? null
                                                                         : flexRender(

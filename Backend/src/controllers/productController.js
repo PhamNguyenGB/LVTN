@@ -1,3 +1,4 @@
+import e from 'express';
 import ProductService from '../services/productService';
 
 const findAllProducts = async (req, res) => {
@@ -184,6 +185,18 @@ const searchProduct = async (req, res) => {
     }
 }
 
+const updateQuantity = async (req, res) => {
+    try {
+        const data = await ProductService.updateQuantity(req.body);
+        if (data.status === 0)
+            return res.status(200).json('success');
+        return res.status(500).json('fail');
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error.message);
+    }
+}
+
 module.exports = {
     findAllProducts,
     createProduct,
@@ -197,4 +210,5 @@ module.exports = {
     fetchNew4Products,
     fetchAllListProducts,
     filterProductsByBrandAndSize,
+    updateQuantity,
 }

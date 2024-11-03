@@ -416,6 +416,26 @@ const handleSearchProduct = async (name) => {
     }
 };
 
+const updateQuantity = async (data) => {
+    try {
+        data.forEach(async (item) => {
+            let product = await db.Product.findOne({
+                where: { id: item.productId }
+            })
+
+            await product.update({
+                quantity: (product.quantity - item.quantity)
+            });
+        });
+        return {
+            status: 0
+        }
+    } catch (error) {
+        console.log(error);
+        return { status: -1 };
+    }
+}
+
 module.exports = {
     getAllProducts,
     addProduct,
@@ -430,4 +450,5 @@ module.exports = {
     getNew4Products,
     getAllListProducts,
     filterProductsByBrandAndSizeSv,
+    updateQuantity,
 }

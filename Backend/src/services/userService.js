@@ -280,13 +280,31 @@ const getAllUsersService = async () => {
     }
 };
 
-const updatePointUserSv = async (increasePoint, decreasePoint, email) => {
+const getInfoById = async (user) => {
+    try {
+        const info = await db.User.findOne({
+            where: { id: user.id },
+        });
+        return {
+            status: 0,
+            data: info,
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            status: -1,
+            mess: 'Lỗi lấy thông tin người dùng'
+        }
+    }
+}
+
+const decreasePointUser = async (decreasePoint, email) => {
     try {
         const user = await db.User.findOne({
             where: { email: email }
         });
         if (user) {
-            const newPoint = user.point - decreasePoint + increasePoint;
+            const newPoint = user.point - decreasePoint;
             user.update({
                 point: newPoint,
             });
@@ -310,6 +328,21 @@ const updatePointUserSv = async (increasePoint, decreasePoint, email) => {
     }
 };
 
+const increatePointUser = async (data) => {
+    try {
+        const user = await db.User.findOne({
+            where: { id: data.userId }
+        });
+        user.update({
+            point: data.point
+        })
+        return { status: 0 }
+    } catch (error) {
+        console.log(error);
+        return { status: -1 }
+    }
+}
+
 
 module.exports = {
     registerUser,
@@ -320,7 +353,9 @@ module.exports = {
     getAllUsersService,
     checkEmailUser,
     checkUserPhone,
-    updatePointUserSv,
+    decreasePointUser,
     updateAvatar,
     updateInfo,
+    increatePointUser,
+    getInfoById,
 }

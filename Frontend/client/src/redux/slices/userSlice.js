@@ -41,8 +41,8 @@ export const updateAvatar = createAsyncThunk(
 
 export const updateInfo = createAsyncThunk(
     'user/updateInfo',
-    async (dataStaff) => {
-        const data = await axiosClient.post('/user/info', dataStaff);
+    async (dataUser) => {
+        const data = await axiosClient.post('/user/update/info', dataUser);
         return data;
     }
 );
@@ -55,13 +55,21 @@ export const logout = createAsyncThunk(
     }
 )
 
-// export const updatePointUser = createAsyncThunk(
-//     'user/update/point',
-//     async ({ increasePoint, decreasePoint, email }) => {
-//         const request = await axiosClient.post('/user/update/point', { increasePoint, decreasePoint, email });
-//         return request;
-//     }
-// )
+export const getInfoById = createAsyncThunk(
+    'user/getInfoById',
+    async () => {
+        const request = await axiosClient.get('/user/get/info');
+        return request;
+    }
+)
+
+export const decreasePointUser = createAsyncThunk(
+    'user/decrease/point',
+    async ({ decreasePoint, email }) => {
+        const request = await axiosClient.post('/user/decreate/point', { decreasePoint, email });
+        return request;
+    }
+)
 
 const userSlice = createSlice({
     name: 'user',
@@ -120,14 +128,27 @@ const userSlice = createSlice({
             })
             .addCase(updateInfo.fulfilled, (state, action) => {
                 state.loading = false;
-                console.log('check payload', action.payload);
-
                 state.user.fullname = action.payload?.data.fullname;
                 state.user.phone = action.payload?.data.phone;
                 state.user.address = action.payload?.data.address;
                 state.mess = action.payload?.mess;
             })
             .addCase(updateInfo.rejected, (state, action) => {
+                state.loading = false;
+                state.mess = action.payload.error;
+            })
+            // decrease point
+            .addCase(decreasePointUser.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(decreasePointUser.fulfilled, (state, action) => {
+                state.loading = false;
+                console.log('check payload', action.payload);
+
+                state.user.point = action.payload?.data;
+                state.mess = action.payload?.mess;
+            })
+            .addCase(decreasePointUser.rejected, (state, action) => {
                 state.loading = false;
                 state.mess = action.payload.error;
             })
@@ -145,6 +166,21 @@ const userSlice = createSlice({
             .addCase(logout.rejected, (state, action) => {
                 state.loading = true;
                 state.error = 'Lỗi đăng xuất';
+            })
+            //get info user by id
+            .addCase(getInfoById.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getInfoById.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.mess;
+                state.user = action.payload?.data;
+            })
+
+            .addCase(getInfoById.rejected, (state, action) => {
+                state.loading = true;
+                state.error = action.payload?.mess;
             })
 
     }

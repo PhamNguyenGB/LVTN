@@ -171,7 +171,6 @@ const getOrderInTransit = async (req, res) => {
 
 const updateStatusShipper = async (req, res) => {
     try {
-        console.log('check status', req.body, req.user);
         let data = await OrderService.updateStatusShipper(req.body.orderId, req.body.status, req.user);
         return res.status(200).json(data);
     } catch (error) {
@@ -194,6 +193,26 @@ const getAllOrderTransited = async (req, res) => {
     }
 }
 
+const monthlyRevenueReport = async (req, res) => {
+    try {
+        let data = await OrderService.monthlyRevenueReport();
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error);
+        returnres.status(500).json(error.message);
+    }
+}
+
+const revenueLastFiveYears = async (req, res) => {
+    try {
+        let data = await OrderService.revenueLastFiveYears();
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error.message);
+    }
+}
+
 module.exports = {
     addCart,
     getAllOrdersStaff,
@@ -207,4 +226,6 @@ module.exports = {
     getOrderInTransit,
     updateStatusShipper,
     getAllOrderTransited,
+    monthlyRevenueReport,
+    revenueLastFiveYears,
 }

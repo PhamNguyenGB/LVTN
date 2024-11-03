@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
-import { MdOutlineEventNote } from "react-icons/md";
+import { MdOutlineEventNote, MdOutlineRateReview } from "react-icons/md";
 import { FaBorderAll } from "react-icons/fa6";
 import { TbBrandProducthunt } from "react-icons/tb";
 import { FcStatistics } from "react-icons/fc";
@@ -85,6 +85,14 @@ const Navigation = () => {
                     <NavLink className="nav-link" to="/region">
                         <PiTrainRegionalFill fontSize={18} />
                         <span className='ml-1'>Quản lý địa chỉ giao hàng</span></NavLink>
+                </li>
+
+                <hr className="sidebar-divider my-0" />
+
+                <li className="nav-item active">
+                    <NavLink className="nav-link" to="/review">
+                        <MdOutlineRateReview fontSize={18} />
+                        <span className='ml-1'>Quản lý đánh giá</span></NavLink>
                 </li>
 
                 <hr className="sidebar-divider my-0" />

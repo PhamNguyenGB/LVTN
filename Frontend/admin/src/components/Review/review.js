@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import Navigation from '../Navigation/Navigation';
-import ModalRegion from './modalRegion';
 import numeral from 'numeral';
-import ModalDeleteRegion from './modalDeleteRegion';
-import { fetAllRegion } from "../../api/regionAPIs";
+import { fetAllReview, repComment } from "../../api/reviewAPIs";
 import FilterCol from '../Filter/FilterCol';
-import { FaSort, FaSortAmountDown, FaSortAmountDownAlt } from "react-icons/fa";
+import { FaSort, FaSortAmountDown, FaSortAmountDownAlt, FaReply } from "react-icons/fa";
 import Pagination from '../Pagination/Pagination';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import { toast } from 'react-toastify';
 import {
     useReactTable,
     getCoreRowModel,
@@ -26,23 +27,54 @@ const columns = [
         searchHidden: true,
     },
     {
-        accessorKey: 'name',
-        header: 'Tên sự kiện',
+        accessorKey: 'Product',
+        header: 'Hình ảnh',
+        cell: (props) => {
+            const data = props.getValue().images;
+            const imageArr = JSON.parse(data);
+            return (
+                <img src={imageArr[[0]]} alt="Product" style={{ width: '100px', height: 'auto', marginRight: '10px' }} />
+
+            )
+
+        },
+        // <img src={props.getValue()} alt="Product" style={{ width: '100px', height: 'auto' }} />
+        enableSorting: false,
+        searchHidden: true,
+
+    },
+    {
+        accessorKey: 'Product',
+        header: 'Thương hiệu',
+        cell: (props) => <p>{props.getValue().brand}</p>,
+        searchHidden: false,
+
+    },
+    {
+        accessorKey: 'star',
+        header: 'Số sao',
         cell: (props) => <p>{props.getValue()}</p>,
+        searchHidden: true,
+
+    },
+    {
+        accessorKey: 'Comment',
+        header: 'Lời đánh giá',
+        cell: (props) => <p className='text-center'>{props.getValue().content}</p>,
         searchHidden: false,
 
     },
     {
-        accessorKey: 'deliveryFee',
-        header: 'Phí vận chuyển',
-        cell: (props) => <p className='text-center'>{props.getValue()}</p>,
+        accessorKey: 'User',
+        header: 'Người đánh giá',
+        cell: (props) => <p className='text-center'>{props.getValue().email}</p>,
         searchHidden: false,
 
     },
     {
-        accessorKey: 'Staff',
-        header: 'Người sửa đổi cuối cùng',
-        cell: (props) => <p>{props.getValue()?.email}</p>,
+        accessorKey: 'Rep_Comment',
+        header: 'Trả lời',
+        cell: (props) => <p>{props.getValue()?.note}</p>,
         searchHidden: false,
 
     },
@@ -62,25 +94,29 @@ const columns = [
     },
 ]
 
-const Region = () => {
+const Review = () => {
 
-    const [isShowModalRegion, setIsShowModalRegion] = useState(false);
-    const [actionModalRegion, setActionModalRegion] = useState("CREATE");
-    const [dataModelRegion, setDataModelRegion] = useState({});
     const [data, setData] = useState('');
     const [columnFilters, setColumnFilters] = useState([]);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 5,
-    })
+    });
+    const [note, setNote] = useState('Cảm ơn bạn đã đánh giá tốt sản phẩm ạ');
+    const [reviewId, setReviewId] = useState();
 
-    // Delete modal 
-    const [isShowModalDelete, setIsShowModalDelete] = useState(false);
-    const [dataModel, setDataModel] = useState({});
+    const [show, setShow] = useState(false);
 
-    const getAllRegions = () => {
+    const handleClose = () => setShow(false);
+    const handleShow = (item) => {
+        setShow(true);
+        setReviewId(item.id);
+
+    }
+
+    const getAllPoint = async () => {
         try {
-            fetAllRegion().then((res) => {
+            await fetAllReview().then((res) => {
                 if (res.status === 0) {
                     setData(res.data);
                 }
@@ -92,31 +128,16 @@ const Region = () => {
     }
 
     useEffect(() => {
-        getAllRegions();
+        getAllPoint();
     }, []);
 
-    const onHideModalRegion = async () => {
-        setIsShowModalRegion(false);
-        setDataModelRegion({});
-        getAllRegions();
-    };
-
-    const handleUpdateRegion = (Region) => {
-        setActionModalRegion("UPDATE");
-        setDataModelRegion(Region);
-        setIsShowModalRegion(true);
-    };
-
-    const handleCloseModalDelete = () => {
-        setIsShowModalDelete(false);
-        setDataModel({});
-        getAllRegions();
+    const repCommentUser = async () => {
+        const request = await repComment({ note, reviewId });
+        if (request.status === 0)
+            toast.success(request.mess);
+        getAllPoint();
+        setShow(false);
     }
-
-    const handleDeleteRegion = (Region) => {
-        setIsShowModalDelete(true);
-        setDataModel(Region);
-    };
 
     const tableInstance = useReactTable({
         columns,
@@ -159,21 +180,12 @@ const Region = () => {
                             <div className="container-fluid mt-5">
 
                                 {/* <!-- Page Heading --> */}
-                                <h1 className="h3 mb-2 text-gray-800">QUẢN LÍ ĐỊA CHỈ GIAO HÀNG</h1>
-                                <div className="row">
-                                    <div className="col-10"></div>
-                                    <button className="col-2 m-3 btn btn-primary" style={{ width: "200px" }}
-                                        onClick={() => {
-                                            setIsShowModalRegion(true);
-                                            setActionModalRegion("CREATE");
-                                        }}
-                                    >+Thêm mới sự kiện</button>
-                                </div>
+                                <h1 className="h3 mb-2 text-gray-800">QUẢN LÍ ĐÁNH GIÁ</h1>
 
                                 {/* <!-- DataTales Example --> */}
                                 <div className="card shadow mb-4">
                                     <div className="card-header py-3">
-                                        <h6 className="m-0 font-weight-bold text-primary">Sự kiện</h6>
+                                        <h6 className="m-0 font-weight-bold text-primary">Điểm thưởng</h6>
                                     </div>
                                     <div className="card-body">
                                         <div className="table-responsive">
@@ -181,9 +193,9 @@ const Region = () => {
                                             <table className="table table-bordered" id="dataTable" cellSpacing="0">
                                                 <thead>
                                                     {tableInstance.getHeaderGroups().map(headerGroup => (
-                                                        <tr key={headerGroup.id}>
+                                                        <tr key={`1-${headerGroup.id}`}>
                                                             {headerGroup.headers.map(header => (
-                                                                <th style={{ width: header.getSize() }} key={header.id}>
+                                                                <th style={{ width: header.getSize() }} key={`2-${header.id}`}>
                                                                     {header.isPlaceholder
                                                                         ? null
                                                                         : flexRender(
@@ -226,9 +238,9 @@ const Region = () => {
                                                 </thead>
                                                 <tfoot>
                                                     {tableInstance.getHeaderGroups().map(headerGroup => (
-                                                        <tr key={headerGroup.id}>
+                                                        <tr key={`3-${headerGroup.id}`}>
                                                             {headerGroup.headers.map(header => (
-                                                                <th key={header.id}>
+                                                                <th key={`4-${header.id}`}>
                                                                     {header.isPlaceholder
                                                                         ? null
                                                                         : flexRender(
@@ -253,11 +265,8 @@ const Region = () => {
                                                                     ))}
                                                                     <td style={{ width: "200px" }}>
                                                                         <span>
-                                                                            <button className=" btn btn-success ml-5" onClick={() => handleUpdateRegion(row.original)}>
-                                                                                <i className="fa fa-solid fa-pencil"></i>
-                                                                            </button>
-                                                                            <button className=" btn btn-danger ml-3" onClick={() => handleDeleteRegion(row.original)}>
-                                                                                <i className="fa fa-solid fa-trash"></i>
+                                                                            <button disabled={row.original.repCommentId !== null ? true : false} className=" btn btn-success ml-5" onClick={() => handleShow(row.original)}>
+                                                                                <FaReply />
                                                                             </button>
                                                                         </span>
                                                                     </td>
@@ -333,36 +342,41 @@ const Region = () => {
                 </div>
             </div >
 
-            {isShowModalRegion === true ?
-                <>
-                    <ModalRegion
-                        isShowModalRegion={isShowModalRegion}
-                        onHide={onHideModalRegion}
-                        action={actionModalRegion}
-                        dataModelRegion={dataModelRegion}
-                    />
-                </>
-                :
-                <></>
-            }
+            <Modal size="md" show={show} className='modal-user' onHide={handleClose} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        <span></span>
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className='form-inputs'>
+                        <div className='input-box'>
+                            <label>Trả lời đánh giá:</label>
+                            <textarea
+                                className="form-control form-control-user input-field"
+                                style={{ minHeight: '200px' }}
+                                value={note}
+                                onChange={(e) => setNote(e.target.value)}
+                            >
 
-            {
-                isShowModalDelete === true ?
-                    <>
-                        <ModalDeleteRegion
-                            isShowModalDelete={isShowModalDelete}
-                            handleCloseModalDelete={handleCloseModalDelete}
-                            dataModel={dataModel}
+                            </textarea>
 
-                        />
-                    </>
-                    :
-                    <></>
-            }
+                        </div>
+                    </div>
 
+                </Modal.Body >
+                <Modal.Footer>
+                    <Button variant="secondary">
+                        Đóng
+                    </Button>
+                    <Button variant="primary" onClick={repCommentUser}>
+                        Trả lời
+                    </Button>
+                </Modal.Footer>
+            </Modal >
         </>
 
     );
 }
 
-export default Region;
+export default Review;

@@ -17,6 +17,7 @@ const ProductRoute = (app) => {
     router.get('/similar/:brand/:id', ProductController.getSimilarProduct);
     router.post('/filter/brand/size', ProductController.filterProductsByBrandAndSize);
     router.get('/search/:name', ProductController.searchProduct);
+    router.post('/update/quantity', checkVerifyTokenAdmin, ProductController.updateQuantity);
 
     return app.use('/api/products', router);
 }

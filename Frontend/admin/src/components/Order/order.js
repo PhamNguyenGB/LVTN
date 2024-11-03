@@ -77,7 +77,7 @@ const columns = [
     {
         accessorKey: 'Event',
         header: 'Giảm giá',
-        cell: (props) => <p>{props.getValue()?.discount + '%'}</p>,
+        cell: (props) => <p>{props.getValue()?.discount ? props.getValue().discount + '%' : ''}</p>,
         searchHidden: true,
 
     },

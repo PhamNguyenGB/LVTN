@@ -9,6 +9,9 @@ import Modal from 'react-bootstrap/Modal';
 import numeral from 'numeral';
 import { getOrderDetail } from '../../api/orderDetailAPIs';
 import { updateStatusOrder } from '../../api/OrderAPIs';
+import { RotatingLines } from 'react-loader-spinner';
+import { addSoldProduct, updateQuantity } from '../../api/productAPI';
+import { updatePointUser } from '../../api/pointAPIs';
 
 const OrderDetail = () => {
     const history = useHistory();
@@ -16,11 +19,7 @@ const OrderDetail = () => {
 
     const { id } = useParams();
 
-    // const products_OD = useSelector((state) => state.orderDetail.products);
-    const shipping = useSelector((state) => state.orderDetail.shipping);
-    const status = useSelector((state) => state.orderDetail.status);
-    const totalAmout = useSelector((state) => state.orderDetail.totalAmout);
-    const staff = useSelector((state) => state.staff.staff);
+    const [loading, setLoanding] = useState(false);
 
     const [products_OD, setProductOD] = useState('');
     const [info, setInfo] = useState('');
@@ -70,15 +69,30 @@ const OrderDetail = () => {
         history.goBack();
     };
 
-    const handleConfirmOrder = (action) => {
+    const handleConfirmOrder = async (action) => {
+        if (action === 'Đã giao') {
+            await addSoldProduct(products_OD);
+            await updateQuantity(products_OD);
+            await updatePointUser({ userId: info.userId, point: info.point });
+        }
+        setLoanding(true);
+        setTimeout(() => {
+            setLoanding(false);
+
+        }, 1500);
         const data = { orderId: id, status: action }
-        updateStatusOrder(data);
+        await updateStatusOrder(data);
         fetchOrderDetail();
     };
 
-    const handleCancelOrder = (action) => {
+    const handleCancelOrder = async (action) => {
+        setLoanding(true);
+        setTimeout(() => {
+            setLoanding(false);
+
+        }, 1500);
         const data = { orderId: id, status: action }
-        updateStatusOrder(data);
+        await updateStatusOrder(data);
         history.goBack();
     };
 
@@ -181,9 +195,8 @@ const OrderDetail = () => {
                                                             aria-valuemin="0" aria-valuemax="100"></div>
                                                     </div>
                                                     <div className="d-flex justify-content-around mb-1">
-                                                        <p className="text-muted mt-1 mb-0 small ms-xl-5">Gửi hàng</p>
+                                                        <p className="text-muted mt-1 mb-0 small ms-xl-5">Đơn đã xác nhận</p>
                                                         <p className="text-muted mt-1 mb-0 small ms-xl-5">Đang vận chuyển</p>
-                                                        <p className="text-muted mt-1 mb-0 small ms-xl-5">Đang giao</p>
                                                         <p className="text-muted mt-1 mb-0 small ms-xl-5">Đã giao</p>
                                                     </div>
                                                 </div>
@@ -212,22 +225,50 @@ const OrderDetail = () => {
                                             style={{ backgroundColor: " #d59476 ", borderBottomLeftRadius: "10px", borderBottomRightRadius: "10px" }}>
                                             <h5 className="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Tổng
                                                 tiền: <span className="h2 mb-0 ms-2">{formatNumber(info.totalCost)} vnđ</span></h5>
-                                            {info.status === 'Chưa xác nhận' ?
+
+                                            {loading === true ?
                                                 <div className='d-flex justify-content-end mt-3'>
-                                                    <button className='btn btn-success m-2 mb-0' onClick={() => handleConfirmOrder('Đã xác nhận')}>Xác nhận đơn</button>
-                                                    <button className='btn btn-danger m-2 mb-0' onClick={handleShow}>Hủy đơn</button>
-                                                </div>
-                                                :
-                                                <div className='d-flex justify-content-end mt-3 text-white'>
-                                                    {info.status}
-                                                </div>
-                                            }
-                                            {info.status === 'Đã xác nhận' ?
-                                                <div className='d-flex justify-content-end mt-3'>
-                                                    <button className='btn btn-success m-2 mb-0' onClick={() => handleConfirmOrder('Đang vận chuyển')}>Giao cho vận chuyển</button>
+
+                                                    <RotatingLines
+                                                        visible={true}
+                                                        height="96"
+                                                        width="96"
+                                                        color="grey"
+                                                        strokeWidth="5"
+                                                        animationDuration="0.75"
+                                                        ariaLabel="rotating-lines-loading"
+                                                        wrapperStyle={{}}
+                                                        wrapperClass=""
+                                                    />
                                                 </div>
                                                 :
                                                 <>
+                                                    {info.status === 'Chưa xác nhận' ?
+                                                        <div className='d-flex justify-content-end mt-3'>
+                                                            <button className='btn btn-success m-2 mb-0' onClick={() => handleConfirmOrder('Đã xác nhận')}>Xác nhận đơn</button>
+                                                            <button className='btn btn-danger m-2 mb-0' onClick={handleShow}>Hủy đơn</button>
+                                                        </div>
+                                                        :
+                                                        <div className='d-flex justify-content-end mt-3 text-white'>
+                                                            {info.status}
+                                                        </div>
+                                                    }
+                                                    {info.status === 'Đã xác nhận' ?
+                                                        <div className='d-flex justify-content-end mt-3'>
+                                                            <button className='btn btn-success m-2 mb-0' onClick={() => handleConfirmOrder('Đang vận chuyển')}>Giao cho vận chuyển</button>
+                                                        </div>
+                                                        :
+                                                        <>
+                                                        </>
+                                                    }
+                                                    {info.status === 'Đang vận chuyển' ?
+                                                        <div className='d-flex justify-content-end mt-3'>
+                                                            <button className='btn btn-success m-2 mb-0' onClick={() => handleConfirmOrder('Đã giao')}>Đã giao</button>
+                                                        </div>
+                                                        :
+                                                        <>
+                                                        </>
+                                                    }
                                                 </>
                                             }
                                         </div>

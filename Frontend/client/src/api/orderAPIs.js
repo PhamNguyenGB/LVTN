@@ -16,3 +16,9 @@ export const addOrderDetail = async (data) => {
     const request = await axiosClient.post(`/Details/addOrderDetail`, data);
     return request;
 };
+
+export const getOrderDetail = async (orderId) => {
+    let request = await axiosClient.get(`/Details/user/orderDetail/${orderId}`);
+    return request;
+}
+

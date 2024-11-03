@@ -39,13 +39,11 @@ axiosClient.interceptors.response.use(
                 localStorage.clear();
                 window.location.href = '/login';
             }
-            const history = useHistory();
             axiosClient.defaults.headers["token"] = null;
             window.localStorage.removeItem("token");
             window.localStorage.removeItem("refresh-token");
             return error.response;
         }
-
         return error.response?.data || "SERVER_ERROR";
     }
 );

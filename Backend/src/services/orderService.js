@@ -14,7 +14,7 @@ const addOrderService = async (data, user) => {
             regionId: data.regionId,
             point: data.point,
             paymentMethod: data.paymentMethod,
-            eventId: data?.eventId,
+            eventId: data?.eventId || null,
             note: data.note,
             status: 'Chưa xác nhận',
             orderCode: `${timestamp}${random}`,
@@ -363,6 +363,78 @@ const getAllOrderTransited = async (shipper) => {
     }
 }
 
+const monthlyRevenueReport = async () => {
+    try {
+        const currentYear = new Date().getFullYear();
+
+        // Mảng chứa tất cả các tháng từ 1 đến 12
+        const allMonths = Array.from({ length: 12 }, (_, i) => {
+            return { month: (i + 1).toString().padStart(2, '0'), totalRevenue: 0 }; // Định dạng tháng là '01', '02', ...
+        });
+
+        // Truy vấn để lấy doanh thu từng tháng
+        const revenue = await db.Order.findAll({
+            attributes: [
+                [fn('DATE_FORMAT', col('createdAt'), '%m'), 'month'], // Lấy từng tháng
+                [fn('SUM', col('totalCost')), 'totalRevenue'] // Tổng doanh thu từng tháng
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: new Date(`${currentYear}-01-01`), // Bắt đầu từ đầu năm
+                    [Op.lte]: new Date(`${currentYear}-12-31`)  // Kết thúc ở cuối năm
+                }
+            },
+            group: [fn('DATE_FORMAT', col('createdAt'), '%m')], // Nhóm theo tháng
+            order: [[fn('DATE_FORMAT', col('createdAt'), '%m'), 'ASC']]
+        });
+
+        // Chuyển kết quả từ truy vấn về dạng object cho dễ kết hợp
+        const revenueMap = revenue.reduce((acc, item) => {
+            acc[item.dataValues.month] = parseFloat(item.dataValues.totalRevenue) || 0; // Gán giá trị doanh thu vào map
+            return acc;
+        }, {});
+
+        // Kết hợp với mảng allMonths
+        allMonths.forEach(month => {
+            if (revenueMap[month.month]) {
+                month.totalRevenue = revenueMap[month.month]; // Gán doanh thu từ kết quả
+            }
+        });
+
+        return allMonths; // Trả về tất cả các tháng cùng với doanh thu
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
+
+const revenueLastFiveYears = async () => {
+    try {
+        const currentYear = new Date().getFullYear();
+        const startYear = currentYear - 5; // Lấy 5 năm trước
+
+        const revenue = await db.Order.findAll({
+            attributes: [
+                [fn('DATE_FORMAT', col('createdAt'), '%Y'), 'month'], // Lấy từng tháng
+                [fn('SUM', col('totalCost')), 'totalRevenue'] // Tổng doanh thu từng tháng
+            ],
+            where: {
+                createdAt: {
+                    [Op.gte]: new Date(`${startYear}-01-01`), // Bắt đầu từ 5 năm trước
+                    [Op.lte]: new Date(`${currentYear}-12-31`)  // Kết thúc ở cuối năm hiện tại
+                }
+            },
+            group: [fn('DATE_FORMAT', col('createdAt'), '%Y')], // Nhóm theo năm và tháng
+            order: [[fn('DATE_FORMAT', col('createdAt'), '%Y'), 'ASC']]
+        });
+
+        return revenue;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
+
 
 module.exports = {
     addOrderService,
@@ -378,4 +450,6 @@ module.exports = {
     updateStatusShipper,
     getAllOrderTransited,
     updateStatusPay,
+    monthlyRevenueReport,
+    revenueLastFiveYears,
 }

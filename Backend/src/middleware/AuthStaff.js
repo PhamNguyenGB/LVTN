@@ -9,7 +9,10 @@ const verifyToken = (req, res, next) => {
                 if (err.name === 'TokenExpiredError') {
                     return res.status(401).json({ error_code: 1 });
                 }
-                return res.status(403).json("Token is invalid");
+                return res.status(403).json({
+                    mess: "Token is invalid",
+                    error_code: 2
+                });
             }
 
             req.user = user;

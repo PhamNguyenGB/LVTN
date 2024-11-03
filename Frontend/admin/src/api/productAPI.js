@@ -27,3 +27,13 @@ export const deleteProduct = async (idProduct) => {
     const request = await axiosClient.delete(`http://localhost:8080/api/products/delete/${idProduct}`)
     return request;
 };
+
+export const addSoldProduct = async (data) => {
+    const request = await axiosClient.post('/sold/product/create', data);
+    return request;
+};
+
+export const updateQuantity = async (data) => {
+    const request = await axiosClient.post('/products/update/quantity', data);
+    return request;
+}

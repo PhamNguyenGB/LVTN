@@ -6,6 +6,8 @@ import cookieParser from "cookie-parser";
 import { routes } from './routes/routes';
 import cors from "cors";
 
+require('./config/cronJobs');
+
 const app = express();
 
 configViewEngine(app);

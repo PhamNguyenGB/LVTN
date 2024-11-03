@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     productId: DataTypes.INTEGER,
     totalCost: DataTypes.INTEGER,
     quantity: DataTypes.INTEGER,
+    evaluated: DataTypes.BOOLEAN,
   }, {
     sequelize,
     freezeTableName: true,

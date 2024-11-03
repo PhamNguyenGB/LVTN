@@ -12,9 +12,11 @@ const UserRoute = (app) => {
     router.post('/login', UserController.loginUser);
     router.post('/auth/google', UserController.verifyGoogleToken);
     router.post('/refresh', UserController.refreshToken);
-    router.post('/update/point', checkVerifyTokenUser, UserController.updatePointUser);
+    router.post('/decreate/point', checkVerifyTokenUser, UserController.decreasePointUser);
     router.post('/avatar', checkVerifyTokenUser, upload.single('image'), UserController.updateAvatar);
-    router.post('/info', checkVerifyTokenUser, UserController.updateInfoUser);
+    router.post('update/info', checkVerifyTokenUser, UserController.updateInfoUser);
+    router.get('/get/info', checkVerifyTokenUser, UserController.getInfoById);
+    router.post('/update/point', checkVerifyTokenAdmin, UserController.increatePointUser);
 
     router.get('/statictis/users', checkVerifyTokenAdmin, UserController.statisticUsers);
     router.get('/statictis/getAllUsers', checkVerifyTokenAdmin, UserController.getAllUsers);

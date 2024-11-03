@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            Rep_Comment.belongsTo(models.Comment);
             Rep_Comment.belongsTo(models.Staff);
             Rep_Comment.hasOne(models.Review);
 
@@ -18,7 +17,6 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     Rep_Comment.init({
-        commentId: DataTypes.INTEGER,
         staffId: DataTypes.INTEGER,
         note: DataTypes.STRING,
     }, {

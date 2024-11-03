@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
             Comment.belongsTo(models.User);
             Comment.belongsTo(models.Product);
-            Comment.hasOne(models.Rep_Comment);
             Comment.hasOne(models.Review);
         }
     }
@@ -20,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     Comment.init({
         userId: DataTypes.INTEGER,
         productId: DataTypes.INTEGER,
-        note: DataTypes.STRING,
+        content: DataTypes.STRING,
     }, {
         sequelize,
         freezeTableName: true,

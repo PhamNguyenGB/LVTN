@@ -1,4 +1,5 @@
 require("dotenv").config();
+import e from 'express';
 import UserService from '../services/userService';
 import jwt from 'jsonwebtoken';
 
@@ -176,13 +177,33 @@ const verifyGoogleToken = async (req, res) => {
     }
 };
 
-const updatePointUser = async (req, res) => {
+const getInfoById = async (req, res) => {
+    try {
+        const data = await UserService.getInfoById(req.user);
+        if (data.status === 0)
+            return res.status(200).json({
+                status: 0,
+                data: data.data
+            });
+        return res.status(500).json({
+            status: -1,
+            mess: data.mess
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: -1,
+            mess: error.message,
+        });
+    }
+}
+
+const decreasePointUser = async (req, res) => {
     try {
         const decreasePoint = req.body.decreasePoint;
-        const increasePoint = req.body.increasePoint;
         const email = req.body.email;
 
-        const request = await UserService.updatePointUserSv(increasePoint, decreasePoint, email);
+        const request = await UserService.decreasePointUser(decreasePoint, email);
         if (request.status === 0)
             return res.status(200).json({
                 status: 0,
@@ -203,6 +224,16 @@ const updatePointUser = async (req, res) => {
     }
 };
 
+const increatePointUser = async (req, res) => {
+    try {
+        await UserService.increatePointUser(req.body);
+        return res.status(200).json({ status: 0 });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ status: -1 });
+    }
+};
+
 module.exports = {
     register,
     loginUser,
@@ -211,7 +242,9 @@ module.exports = {
     statisticUsers,
     getAllUsers,
     verifyGoogleToken,
-    updatePointUser,
+    decreasePointUser,
     updateAvatar,
-    updateInfoUser
+    updateInfoUser,
+    getInfoById,
+    increatePointUser,
 }

@@ -5,7 +5,7 @@ import EventController from '../controllers/eventController';
 const router = express.Router();
 
 const EventRoute = (app) => {
-    router.get('/', EventController.getAllEvent);
+    router.get('/', checkVerifyTokenAdmin, EventController.getAllEvent);
     router.post('/create', checkVerifyTokenAdmin, EventController.createEvent);
     router.put('/update', checkVerifyTokenAdmin, EventController.updateEvent);
     router.delete('/delete/:id', checkVerifyTokenAdmin, EventController.deleteEvent);

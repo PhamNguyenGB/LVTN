@@ -9,11 +9,6 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER,
             },
-            commentId: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                onDelete: 'CASCADE',
-            },
             staffId: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
