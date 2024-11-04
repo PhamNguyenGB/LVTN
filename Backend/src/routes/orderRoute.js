@@ -9,8 +9,11 @@ const OrderRoute = (app) => {
     router.post('/addOrder', checkVerifyTokenUser, OrderController.addCart);
     router.put('/staff/update/status', checkVerifyTokenAdmin, OrderController.updateStautsOrderStaff);
     router.get('/getOrderById', checkVerifyTokenUser, OrderController.getOrderById);
-    router.get('/revenue/report/month', OrderController.monthlyRevenueReport);
-    router.get('/revenue/report/year', OrderController.revenueLastFiveYears);
+
+    //statistic
+    router.get('/revenue/report/month/:year', checkVerifyTokenAdmin, OrderController.monthlyRevenueReport);
+    router.get('/statistic/order/month/:year', checkVerifyTokenAdmin, OrderController.orderStatistics);
+    router.get('/statistic/order/status', checkVerifyTokenAdmin, OrderController.getOrderStatusStatistics);
 
     // router.post('/statisticsMonth', checkVerifyTokenAdmin, OrderController.statisticMoneyMonth);
     // router.post('/statisticsYear', checkVerifyTokenAdmin, OrderController.statisticMoneyYear);

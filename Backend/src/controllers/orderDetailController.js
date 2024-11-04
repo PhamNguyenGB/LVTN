@@ -44,8 +44,41 @@ const totalQuantity = async (req, res) => {
     }
 };
 
+const ListCarStatistics = async (req, res) => {
+    try {
+        let data = await OrderDetailService.ListCarStatistics(req.params.year);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error.message);
+    }
+}
+
+const ListSpecializedVehicleStatistics = async (req, res) => {
+    try {
+        let data = await OrderDetailService.ListSpecializedVehicleStatistics(req.params.year);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error.message);
+    }
+}
+
+const ListPlaneStatistics = async (req, res) => {
+    try {
+        let data = await OrderDetailService.ListPlaneStatistics(req.params.year);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error.message);
+    }
+}
+
 module.exports = {
     addOrderDetail,
     getOrderDetail,
     totalQuantity,
+    ListCarStatistics,
+    ListSpecializedVehicleStatistics,
+    ListPlaneStatistics,
 };

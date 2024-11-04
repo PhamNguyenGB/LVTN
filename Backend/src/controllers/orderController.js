@@ -195,7 +195,7 @@ const getAllOrderTransited = async (req, res) => {
 
 const monthlyRevenueReport = async (req, res) => {
     try {
-        let data = await OrderService.monthlyRevenueReport();
+        let data = await OrderService.monthlyRevenueReport(req.params.year);
         return res.status(200).json(data);
     } catch (error) {
         console.log(error);
@@ -203,9 +203,19 @@ const monthlyRevenueReport = async (req, res) => {
     }
 }
 
-const revenueLastFiveYears = async (req, res) => {
+const orderStatistics = async (req, res) => {
     try {
-        let data = await OrderService.revenueLastFiveYears();
+        let data = await OrderService.orderStatistics(req.params.year);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error.message);
+    }
+}
+
+const getOrderStatusStatistics = async (req, res) => {
+    try {
+        let data = await OrderService.getOrderStatusStatistics();
         return res.status(200).json(data);
     } catch (error) {
         console.log(error);
@@ -227,5 +237,6 @@ module.exports = {
     updateStatusShipper,
     getAllOrderTransited,
     monthlyRevenueReport,
-    revenueLastFiveYears,
+    orderStatistics,
+    getOrderStatusStatistics,
 }

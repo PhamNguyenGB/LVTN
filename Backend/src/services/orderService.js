@@ -1,5 +1,5 @@
 import db, { sequelize } from '../models/index';
-import { Op, fn, col, or, where } from 'sequelize';
+import { Op, fn, col, or, where, Sequelize } from 'sequelize';
 
 const addOrderService = async (data, user) => {
     const timestamp = Date.now(); // Lấy timestamp hiện tại
@@ -363,9 +363,9 @@ const getAllOrderTransited = async (shipper) => {
     }
 }
 
-const monthlyRevenueReport = async () => {
+const monthlyRevenueReport = async (year) => {
     try {
-        const currentYear = new Date().getFullYear();
+        const currentYear = year;
 
         // Mảng chứa tất cả các tháng từ 1 đến 12
         const allMonths = Array.from({ length: 12 }, (_, i) => {
@@ -408,32 +408,69 @@ const monthlyRevenueReport = async () => {
     }
 }
 
-const revenueLastFiveYears = async () => {
+const orderStatistics = async (year) => {
     try {
-        const currentYear = new Date().getFullYear();
-        const startYear = currentYear - 5; // Lấy 5 năm trước
+        // Mảng chứa tất cả các tháng từ 1 đến 12
+        const allMonths = Array.from({ length: 12 }, (_, i) => {
+            return { month: (i + 1).toString().padStart(2, '0'), totalOrder: 0 }; // Định dạng tháng là '01', '02', ...
+        });
 
         const revenue = await db.Order.findAll({
             attributes: [
-                [fn('DATE_FORMAT', col('createdAt'), '%Y'), 'month'], // Lấy từng tháng
-                [fn('SUM', col('totalCost')), 'totalRevenue'] // Tổng doanh thu từng tháng
+                [fn('DATE_FORMAT', col('createdAt'), '%m'), 'month'], // Lấy từng tháng
+                [fn('COUNT', col('id')), 'totalOrder'] // Tổng đơn hàng từng tháng
             ],
             where: {
                 createdAt: {
-                    [Op.gte]: new Date(`${startYear}-01-01`), // Bắt đầu từ 5 năm trước
-                    [Op.lte]: new Date(`${currentYear}-12-31`)  // Kết thúc ở cuối năm hiện tại
+                    [Op.gte]: new Date(`${year}-01-01`), // Bắt đầu từ đầu năm
+                    [Op.lte]: new Date(`${year}-12-31`)  // Kết thúc ở cuối năm
                 }
             },
-            group: [fn('DATE_FORMAT', col('createdAt'), '%Y')], // Nhóm theo năm và tháng
-            order: [[fn('DATE_FORMAT', col('createdAt'), '%Y'), 'ASC']]
+            group: [fn('DATE_FORMAT', col('createdAt'), '%m')], // Nhóm theo tháng
+            order: [[fn('DATE_FORMAT', col('createdAt'), '%m'), 'ASC']]
         });
 
-        return revenue;
+        const revenueMap = revenue.reduce((acc, item) => {
+            acc[item.dataValues.month] = parseFloat(item.dataValues.totalOrder) || 0;
+            return acc;
+        }, {});
+
+        // Kết hợp với mảng allMonths
+        allMonths.forEach(month => {
+            if (revenueMap[month.month]) {
+                month.totalOrder = revenueMap[month.month];
+            }
+        });
+
+        return allMonths;
     } catch (error) {
         console.log(error);
         return;
     }
 }
+
+const getOrderStatusStatistics = async () => {
+    try {
+        const statusCounts = await db.Order.findAll({
+            attributes: [
+                'status',
+                [Sequelize.fn('COUNT', Sequelize.col('status')), 'count']
+            ],
+            group: ['status'],
+            order: [['status', 'ASC']]
+        });
+
+        const result = statusCounts.map(item => ({
+            status: item.dataValues.status,
+            count: parseInt(item.dataValues.count, 10)
+        }));
+
+        return result;
+    } catch (error) {
+        console.error("Error fetching order status statistics:", error);
+        return [];
+    }
+};
 
 
 module.exports = {
@@ -451,5 +488,6 @@ module.exports = {
     getAllOrderTransited,
     updateStatusPay,
     monthlyRevenueReport,
-    revenueLastFiveYears,
+    orderStatistics,
+    getOrderStatusStatistics,
 }

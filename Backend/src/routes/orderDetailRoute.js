@@ -9,6 +9,9 @@ const OrderDetailRoute = (app) => {
     router.get('/staff/orderDetail/:id', checkVerifyTokenAdmin, OrderDetailController.getOrderDetail);
     router.get('/user/orderDetail/:id', checkVerifyTokenUser, OrderDetailController.getOrderDetail);
     router.get('/totalQuantity', checkVerifyTokenAdmin, OrderDetailController.totalQuantity);
+    router.get('/statistic/list/product/car/month/:year', checkVerifyTokenAdmin, OrderDetailController.ListCarStatistics);
+    router.get('/statistic/list/product/specialized/vehicle/month/:year', checkVerifyTokenAdmin, OrderDetailController.ListSpecializedVehicleStatistics);
+    router.get('/statistic/list/product/plane/month/:year', checkVerifyTokenAdmin, OrderDetailController.ListPlaneStatistics);
 
     return app.use('/api/Details', router);
 };
