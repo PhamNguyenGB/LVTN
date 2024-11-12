@@ -135,10 +135,10 @@ const getByProductID = async (req, res) => {
 
 const getSimilarProduct = async (req, res) => {
     try {
-        let brand = req.params.brand;
-        brand = brand.replace(/-/g, ' ');
-        let idProduct = req.params.id;
-        let data = await ProductService.getSimilarProductService(brand, idProduct);
+        let brand = req.body.brand;
+        let idProduct = req.body.id;
+        let listProductId = req.body.listProductId;
+        let data = await ProductService.getSimilarProductService(brand, idProduct, listProductId);
         return res.status(200).json(data);
     } catch (error) {
         console.log(error);

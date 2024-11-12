@@ -16,7 +16,6 @@ import { FaBars } from "react-icons/fa6";
 import imgUser from '../../assets/images/user.webp';
 import { toast } from 'react-toastify';
 
-
 const Header = () => {
     const user = useSelector((state) => state.user.user);
     const quantity = useSelector((state) => state.cart.quantity);
@@ -140,7 +139,7 @@ const Header = () => {
                         </div>
                         <div className="row p-2 pt-3 pb-3 d-flex justify-content-around">
                             <div className='col-1  header-product'>
-                                <Link to='/product/new' className="product-name " onClick={() => handleClickNameProduct('Mercedes')}>
+                                <Link to='/product/new' className="product-name ">
                                     <MdFiberNew style={{ fontSize: '24px' }} />
                                     <br />
                                     Hàng mới về
@@ -149,7 +148,7 @@ const Header = () => {
                                 {/* <Link to='/product/Mercedes' className="product-name" onClick={() => handleClickNameProduct('Mercedes')}>Mercedes</Link> */}
                             </div>
                             <div className='col-1 header-product'>
-                                <Link to='/product/car' className="product-name " onClick={() => handleClickNameProduct('Mercedes')}>
+                                <Link to='/product/car' className="product-name ">
                                     <IoCarSportSharp style={{ fontSize: '24px' }} />
                                     <br />
                                     Ô Tô
@@ -158,21 +157,21 @@ const Header = () => {
                                 {/* <Link to='/product/Mercedes' className="product-name" onClick={() => handleClickNameProduct('Mercedes')}>Mercedes</Link> */}
                             </div>
                             <div className='col-1 header-product'>
-                                <Link to='/product/BMW' className="product-name" onClick={() => handleClickNameProduct('BMW')}>
+                                <Link to='/product/specializedVehicle' className="product-name">
                                     <PiCraneDuotone style={{ fontSize: '28px' }} />
                                     <br />
                                     Xe Chuyên Dụng
                                 </Link>
                             </div>
                             <div className='col-1 header-product'>
-                                <Link to='/product/motor' className="product-name" onClick={() => handleClickNameProduct('Bugatti')}>
+                                <Link to='/product/motor' className="product-name" >
                                     <FaMotorcycle style={{ fontSize: '24px' }} />
                                     <br />
                                     Mô Tô
                                 </Link>
                             </div>
                             <div className='col-1 header-product'>
-                                <Link to='/product/plane' className="product-name" onClick={() => handleClickNameProduct('Rolls-Royce')}>
+                                <Link to='/product/plane' className="product-name">
                                     <SlPlane style={{ fontSize: '22px' }} />
                                     <br />
                                     Máy Bay

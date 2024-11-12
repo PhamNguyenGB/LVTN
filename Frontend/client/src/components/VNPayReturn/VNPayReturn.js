@@ -13,8 +13,6 @@ const VNPayReturn = () => {
 
             try {
                 const request = await callbackVNPay(queryParams);
-                console.log('check request', request);
-
                 if (request.RspCode === '00')
                     setTimeout(() => {
                         history.push('/');

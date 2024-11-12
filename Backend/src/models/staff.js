@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       Staff.hasMany(models.List_Product);
       Staff.hasMany(models.Point);
       Staff.hasMany(models.Product);
+      Staff.hasMany(models.Image_Home);
     }
   }
   Staff.init({

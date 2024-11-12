@@ -58,8 +58,8 @@ const Cart = () => {
             return;
 
         } else {
-            setTotalAmout(amount - ((totalDiscount * amount) + usePoint));
-            const total = amount - ((totalDiscount * amount) + usePoint);
+            setTotalAmout(amount - ((totalDiscount) + usePoint));
+            const total = amount - ((totalDiscount) + usePoint);
             const data = await pointsRedemption(total);
 
             if (data.status === 0)
@@ -138,6 +138,7 @@ const Cart = () => {
         await disPatch(clearCart());
 
         setTotalAmout(0);
+        setTotalDiscount(0);
         setShow(false);
 
         toast.success('Đặt hàng thành công');
@@ -166,7 +167,11 @@ const Cart = () => {
         if (data.status === 0) {
             setEvent(data);
             if (data.data) {
-                setTotalDiscount(data.data.discount / 100);
+                if (((data.data.discount / 100) * amount) > data.data.maximum)
+                    setTotalDiscount(data.data.maximum);
+                else
+                    setTotalDiscount((data.data.discount / 100) * amount);
+
                 setEventId(data.data.id);
             } else {
                 setEventId(null);
@@ -402,7 +407,7 @@ const Cart = () => {
                                                 <hr className="my-4" />
                                                 <div className="d-flex justify-content-between mb-1">
                                                     <span className="text-uppercase">Tổng giảm giá</span>
-                                                    <span>{formatNumber((totalDiscount * amount) + usePoint)} đ</span>
+                                                    <span>{formatNumber(totalDiscount + usePoint)} đ</span>
                                                 </div>
                                                 <div className="d-flex justify-content-between mb-1">
                                                     <span className="text-uppercase">Tổng phí vận chuyển</span>
@@ -411,7 +416,7 @@ const Cart = () => {
 
                                                 <div className="d-flex justify-content-between mb-5">
                                                     <span className="text-uppercase">Tổng thanh toán</span>
-                                                    <span>{formatNumber(amount - ((totalDiscount * amount) + usePoint) + shipping)} đ</span>
+                                                    <span>{formatNumber(amount - (totalDiscount + usePoint) + shipping)} đ</span>
                                                 </div>
 
                                                 <div style={{ position: 'relative' }}>

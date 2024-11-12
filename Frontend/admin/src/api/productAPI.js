@@ -33,6 +33,11 @@ export const addSoldProduct = async (data) => {
     return request;
 };
 
+// export const getAllSoldProducts = async () => {
+//     const request = await axiosClient.get('/sold/product/getAll');
+//     return request;
+// };
+
 export const updateQuantity = async (data) => {
     const request = await axiosClient.post('/products/update/quantity', data);
     return request;

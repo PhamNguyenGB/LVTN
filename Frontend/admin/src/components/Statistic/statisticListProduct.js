@@ -3,7 +3,7 @@ import { fetAllUsers } from '../../store/slice/statisticSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from "react";
 import moment from 'moment';
-import { ListCarStatistics, ListPlaneStatistics, ListSpecializedVehicleStatistics } from '../../api/statistic';
+import { ListCarStatistics, ListPlaneStatistics, ListSpecializedVehicleStatistics, ListMotorStatistics } from '../../api/statistic';
 import { RotatingLines } from 'react-loader-spinner';
 import {
     Chart as ChartJS,
@@ -43,18 +43,22 @@ const StatisticListProduct = (props) => {
     const [listCar, setListCar] = useState('');
     const [listPlane, setListPlane] = useState('');
     const [listSpecializedVehicle, setListSpecializedVehicle] = useState('');
+    const [listMotor, setListMotor] = useState('');
 
     //statistic year
     const [totalListCar, setTotalListCar] = useState(0);
     const [totalListPlane, setTotalListPlane] = useState(0);
     const [totalListSpecializedVehicle, setTotalListSpecializedVehicle] = useState(0);
+    const [totalListMotor, setTotalListMotor] = useState(0);
 
     const handeData = async () => {
 
         setTotalListCar(0);
         setTotalListPlane(0);
         setTotalListSpecializedVehicle(0);
+        setTotalListMotor(0);
 
+        //Car
         const ltCar = [];
         const car = await ListCarStatistics(year);
         car.forEach((item) => {
@@ -63,22 +67,34 @@ const StatisticListProduct = (props) => {
         });
         setListCar(ltCar);
 
+        //Plane
         const ltPlane = [];
         const plane = await ListPlaneStatistics(year);
         plane.forEach((item) => {
             ltPlane.push(item.totalListCar);
-            setTotalListSpecializedVehicle(total => total += item.totalListCar);
+            setTotalListPlane(total => total += item.totalListCar);
         });
         setListPlane(ltPlane);
 
+        //Specialized Vehicle 
         const ltSpecializedVehicle = [];
         const specializedVehicle = await ListSpecializedVehicleStatistics(year);
         specializedVehicle.forEach((item) => {
             ltSpecializedVehicle.push(item.totalListCar);
-            setTotalListPlane(total => total += item.totalListCar);
+            setTotalListSpecializedVehicle(total => total += item.totalListCar);
 
         });
         setListSpecializedVehicle(ltSpecializedVehicle);
+
+        //Motor
+        const ltMotor = [];
+        const motor = await ListMotorStatistics(year);
+        motor.forEach((item) => {
+            ltMotor.push(item.totalListCar);
+            setTotalListMotor(total => total += item.totalListCar);
+
+        });
+        setListMotor(ltMotor);
     }
 
     const handleSelectChangeYear = (event) => {
@@ -101,19 +117,21 @@ const StatisticListProduct = (props) => {
     }
 
     const data1 = {
-        labels: ['Xe hơi', 'Máy bay', 'Xe chuyên dụng'],
+        labels: ['Xe hơi', 'Máy bay', 'Xe chuyên dụng', 'Mô Tô'],
         datasets: [
             {
                 label: '# of Votes',
-                data: [totalListCar, totalListPlane, totalListSpecializedVehicle],
+                data: [totalListCar, totalListPlane, totalListSpecializedVehicle, totalListMotor],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(255, 206, 86, 0.2)',
                     'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)',
                     'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
                     'rgba(75, 192, 192, 1)',
                 ],
                 borderWidth: 1,
@@ -153,6 +171,11 @@ const StatisticListProduct = (props) => {
                 label: 'Máy bay',
                 data: listPlane,
                 backgroundColor: 'rgba(255, 206, 86, 0.5)',
+            },
+            {
+                label: 'Mô tô',
+                data: listMotor,
+                backgroundColor: 'rgba(153, 102, 255, 0.5)',
             },
         ],
     };

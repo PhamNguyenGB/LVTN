@@ -25,10 +25,10 @@ const ModalDeletePoint = (props) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={props.handleCloseModalDelete}>
-                        Close
+                        Hủy
                     </Button>
                     <Button variant="danger" onClick={confirmDeletePoint}>
-                        Confirm
+                        Xóa
                     </Button>
                 </Modal.Footer>
             </Modal>

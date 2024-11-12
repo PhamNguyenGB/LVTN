@@ -21,6 +21,10 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
+            maximum: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
             staffId: {
                 type: Sequelize.INTEGER,
                 allowNull: true,

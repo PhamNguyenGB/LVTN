@@ -12,6 +12,8 @@ import CommentReviewRoute from "./commentReviewRoute";
 import PaymentOnlineRoute from "./paymentOnlineRoute";
 import ShipperRoute from "./shipperRoute";
 import SoldProductRoute from "./soldProductRoute";
+import LevelRoute from "./levelRoute";
+import ImgHomeRoute from "./imageHomeRoute";
 
 export const routes = (app) => {
     UserRoute(app);
@@ -28,4 +30,6 @@ export const routes = (app) => {
     PaymentOnlineRoute(app);
     ShipperRoute(app);
     SoldProductRoute(app);
+    LevelRoute(app);
+    ImgHomeRoute(app);
 };

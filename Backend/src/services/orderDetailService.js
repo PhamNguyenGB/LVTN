@@ -248,6 +248,111 @@ const ListPlaneStatistics = async (year) => {
     }
 }
 
+const ListMotorStatistics = async (year) => {
+    try {
+        // Mảng chứa tất cả các tháng từ 1 đến 12
+        const allMonths = Array.from({ length: 12 }, (_, i) => {
+            return { month: (i + 1).toString().padStart(2, '0'), totalListCar: 0 };
+        });
+
+        const motor = await db.Order_Detail.findAll({
+            include: {
+                model: db.Product,
+                attributes: ['listProductId'],
+                where: {
+                    listProductId: [4],
+                },
+                required: true,
+            },
+            attributes: [
+                [fn('DATE_FORMAT', col('Order_Detail.createdAt'), '%m'), 'month'],
+                'Product.listProductId',
+                [fn('SUM', col('Order_Detail.quantity')), 'totalListCar']
+            ],
+            where: {
+                '$Order_Detail.createdAt$': {
+                    [Op.gte]: new Date(`${year}-01-01`),
+                    [Op.lte]: new Date(`${year}-12-31`),
+                }
+            },
+            group: [fn('DATE_FORMAT', col('Order_Detail.createdAt'), '%m')],
+            order: [[fn('DATE_FORMAT', col('Order_Detail.createdAt'), '%m'), 'ASC']]
+        });
+
+        const motorMap = motor.reduce((acc, item) => {
+            const month = parseInt(item.dataValues.month, 10);
+            if (!acc[month]) acc[month] = 0;
+            acc[month] += parseFloat(item.dataValues.totalListCar) || 0;
+            return acc;
+        }, {});
+        // Kết hợp với mảng allMonths
+        allMonths.forEach(month => {
+            if (motorMap[month.month]) {
+                month.totalListCar = motorMap[month.month];
+            }
+        });
+
+        return allMonths;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
+
+const countSoldProducts = async () => {
+    try {
+        const soldProducts = await db.Order_Detail.findAll({
+            attributes: [
+                'productId',
+                [sequelize.fn('SUM', sequelize.col('Order_Detail.quantity')), 'totalSold']
+            ],
+            include: [
+                {
+                    model: db.Order,
+                    attributes: [],
+                    where: { status: 'Đã giao' }
+                },
+                {
+                    model: db.Product
+                }
+            ],
+            group: ['productId'],
+        });
+        return soldProducts;
+    } catch (error) {
+        console.log(error);
+        return error.message;
+    }
+};
+
+const topSellingProducts = async () => {
+    try {
+        const data = await db.Order_Detail.findAll({
+            attributes: [
+                'productId',
+                [sequelize.fn('SUM', sequelize.col('Order_Detail.quantity')), 'totalSold'],
+            ],
+            group: ['productId'],
+            order: [[sequelize.fn('SUM', sequelize.col('Order_Detail.quantity')), 'DESC']],
+            limit: 8,
+            include: [
+                {
+                    model: db.Order,
+                    attributes: [],
+                    where: { status: 'Đã giao' }
+                },
+                {
+                    model: db.Product,
+                },
+            ],
+        });
+        return data;
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
+
 module.exports = {
     addOrderDetailService,
     getOrderDetailService,
@@ -255,4 +360,7 @@ module.exports = {
     ListCarStatistics,
     ListSpecializedVehicleStatistics,
     ListPlaneStatistics,
+    ListMotorStatistics,
+    countSoldProducts,
+    topSellingProducts,
 }

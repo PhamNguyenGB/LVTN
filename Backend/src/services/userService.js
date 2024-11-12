@@ -77,6 +77,7 @@ const registerUser = async (userData, providedOtp) => {
             phone: userData.phone,
             address: userData.address,
             password: hashPass,
+            levelId: 1,
             point: 0,
 
         })
@@ -101,7 +102,11 @@ const checkPassword = (hashPass, password) => {
 const loginUser = async (email, password) => {
     try {
         let user = await db.User.findOne({
-            where: { email: email }
+            where: { email: email },
+            include: {
+                model: db.Level,
+                attributes: ['id', 'name']
+            }
         });
 
         if (user) {
@@ -111,6 +116,7 @@ const loginUser = async (email, password) => {
                     fullname: user.dataValues.fullname,
                     email: user.dataValues.email,
                     role: 'user',
+                    Level: user.dataValues.Level,
                     id: user.dataValues.id,
                 }
                 let token = createJWT(payload);
@@ -124,6 +130,7 @@ const loginUser = async (email, password) => {
                     address: user.dataValues.address,
                     refreshToken: refresh_token,
                     avatar: user.dataValues.avatar,
+                    Level: user.dataValues.Level,
                     role: 'user',
                     point: user.dataValues.point,
                 }
@@ -272,11 +279,19 @@ const statisticUsers = async () => {
 
 const getAllUsersService = async () => {
     try {
-        let users = await db.User.findAll({});
-        return users;
+        let users = await db.User.findAll({
+            include: { model: db.Level },
+        });
+        return {
+            status: 0,
+            data: users
+        };
     } catch (error) {
         console.log(error);
-        return;
+        return {
+            status: -1,
+            mess: 'error'
+        };
     }
 };
 
@@ -343,6 +358,33 @@ const increatePointUser = async (data) => {
     }
 }
 
+const UpdateLevel = async (data) => {
+    try {
+        const user = await db.User.findOne({
+            where: { id: data.userId }
+        })
+        if (user) {
+            await user.update({
+                levelId: data.levelId,
+            });
+            return {
+                status: 0,
+                mess: 'Cập nhật cấp bậc thành công'
+            }
+        }
+        return {
+            status: -1,
+            mess: 'Không tìm thấy người dùng'
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            status: -1,
+            mess: error.message,
+        }
+    }
+}
+
 
 module.exports = {
     registerUser,
@@ -358,4 +400,5 @@ module.exports = {
     updateInfo,
     increatePointUser,
     getInfoById,
+    UpdateLevel,
 }

@@ -4,6 +4,8 @@ import { checkUserPhone, checkEmailUser } from './userService';
 const randomstring = require("randomstring");
 const nodemailer = require('nodemailer');
 import { client } from '../config/connectRedis';
+import db from '../models';
+import bcrypt from 'bcryptjs';
 
 
 // client.connect();
@@ -107,6 +109,66 @@ export const deleteStoredOtp = async (email) => {
     await client.del(`otp:${email}`);
 };
 
+const salt = bcrypt.genSaltSync(10);
+
+const funHashPassWord = (password) => {
+    let hash = bcrypt.hashSync(password, salt);
+    return hash
+}
+
+const forgotPass = async (email) => {
+    try {
+        const user = await db.Staff.findOne({
+            where: { email: email }
+        })
+
+        if (user) {
+            let newPass = randomstring.generate({ length: 8 });
+
+            let transporter = nodemailer.createTransport({
+                service: 'gmail',
+                host: 'smtp.gmail.com',
+                port: 465,
+                secure: true,
+                auth: {
+                    user: process.env.EMAIL,
+                    pass: process.env.PASS_EMAIL,
+                },
+            });
+
+            const mailOptions = {
+                from: process.env.EMAIL,
+                to: email,
+                subject: "Website TOYMODEL gửi bạn mật khẩu mới",
+                text: `Mật khẩu mới của bạn là: ${newPass}`
+            }
+            await transporter.sendMail(mailOptions);
+
+            let hashNewPass = await funHashPassWord(newPass);
+
+            await user.update({
+                password: hashNewPass
+            })
+
+            return {
+                status: 0,
+                mess: 'Cập nhật mật khẩu thành công'
+            }
+        }
+        return {
+            status: 0,
+            mess: 'Tài khoản không tồn tại'
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            status: -1,
+            mess: error.message,
+        }
+    }
+};
+
 module.exports = {
     sendOTP,
+    forgotPass,
 }

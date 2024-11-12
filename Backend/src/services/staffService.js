@@ -258,6 +258,39 @@ const updateInfo = async (data, staffId) => {
     }
 }
 
+const chancePassword = async (oldPass, newPass, staff) => {
+    try {
+        const infoStaff = await db.Staff.findOne({
+            where: { id: staff.id },
+        });
+
+        const match = await bcrypt.compare(oldPass, infoStaff.password);
+
+        if (match) {
+            let hashPass = await funHashPassWord(newPass);
+            await infoStaff.update({
+                password: hashPass,
+            });
+
+            return {
+                status: 0,
+                mess: 'Cập nhật mật khẩu thành công',
+            }
+        }
+
+        return {
+            status: -1,
+            mess: 'Cập nhật mật khẩu thất bại'
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            status: -1,
+            mess: 'Cập nhật mật khẩu thất bại!!!'
+        }
+    }
+}
+
 module.exports = {
     reristerStaff,
     loginStaff,
@@ -265,4 +298,5 @@ module.exports = {
     refreshToken,
     updateAvatar,
     updateInfo,
+    chancePassword,
 };

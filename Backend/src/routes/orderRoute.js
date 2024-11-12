@@ -14,6 +14,7 @@ const OrderRoute = (app) => {
     router.get('/revenue/report/month/:year', checkVerifyTokenAdmin, OrderController.monthlyRevenueReport);
     router.get('/statistic/order/month/:year', checkVerifyTokenAdmin, OrderController.orderStatistics);
     router.get('/statistic/order/status', checkVerifyTokenAdmin, OrderController.getOrderStatusStatistics);
+    router.get('/statistic/order/user', checkVerifyTokenAdmin, OrderController.statisticUser);
 
     // router.post('/statisticsMonth', checkVerifyTokenAdmin, OrderController.statisticMoneyMonth);
     // router.post('/statisticsYear', checkVerifyTokenAdmin, OrderController.statisticMoneyYear);

@@ -23,6 +23,24 @@ const sendOTPCL = async (req, res) => {
     }
 };
 
+const forgotPassword = async (req, res) => {
+    try {
+        const request = await sendOTPService.forgotPass(req.body.email);
+        return res.status(200).json({
+            status: request.status,
+            mess: request.mess,
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: -1,
+            mess: error.message,
+        });
+    }
+}
+
 module.exports = {
     sendOTPCL,
+    forgotPassword,
 }

@@ -20,3 +20,13 @@ export const filterProductsByBrandAndSize = async (brandArr, sizeArr, page, limi
     return request;
 }
 
+export const getProductsSimilar = async (data) => {
+    const request = await axiosClient.post('/products/similar', data);
+    return request;
+}
+
+export const topSellingProducts = async () => {
+    const request = await axiosClient.get('/Details/top/selling/products');
+    return request;
+}
+

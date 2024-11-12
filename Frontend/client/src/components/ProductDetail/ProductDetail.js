@@ -15,9 +15,10 @@ import { GrNext, GrPrevious } from "react-icons/gr";
 import { toast } from 'react-toastify';
 import { MdStar } from "react-icons/md";
 import { getAllCommentById } from '../../api/commentReviewAPIs';
+import { getProductsSimilar } from '../../api/productAPIs';
 import imgUser from '../../assets/images/user.webp';
 import ReactPaginate from "react-paginate";
-
+import { MdStarRate } from "react-icons/md";
 
 
 
@@ -26,6 +27,8 @@ const ProductDetail = () => {
     const similarProducts = useSelector((state) => state.product.similarProducts);
     const [quantity, setQuantity] = useState(1);
     const [product, setProduct] = useState('');
+    const [productSimilar, setProductSimilar] = useState('');
+
     const [commentReview, setCommentReview] = useState('');
 
     const [currentPageReview, setCurrentPageReview] = useState(1);
@@ -44,6 +47,14 @@ const ProductDetail = () => {
         parseImages.push({ ...data, images: images });
 
         setProduct(parseImages);
+
+        const getAllProducts = [];
+        const similar = await getProductsSimilar({ brand: data.brand, id, listProductId: data.listProductId });
+        similar.forEach(item => {
+            const images = JSON.parse(item.images);
+            getAllProducts.push({ ...item, images: images });
+        });
+        setProductSimilar(getAllProducts);
     };
 
     const GetAllReviewById = async () => {
@@ -416,20 +427,43 @@ const ProductDetail = () => {
                     <div className="container similar-products my-4">
                         <p className="display-5">Sản phẩm tương tự</p>
 
-                        {/* <div className="row">
-                            {similarProducts ?
+                        <div className="row">
+                            {productSimilar ?
                                 <>
-                                    {similarProducts.Data.map((item, index) => {
+                                    {productSimilar.map((item, index) => {
                                         return (
                                             <>
-                                                <div className="col-md-3 similar-product" key={`similar-${index}`}>
-                                                    <img className="w-100" src={item.image} role='button' alt="Preview" onClick={() => handleClickCart(item.type, item.id)} />
+                                                <div className="card card-product col-3 m-1" key={`product-${index}`}>
+                                                    <img role="button" src={item.images[0]} className="card-img-top" alt="..." onClick={() => handleClickCart(item.id)} />
                                                     <div className="card-body" onClick={() => handleClickCart(item.id)}>
-                                                        <h4 className="title" role='button' onClick={() => handleClickCart(item.type, item.id)}>{item.name}</h4>
-                                                        <p className="price" role='button' onClick={() => handleClickCart(item.type, item.id)}>{item.price}</p>
+                                                        <h6 className="card-title" role="button" style={{ fontSize: "16px" }}>{item.name}</h6>
+                                                        <div className='mb-2'>
+                                                            {item.star > 0 ?
+                                                                <>
+                                                                    {
+                                                                        Array.from({ length: Math.round(item.star) }).map((_, i) => (
+                                                                            <MdStarRate color='yellow' />
+                                                                        ))
+                                                                    }
+                                                                    {
+                                                                        Array.from({ length: 5 - Math.round(item.star) }).map((_, i) => (
+                                                                            <MdStarRate />
+                                                                        ))
+                                                                    }
+                                                                </>
+                                                                :
+                                                                <>
+                                                                    <MdStarRate />
+                                                                    <MdStarRate />
+                                                                    <MdStarRate />
+                                                                    <MdStarRate />
+                                                                    <MdStarRate />
+                                                                </>
+                                                            }
+                                                        </div>
+                                                        <p role="button" className="card-text text-primary">{formatNumber(item.price)} đ</p>
                                                     </div>
-                                                    <button className="btn btn-primary mb-3" style={{ fontSize: "16px", width: 'auto' }} onClick={() => handleClickCart(item.type, item.id)}> Xem chi tiết</button>
-
+                                                    <button className="btn btn-primary add-cart" style={{ fontSize: "1rem", width: 'auto', fontWeight: 500 }} onClick={() => handleClickAddCart(item)}> Thêm vào giỏ</button>
                                                 </div>
                                             </>
 
@@ -441,7 +475,7 @@ const ProductDetail = () => {
                                     ...isLoading
                                 </>
                             }
-                        </div> */}
+                        </div>
                     </div>
                 </>
                 :

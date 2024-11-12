@@ -8,11 +8,13 @@ const router = express.Router();
 
 const StaffRoute = (app) => {
     router.post('/sendOTP', SendOTPController.sendOTPCL);
+    router.post('/forgot/pass', SendOTPController.forgotPassword);
     router.post('/register', checkVerifyTokenAd, StaffController.reristerStaff);
     router.post('/login', StaffController.login);
     router.post('/refresh', StaffController.refreshToken);
     router.post('/avatar', checkVerifyTokenAdmin, upload.single('image'), StaffController.updateAvatar);
     router.post('/info', checkVerifyTokenAdmin, StaffController.updateInfoStaff);
+    router.post('/chance/pass', checkVerifyTokenAdmin, StaffController.chancePassword);
 
     return app.use("/api/staff", router);
 }

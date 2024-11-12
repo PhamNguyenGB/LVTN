@@ -128,6 +128,8 @@ const userSlice = createSlice({
             })
             .addCase(updateInfo.fulfilled, (state, action) => {
                 state.loading = false;
+                console.log('check action', action.payload);
+
                 state.user.fullname = action.payload?.data.fullname;
                 state.user.phone = action.payload?.data.phone;
                 state.user.address = action.payload?.data.address;
@@ -143,8 +145,6 @@ const userSlice = createSlice({
             })
             .addCase(decreasePointUser.fulfilled, (state, action) => {
                 state.loading = false;
-                console.log('check payload', action.payload);
-
                 state.user.point = action.payload?.data;
                 state.mess = action.payload?.mess;
             })

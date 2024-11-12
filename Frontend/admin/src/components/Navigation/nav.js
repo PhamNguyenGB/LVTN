@@ -1,20 +1,56 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import imgUser from '../../assets/images/user.webp';
+import { CgPassword } from "react-icons/cg";
+import { toast } from 'react-toastify';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import React, { useState } from 'react';
+import { chancePassword } from '../../api/staffAPIs';
+import { logout } from '../../store/slice/userSlice';
 
 
 const Nav = () => {
     const staff = useSelector((state) => state.staff.staff);
 
     const history = useHistory();
+    const dispatch = useDispatch();
+
+    const [show, setShow] = useState(false);
+    const [oldPass, setOldPass] = useState('');
+    const [newPass, setNewPass] = useState('');
+    const [checkNewPass, setCheckNewPass] = useState('');
+
+    const handleClose = () => setShow(false);
+
+    const handleShow = () => {
+        setShow(true);
+    }
 
     const handleLogout = () => {
         localStorage.removeItem('staff');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('token');
         localStorage.setItem('persist:root', null);
+
+        dispatch(logout());
         history.push('/login');
     };
+
+    const handleChancePass = async () => {
+        if (checkNewPass !== newPass)
+            toast.error('Mật khẩu mới và mật khẩu nhập lại không khớp');
+        else {
+            const request = await chancePassword({ oldPass, newPass });
+            if (request.status === 0) {
+                toast.success('Cập nhật mật khẩu thành công');
+                handleLogout();
+            } else
+                toast.error('Sai mật khẩu');
+
+        }
+    }
+
     return (
         <>
             <div id="page-top">
@@ -75,10 +111,10 @@ const Nav = () => {
                                     <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Đăng ký
                                 </NavLink>
-                                <a className="dropdown-item" href="#">
-                                    <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
-                                </a>
+                                <button className="dropdown-item" onClick={handleShow} >
+                                    <CgPassword className="mr-2 text-gray-400" fontSize={20} />
+                                    Đổi mật khẩu
+                                </button>
                                 <div className="dropdown-divider"></div>
                                 <button className="dropdown-item" data-toggle="modal" data-target="#logoutModal">
                                     <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -98,7 +134,7 @@ const Nav = () => {
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                                <h5 className="modal-title" id="exampleModalLabel">Thoát khỏi hệ thống?</h5>
                                 <button className="close" type="button" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                 </button>
@@ -113,6 +149,57 @@ const Nav = () => {
                 </div>
 
             </div>
+            <Modal show={show} onHide={handleClose} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Cập nhật thông tin</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <form>
+                        <div className='update-profile'>
+                            <div className='form-inputs'>
+                                <div className='input-box'>
+                                    <label>Mật khẩu cũ:</label>
+                                    <input
+                                        type='password' required
+                                        className={"form-control form-control-user input-field"}
+                                        value={oldPass}
+                                        onChange={(e) => setOldPass(e.target.value)}
+                                    />
+                                </div>
+                                <br />
+                                <div className='input-box'>
+                                    <label>Mật khẩu mới:</label>
+                                    <input
+                                        type='password' required
+                                        className={"form-control form-control-user input-field"}
+                                        value={newPass}
+                                        onChange={(e) => setNewPass(e.target.value)}
+
+                                    />
+                                </div>
+                                <br />
+                                <div className='input-box'>
+                                    <label>Nhập lại mật khẩu mới:</label>
+                                    <input
+                                        type='password' required
+                                        className={"form-control form-control-user input-field"}
+                                        value={checkNewPass}
+                                        onChange={(e) => setCheckNewPass(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Đóng
+                    </Button>
+                    <Button variant="primary" onClick={handleChancePass}>
+                        Cập nhật
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 };

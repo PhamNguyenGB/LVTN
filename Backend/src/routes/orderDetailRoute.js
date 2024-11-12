@@ -12,6 +12,9 @@ const OrderDetailRoute = (app) => {
     router.get('/statistic/list/product/car/month/:year', checkVerifyTokenAdmin, OrderDetailController.ListCarStatistics);
     router.get('/statistic/list/product/specialized/vehicle/month/:year', checkVerifyTokenAdmin, OrderDetailController.ListSpecializedVehicleStatistics);
     router.get('/statistic/list/product/plane/month/:year', checkVerifyTokenAdmin, OrderDetailController.ListPlaneStatistics);
+    router.get('/statistic/list/product/motor/month/:year', checkVerifyTokenAdmin, OrderDetailController.ListMotorStatistics);
+    router.get('/sold/products', checkVerifyTokenAdmin, OrderDetailController.countSoldProducts);
+    router.get('/top/selling/products', OrderDetailController.topSellingProducts);
 
     return app.use('/api/Details', router);
 };

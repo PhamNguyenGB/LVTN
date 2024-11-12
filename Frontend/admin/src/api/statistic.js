@@ -25,8 +25,19 @@ export const ListPlaneStatistics = async (year) => {
     return request;
 }
 
+export const ListMotorStatistics = async (year) => {
+    const request = await axiosClient.get(`/Details/statistic/list/product/motor/month/${year}`);
+    return request;
+}
+
+
 export const getOrderStatusStatistics = async () => {
     const request = await axiosClient.get(`/order/statistic/order/status`);
+    return request;
+}
+
+export const statisticUser = async () => {
+    const request = await axiosClient.get(`/order/statistic/order/user`);
     return request;
 }
 

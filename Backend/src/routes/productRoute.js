@@ -14,7 +14,7 @@ const ProductRoute = (app) => {
     router.get('/newProduct', ProductController.fetchNewProducts);
     router.get('/new4Product', ProductController.fetchNew4Products);
     router.get('/oneProduct/:id', ProductController.getByProductID);
-    router.get('/similar/:brand/:id', ProductController.getSimilarProduct);
+    router.post('/similar', ProductController.getSimilarProduct);
     router.post('/filter/brand/size', ProductController.filterProductsByBrandAndSize);
     router.get('/search/:name', ProductController.searchProduct);
     router.post('/update/quantity', checkVerifyTokenAdmin, ProductController.updateQuantity);

@@ -6,11 +6,14 @@ import { useEffect, useState, useMemo } from "react";
 import StatisticListProduct from './statisticListProduct';
 import StatisticMoneyTable from './statisticRevenuaOrder';
 import StatisticStatusOrder from './statisticStatusOrder';
+import StatisticUser from './statisticUser';
 import numeral from 'numeral';
 import Navigation from '../Navigation/Navigation';
 import { MdPlaylistAddCheckCircle } from "react-icons/md";
 import { FaBoxArchive } from "react-icons/fa6";
 import { GrStatusUnknown } from "react-icons/gr";
+import { HiUserGroup } from "react-icons/hi2";
+
 
 function Statistic() {
     const currentMonth = new Date().getMonth() + 1;
@@ -27,22 +30,33 @@ function Statistic() {
     const [showStatisticLP, setShowStatisticLP] = useState(true);
     const [showStatusOrder, setShowStatusOrder] = useState(true);
     const [showTableMoney, setShowTableMoney] = useState(true);
+    const [showStatisticUser, setshowStatisticUser] = useState(true);
     const [actionTableMoney, setActionTableMoney] = useState("");
 
-    const handleClickShowTableUser = () => {
+    const handleClickShowTableLP = () => {
         setShowTableMoney(true);
         setShowStatisticLP(false);
         setShowStatusOrder(true);
+        setshowStatisticUser(true);
     }
 
     const handleShowStatusOrder = () => {
         setShowTableMoney(true);
         setShowStatisticLP(true);
         setShowStatusOrder(false);
+        setshowStatisticUser(true);
     }
+
+    const handleShowSatisticUser = () => {
+        setShowTableMoney(true);
+        setShowStatisticLP(true);
+        setShowStatusOrder(true);
+        setshowStatisticUser(false);
+    };
 
     const handleClickShowTableMoney = (action) => {
         setShowStatisticLP(true);
+        setshowStatisticUser(true);
         setShowTableMoney(false);
         if (action === 'revenue') {
             setActionTableMoney('revenue');
@@ -131,7 +145,7 @@ function Statistic() {
                                     </div>
 
                                     {/* <!-- Earnings (Monthly) Card Example --> */}
-                                    <div className="col-xl-3 col-md-6 mb-4" role='button' onClick={() => handleClickShowTableUser()}>
+                                    <div className="col-xl-3 col-md-6 mb-4" role='button' onClick={() => handleClickShowTableLP()}>
                                         <div className="card border-left-info shadow h-100 py-2">
                                             <div className="card-body p-4">
                                                 <div className="row no-gutters align-items-center">
@@ -165,6 +179,23 @@ function Statistic() {
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div className="col-xl-3 col-md-6 mb-4" role='button' onClick={() => handleShowSatisticUser()}>
+                                        <div className="card border-left-danger shadow h-100 py-2">
+                                            <div className="card-body p-4">
+                                                <div className="row no-gutters align-items-center">
+                                                    <div className="col mr-2">
+                                                        <div className="text-lg font-weight-bold text-danger text-uppercase mb-1">
+                                                            Chi tiêu khách hàng
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-auto">
+                                                        <HiUserGroup fontSize={30} color='#ccc' />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {/* <!-- Content Row --> */}
@@ -181,7 +212,9 @@ function Statistic() {
                             <StatisticStatusOrder
                                 showStatusOrder={showStatusOrder}
                             />
-
+                            <StatisticUser
+                                showStatisticUser={showStatisticUser}
+                            />
                         </div>
                         {/* <!-- End of Main Content --> */}
 
@@ -189,7 +222,7 @@ function Statistic() {
                         <footer className="sticky-footer bg-white">
                             <div className="container my-auto">
                                 <div className="copyright text-center my-auto">
-                                    <span>Copyright &copy; Your Website 2021</span>
+                                    <span>TOYMODEL XIN CHÀO BẠN</span>
                                 </div>
                             </div>
                         </footer>

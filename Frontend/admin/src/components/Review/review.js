@@ -8,6 +8,7 @@ import Pagination from '../Pagination/Pagination';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { toast } from 'react-toastify';
+import moment from "moment";
 import {
     useReactTable,
     getCoreRowModel,
@@ -81,14 +82,14 @@ const columns = [
     {
         accessorKey: 'createdAt',
         header: 'Ngày tạo',
-        cell: (props) => <p>{props.getValue()}</p>,
+        cell: (props) => <p>{moment(props.getValue()).format('DD-MM-YYYY')}</p>,
         searchHidden: false,
 
     },
     {
         accessorKey: 'updatedAt',
         header: 'Ngày cập nhật',
-        cell: (props) => <p>{props.getValue()}</p>,
+        cell: (props) => <p>{moment(props.getValue()).format('DD-MM-YYYY')}</p>,
         searchHidden: false,
 
     },
@@ -304,7 +305,7 @@ const Review = () => {
                         <footer className="sticky-footer bg-white">
                             <div className="container my-auto">
                                 <div className="copyright text-center my-auto">
-                                    <span>Copyright &copy; Your Website 2021</span>
+                                    <span>TOYMODEL XIN CHÀO BẠN</span>
                                 </div>
                             </div>
                         </footer>

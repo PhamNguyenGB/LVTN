@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'userId', // Khóa ngoại của bảng User trong bảng Used_Event
         otherKey: 'eventId', // Khóa ngoại của bảng Event trong bảng Used_Event
       });
+      User.belongsTo(models.Level);
     }
   }
   User.init({
@@ -30,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     address: DataTypes.STRING,
     point: DataTypes.INTEGER,
     avatar: DataTypes.STRING,
+    levelId: DataTypes.INTEGER,
   }, {
     sequelize,
     freezeTableName: true,

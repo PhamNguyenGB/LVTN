@@ -17,6 +17,11 @@ import { useSelector } from "react-redux";
 import Register from "../components/Register/Register";
 import Profile from "../components/Profile/profile";
 import Review from "../components/Review/review";
+import User from "../components/User/user";
+import SoldProduct from "../components/SoldProduct/SoldProduct";
+import ForgotPass from "../components/ForgotPass/ForgotPass";
+import Level from "../components/Level/level";
+import ImageHome from "../components/ImageHome/imageHome";
 
 const StaffRoute = () => {
     const staff = useSelector((state) => state.staff.staff);
@@ -35,6 +40,13 @@ const StaffRoute = () => {
                 <Route path="/login" exact>
                     <Login />
                 </Route>
+                <Route path="/forgot" exact>
+                    <ForgotPass />
+                </Route>
+                <PrivateRoute path="/image/home" component={ImageHome} />
+                <PrivateRoute path="/level" component={Level} />
+                <PrivateRoute path="/sold/product" component={SoldProduct} />
+                <PrivateRoute path="/user" component={User} />
                 <PrivateRoute path="/review" component={Review} />
                 <PrivateRoute path="/region" component={Region} />
                 <PrivateRoute path="/point" component={Point} />

@@ -110,20 +110,19 @@
 
 
 .similar-products {
-    .similar-product {
-        border: 1px solid #ccc;
-        margin: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        border-radius: 5px;
-    }
+    .card-product {
+        .add-cart {
+            background-color: #fff;
+            color: #4e4ffa;
+            margin: 0 auto;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
 
-    .title {
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        /* number of lines to show */
-        line-clamp: 2;
-        -webkit-box-orient: vertical;
+        .add-cart:hover {
+            background-color: #4e4ffa;
+            color: #fff;
+        }
     }
 }
 

@@ -44,7 +44,6 @@ const Products = () => {
 
     const handleClickCart = async (idProduct) => {
         history.push(`/product/${type}/${idProduct}`);
-        // await disPatch(getSimilarProduct({ type, idProduct }));
     };
 
     const handleClickAddCart = async (product) => {
@@ -103,13 +102,15 @@ const Products = () => {
     const filterProductsBrandAndSize = async () => {
         let listId;
         if (type === 'car') {
-            listId = 1
-        } else if (type === 'motor') {
-            listId = 2
+            listId = 1;
+        } else if (type === 'specializedVehicle') {
+            listId = 2;
         } else if (type === 'plane') {
-            listId = 3
+            listId = 3;
+        } else if (type === 'motor') {
+            listId = 4;
         } else {
-            listId = 0
+            listId = 0;
         }
         const product = await filterProductsByBrandAndSize(dataBrandFilter, dataSizeFilter, currentPage, currentLimit, listId);
         setTotalPages(product.totalPages);
@@ -149,10 +150,12 @@ const Products = () => {
             let listId;
             if (type === 'car') {
                 listId = 1
-            } else if (type === 'motor') {
+            } else if (type === 'specializedVehicle') {
                 listId = 2
             } else if (type === 'plane') {
                 listId = 3
+            } else if (type === 'motor') {
+                listId = 4
             } else {
                 listId = 0
             }
@@ -273,41 +276,31 @@ const Products = () => {
                                 />
                                 <label style={{ fontSize: '12px' }}>Thương hiệu</label>
 
+
+
                                 <div className={`dropdown_type ${btnToggleType}`}>
-                                    <li>
-                                        <div className='filter-type-phone'>
-                                            <input type="checkbox" name="sỉze" className="m-2" autocomplete="on" defaultValue={500000} onClick={(e) => handleFillterBrand(e.target.defaultValue)} />
-                                            <label>BWM</label>
-                                        </div>
-                                    </li>
-                                    <hr />
-                                    <li>
-                                        <div className='filter-type-phone'>
-                                            <input type="checkbox" name="sỉze" className="m-2" autocomplete="on" defaultValue={500000} onClick={(e) => handleFillterBrand(e.target.defaultValue)} />
-                                            <label>Mercedes</label>
-                                        </div>
-                                    </li>
-                                    <hr />
-                                    <li>
-                                        <div className='filter-type-phone'>
-                                            <input type="checkbox" name="sỉze" className="m-2" autocomplete="on" defaultValue={500000} onClick={(e) => handleFillterBrand(e.target.defaultValue)} />
-                                            <label>Rolls Royce</label>
-                                        </div>
-                                    </li>
-                                    <hr />
-                                    <li>
-                                        <div className='filter-type-phone'>
-                                            <input type="checkbox" name="sỉze" className="m-2" autocomplete="on" defaultValue={500000} onClick={(e) => handleFillterBrand(e.target.defaultValue)} />
-                                            <label>Porsche</label>
-                                        </div>
-                                    </li>
-                                    <hr />
-                                    <li>
-                                        <div className='filter-type-phone'>
-                                            <input type="checkbox" name="sỉze" className="m-2" autocomplete="on" defaultValue={500000} onClick={(e) => handleFillterBrand(e.target.defaultValue)} />
-                                            <label>Toyota</label>
-                                        </div>
-                                    </li>
+                                    {
+                                        brandFilter ? brandFilter.map((item, index) => {
+                                            return (
+                                                // <div className="col-lg-6 col-12" key={`brand-${index}`}>
+                                                //     <input type="checkbox" autocomplete="on" name="brand" className="m-2" value={item} onChange={() => handleFillterBrand(item)} />
+                                                //     <label style={{ fontSize: '14px', color: '#1ea6e8' }}>{item}</label>
+                                                // </div>
+                                                <div key={`brand-1-${index}`}>
+                                                    <li>
+                                                        <div className='filter-type-phone'>
+                                                            <input type="checkbox" name="sỉze" className="m-2" autocomplete="on" value={item} onChange={() => handleFillterBrand(item)} />
+                                                            <label>{item}</label>
+                                                        </div>
+                                                    </li>
+                                                    <hr />
+                                                </div>
+                                            )
+                                        })
+                                            :
+                                            <>
+                                            </>
+                                    }
                                 </div>
                             </span>
                             <span className="option-phone">
@@ -316,40 +309,24 @@ const Products = () => {
                                 />
                                 <label style={{ fontSize: '12px' }}>Tỷ lệ</label>
                                 <div className={`dropdown_size ${btnToggleSize}`}>
-                                    <li>
-                                        <div className='filter-type-phone'>
-                                            <input type="checkbox" name="sỉze" className="m-2" autocomplete="on" defaultValue={500000} onClick={(e) => handleFillterBrand(e.target.defaultValue)} />
-                                            <label>1:18</label>
-                                        </div>
-                                    </li>
-                                    <hr />
-                                    <li>
-                                        <div className='filter-type-phone'>
-                                            <input type="checkbox" name="sỉze" className="m-2" autocomplete="on" defaultValue={500000} onClick={(e) => handleFillterBrand(e.target.defaultValue)} />
-                                            <label>1:30</label>
-                                        </div>
-                                    </li>
-                                    <hr />
-                                    <li>
-                                        <div className='filter-type-phone'>
-                                            <input type="checkbox" name="sỉze" className="m-2" autocomplete="on" defaultValue={500000} onClick={(e) => handleFillterBrand(e.target.defaultValue)} />
-                                            <label>1:25</label>
-                                        </div>
-                                    </li>
-                                    <hr />
-                                    <li>
-                                        <div className='filter-type-phone'>
-                                            <input type="checkbox" name="sỉze" className="m-2" autocomplete="on" defaultValue={500000} onClick={(e) => handleFillterBrand(e.target.defaultValue)} />
-                                            <label>1:20</label>
-                                        </div>
-                                    </li>
-                                    <hr />
-                                    <li>
-                                        <div className='filter-type-phone'>
-                                            <input type="checkbox" name="sỉze" className="m-2" autocomplete="on" defaultValue={500000} onClick={(e) => handleFillterBrand(e.target.defaultValue)} />
-                                            <label>1:16</label>
-                                        </div>
-                                    </li>
+                                    {
+                                        sizeFilter ? sizeFilter.map((item, index) => {
+                                            return (
+                                                <div key={`size-1-${index}`}>
+                                                    <li>
+                                                        <div className='filter-type-phone'>
+                                                            <input type="checkbox" name="sỉze" className="m-2" autocomplete="on" value={item} onChange={() => handleFillterSize(item)} />
+                                                            <label>{item}</label>
+                                                        </div>
+                                                    </li>
+                                                    <hr />
+                                                </div>
+                                            )
+                                        })
+                                            :
+                                            <>
+                                            </>
+                                    }
                                 </div>
                             </span>
                         </div>

@@ -7,6 +7,7 @@ import { fetAllPoint } from "../../api/pointAPIs";
 import FilterCol from '../Filter/FilterCol';
 import { FaSort, FaSortAmountDown, FaSortAmountDownAlt } from "react-icons/fa";
 import Pagination from '../Pagination/Pagination';
+import moment from "moment";
 import {
     useReactTable,
     getCoreRowModel,
@@ -15,6 +16,9 @@ import {
     getFilteredRowModel,
     flexRender,
 } from '@tanstack/react-table';
+const formatNumber = (number) => {
+    return numeral(number).format('0,0');
+}
 
 const columns = [
     {
@@ -28,14 +32,14 @@ const columns = [
     {
         accessorKey: 'price',
         header: 'Mốc đổi điểm',
-        cell: (props) => <p>{props.getValue()}</p>,
+        cell: (props) => <p>{formatNumber(props.getValue())}</p>,
         searchHidden: false,
 
     },
     {
         accessorKey: 'point',
         header: 'Điểm tích lũy',
-        cell: (props) => <p className='text-center'>{props.getValue()}</p>,
+        cell: (props) => <p className='text-center'>{formatNumber(props.getValue())}</p>,
         searchHidden: true,
 
     },
@@ -56,14 +60,14 @@ const columns = [
     {
         accessorKey: 'createdAt',
         header: 'Ngày tạo',
-        cell: (props) => <p>{props.getValue()}</p>,
+        cell: (props) => <p>{moment(props.getValue()).format('DD-MM-YYYY')}</p>,
         searchHidden: false,
 
     },
     {
         accessorKey: 'updatedAt',
         header: 'Ngày cập nhật',
-        cell: (props) => <p>{props.getValue()}</p>,
+        cell: (props) => <p>{moment(props.getValue()).format('DD-MM-YYYY')}</p>,
         searchHidden: false,
 
     },
@@ -145,9 +149,7 @@ const Point = () => {
         onPaginationChange: setPagination,
     });
 
-    const formatNumber = (number) => {
-        return numeral(number).format('0,0');
-    }
+
     return (
         <>
             <div id="page-top position-relative">
@@ -302,7 +304,7 @@ const Point = () => {
                         <footer className="sticky-footer bg-white">
                             <div className="container my-auto">
                                 <div className="copyright text-center my-auto">
-                                    <span>Copyright &copy; Your Website 2021</span>
+                                    <span>TOYMODEL XIN CHÀO BẠN</span>
                                 </div>
                             </div>
                         </footer>

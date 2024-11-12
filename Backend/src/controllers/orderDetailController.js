@@ -74,6 +74,36 @@ const ListPlaneStatistics = async (req, res) => {
     }
 }
 
+const ListMotorStatistics = async (req, res) => {
+    try {
+        let data = await OrderDetailService.ListMotorStatistics(req.params.year);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error.message);
+    }
+}
+
+const countSoldProducts = async (req, res) => {
+    try {
+        let data = await OrderDetailService.countSoldProducts();
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error.message);
+    }
+}
+
+const topSellingProducts = async (req, res) => {
+    try {
+        let data = await OrderDetailService.topSellingProducts();
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error.message);
+    }
+}
+
 module.exports = {
     addOrderDetail,
     getOrderDetail,
@@ -81,4 +111,7 @@ module.exports = {
     ListCarStatistics,
     ListSpecializedVehicleStatistics,
     ListPlaneStatistics,
+    ListMotorStatistics,
+    countSoldProducts,
+    topSellingProducts,
 };

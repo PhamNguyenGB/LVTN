@@ -8,6 +8,7 @@ import { loginStaff } from '../../store/slice/userSlice';
 import { IoIosClose } from "react-icons/io";
 import { createEvent, updateEvent } from '../../api/eventAPIs';
 import { toast } from 'react-toastify';
+import { fetAllLevels } from '../../api/levelAPIs';
 
 const ModalEvent = (props) => {
 
@@ -18,6 +19,7 @@ const ModalEvent = (props) => {
         description: '',
         discount: '',
         expiryDate: '',
+        maximum: '',
     }
 
     const validInputDefaults = {
@@ -25,11 +27,14 @@ const ModalEvent = (props) => {
         description: true,
         discount: true,
         expiryDate: true,
+        maximum: true,
     };
 
     const [validInput, setValidInput] = useState(validInputDefaults);
     const [eventData, setEventData] = useState(defaultEvent);
     const [error, setError] = useState(true);
+    const [dataLevels, setDataLevels] = useState('');
+    const [level, setLevel] = useState('');
 
 
     const handleCloseModalEvent = () => {
@@ -46,7 +51,7 @@ const ModalEvent = (props) => {
 
     const checkValidInputs = () => {
         setValidInput(validInputDefaults);
-        let arr = ['name', 'description', 'discount', 'expiryDate'];
+        let arr = ['name', 'description', 'discount', 'expiryDate', 'maximum'];
         let check = true;
         for (let i = 0; i < arr.length; i++) {
             if (!eventData[arr[i]]) {
@@ -60,11 +65,23 @@ const ModalEvent = (props) => {
         return check;
     };
 
+    const ClickLevels = (data) => {
+        setLevel(prevSelected => {
+            if (prevSelected.includes(data)) {
+                return prevSelected.filter(item => item !== data);
+            } else {
+                return [...prevSelected, data];
+            }
+        })
+
+    }
+
     const handleConfirmEvent = async () => {
         let check = checkValidInputs();
         if (check === true) {
             if (action === 'CREATE') {
-                const data = await createEvent(eventData);
+
+                const data = await createEvent({ eventData, level });
                 if (data.status === 0)
                     toast.success(data.mess);
 
@@ -81,6 +98,18 @@ const ModalEvent = (props) => {
         }
 
     };
+
+    const fetAllLevel = async () => {
+        fetAllLevels().then((res) => {
+            if (res.status === 0) {
+                setDataLevels(res.data);
+            }
+        });
+    }
+
+    useEffect(() => {
+        fetAllLevel();
+    }, [])
 
     useEffect(() => {
         if (action === 'UPDATE') {
@@ -131,10 +160,35 @@ const ModalEvent = (props) => {
                             <label>Ngày hết hạn </label>
                             <input
                                 className={validInput.expiryDate ? 'form-control' : 'form-control is-invalid'}
-                                type='text'
+                                type='date'
                                 value={eventData.expiryDate}
                                 onChange={(event) => handleOnchangeInput(event.target.value, 'expiryDate')}
                             />
+                        </div>
+                        <div className='col-4 form-group'>
+                            <label>Tối đa </label>
+                            <input
+                                className={validInput.maximum ? 'form-control' : 'form-control is-invalid'}
+                                type='text'
+                                value={eventData.maximum}
+                                onChange={(event) => handleOnchangeInput(event.target.value, 'maximum')}
+                            />
+                        </div>
+                        <div className='col-12 form-group'>
+                            <label>Các cấp bậc sử dụng: </label>
+                            {dataLevels && dataLevels?.map((item, index) => {
+                                return (
+                                    <div key={`lv-${index}`}>
+                                        <input
+                                            type='checkbox'
+                                            value={item.id}
+                                            onChange={(event) => ClickLevels(event.target.value)}
+                                        />
+                                        <span className='ml-2'>{item.name}</span>
+                                    </div>
+                                )
+                            })}
+
                         </div>
                         <div className='col-12 form-group' hidden={error}>
                             <div className='text-danger'>bạn chưa nhập đủ thông tin!!</div>

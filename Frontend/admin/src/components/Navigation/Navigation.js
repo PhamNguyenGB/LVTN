@@ -5,8 +5,11 @@ import { FaBorderAll } from "react-icons/fa6";
 import { TbBrandProducthunt } from "react-icons/tb";
 import { FcStatistics } from "react-icons/fc";
 import { HiMiniClipboardDocumentList } from "react-icons/hi2";
-import { FaRegFilePowerpoint } from "react-icons/fa";
+import { FaRegFilePowerpoint, FaUserCog } from "react-icons/fa";
 import { PiTrainRegionalFill } from "react-icons/pi";
+import { AiFillProduct } from "react-icons/ai";
+import { SiLevelsdotfyi } from "react-icons/si";
+import { IoHome } from "react-icons/io5";
 
 const Navigation = () => {
     return (
@@ -97,6 +100,36 @@ const Navigation = () => {
 
                 <hr className="sidebar-divider my-0" />
 
+                <li className="nav-item active">
+                    <NavLink className="nav-link" to="/user">
+                        <FaUserCog fontSize={18} />
+                        <span className='ml-1'>Quản lý người dùng</span></NavLink>
+                </li>
+
+                <hr className="sidebar-divider my-0" />
+
+                <li className="nav-item active">
+                    <NavLink className="nav-link" to="/sold/product">
+                        <AiFillProduct fontSize={18} />
+                        <span className='ml-1'>Sản phẩm đã bán</span></NavLink>
+                </li>
+
+                <hr className="sidebar-divider my-0" />
+
+                <li className="nav-item active">
+                    <NavLink className="nav-link" to="/level">
+                        <SiLevelsdotfyi fontSize={18} />
+                        <span className='ml-1'>Quản lý cấp bậc</span></NavLink>
+                </li>
+
+                <hr className="sidebar-divider my-0" />
+                <li className="nav-item active">
+                    <NavLink className="nav-link" to="/image/home">
+                        <IoHome fontSize={18} />
+                        <span className='ml-1'>Hình ảnh trang chủ</span></NavLink>
+                </li>
+
+                <hr className="sidebar-divider my-0" />
                 {/* <!-- Nav Item - Pages Collapse Menu --> */}
                 {/* <li className="nav-item">
                     <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"

@@ -19,6 +19,28 @@ const addSoldProduct = async (data) => {
     }
 }
 
+const getAllSoldProducts = async () => {
+    try {
+        const data = await db.Sold_Product.findAll({
+            include: {
+                model: db.Product,
+                include: { model: db.List_Product }
+            },
+        });
+        return {
+            status: 0,
+            data: data
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            status: -1,
+            mess: error.message,
+        }
+    }
+}
+
 module.exports = {
     addSoldProduct,
+    getAllSoldProducts
 }

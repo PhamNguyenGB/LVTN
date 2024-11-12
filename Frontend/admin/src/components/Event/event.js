@@ -7,6 +7,7 @@ import { fetAllEvents } from "../../api/eventAPIs";
 import FilterCol from '../Filter/FilterCol';
 import { FaSort, FaSortAmountDown, FaSortAmountDownAlt } from "react-icons/fa";
 import Pagination from '../Pagination/Pagination';
+import moment from 'moment';
 import {
     useReactTable,
     getCoreRowModel,
@@ -15,6 +16,10 @@ import {
     getFilteredRowModel,
     flexRender,
 } from '@tanstack/react-table';
+
+const formatNumber = (number) => {
+    return numeral(number).format('0,0');
+}
 
 const columns = [
     {
@@ -47,9 +52,27 @@ const columns = [
 
     },
     {
+        accessorKey: 'maximum',
+        header: 'Tối đa',
+        cell: (props) => <p className='text-center'>{formatNumber(props.getValue())}</p>,
+        searchHidden: true,
+
+    },
+    {
+        accessorKey: 'Levels',
+        header: 'Các cấp bậc sử dụng',
+        cell: (props) => <p className='text-center'>{props.getValue()?.map((item, index) => {
+            return (
+                <span key={`lll-${index}`}>{item.name},</span>
+            )
+        })}</p>,
+        searchHidden: true,
+
+    },
+    {
         accessorKey: 'expiryDate',
         header: 'Thời gian hết hạn',
-        cell: (props) => <p className='text-center'>{props.getValue()}</p>,
+        cell: (props) => <p className='text-center'>{moment(props.getValue()).format('DD-MM-YYYY')}</p>,
         searchHidden: false,
 
     },
@@ -63,14 +86,14 @@ const columns = [
     {
         accessorKey: 'createdAt',
         header: 'Ngày tạo',
-        cell: (props) => <p>{props.getValue()}</p>,
+        cell: (props) => <p>{moment(props.getValue()).format('DD-MM-YYYY')}</p>,
         searchHidden: false,
 
     },
     {
         accessorKey: 'updatedAt',
         header: 'Ngày cập nhật',
-        cell: (props) => <p>{props.getValue()}</p>,
+        cell: (props) => <p>{moment(props.getValue()).format('DD-MM-YYYY')}</p>,
         searchHidden: false,
 
     },
@@ -152,9 +175,6 @@ const Event = () => {
         onPaginationChange: setPagination,
     });
 
-    const formatNumber = (number) => {
-        return numeral(number).format('0,0');
-    }
     return (
         <>
             <div id="page-top position-relative">
@@ -267,9 +287,9 @@ const Event = () => {
                                                                     ))}
                                                                     <td style={{ width: "200px" }}>
                                                                         <span>
-                                                                            <button className=" btn btn-success ml-5" onClick={() => handleUpdateEvent(row.original)}>
+                                                                            {/* <button className=" btn btn-success ml-5" onClick={() => handleUpdateEvent(row.original)}>
                                                                                 <i className="fa fa-solid fa-pencil"></i>
-                                                                            </button>
+                                                                            </button> */}
                                                                             <button className=" btn btn-danger ml-3" onClick={() => handleDeleteEvent(row.original)}>
                                                                                 <i className="fa fa-solid fa-trash"></i>
                                                                             </button>
@@ -309,7 +329,7 @@ const Event = () => {
                         <footer className="sticky-footer bg-white">
                             <div className="container my-auto">
                                 <div className="copyright text-center my-auto">
-                                    <span>Copyright &copy; Your Website 2021</span>
+                                    <span>TOYMODEL XIN CHÀO BẠN</span>
                                 </div>
                             </div>
                         </footer>

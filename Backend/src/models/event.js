@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
             });
             Event.hasMany(models.Order);
             Event.belongsTo(models.Staff);
+            Event.belongsToMany(models.Level, {
+                through: 'level_event',
+                foreignKey: 'eventId',
+                otherKey: 'levelId'
+            });
         }
     }
 
@@ -25,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         name: DataTypes.STRING,
         description: DataTypes.STRING,
         discount: DataTypes.INTEGER,
+        maximum: DataTypes.INTEGER,
         staffId: DataTypes.INTEGER,
         expiryDate: DataTypes.DATE,
     }, {

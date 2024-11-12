@@ -14,6 +14,7 @@ import sun from '../../assets/images/sun.png';
 import whiteOutline from '../../assets/images/white-outline.png';
 import { FaUser } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 const Login = () => {
     const history = useHistory();
@@ -194,7 +195,7 @@ const Login = () => {
 
                                         <div className='text-danger' hidden={objCheckInput.isValidPassword}>Bạn chưa nhập vào password</div>
                                         <div className='forgot-pass'>
-                                            <a href='#'>Quên mật khâu?</a>
+                                            <Link to='/forgot' >Quên mật khâu?</Link>
                                         </div>
                                         <div className='input-box'>
                                             <button className="btn btn-primary btn-user btn-block input-submit" type='submit' onClick={(e) => handleLogin(e)}>

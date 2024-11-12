@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import imgUser from '../../assets/images/user.webp';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { updateAvatar, updateInfo } from '../../redux/slices/userSlice';
+import { updateAvatar, updateInfo, getInfoById } from '../../redux/slices/userSlice';
 
 const Profile = () => {
     const [show, setShow] = useState(false);
@@ -36,6 +36,10 @@ const Profile = () => {
         dispath(updateAvatar(formData));
         toast.success('Cập nhật ảnh đại diện thành công');
     }
+
+    useEffect(() => {
+        dispath(getInfoById());
+    }, []);
 
     useEffect(() => {
         if (file) {
@@ -69,7 +73,7 @@ const Profile = () => {
                             <div class="job">Khách hàng</div>
 
                             <div class="actions">
-                                <button class="btn">10 Coin</button>
+                                <button class="btn">{user.point} Coin</button>
                                 <button class="btn" onClick={handleFileUpload}>Đổi ảnh</button>
                             </div>
                             <input

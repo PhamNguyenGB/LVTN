@@ -37,8 +37,6 @@ export const updateInfo = createAsyncThunk(
 export const logout = createAsyncThunk(
     'staff/logout',
     async () => {
-        console.log('abc');
-
         return;
     }
 );
@@ -102,8 +100,6 @@ const userSlice = createSlice({
             })
             .addCase(logout.fulfilled, (state, action) => {
                 state.loading = false;
-                console.log('abc');
-
                 state.staff = null;
             })
             .addCase(logout.rejected, (state, action) => {

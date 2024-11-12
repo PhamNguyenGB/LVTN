@@ -472,6 +472,23 @@ const getOrderStatusStatistics = async () => {
     }
 };
 
+const statisticUser = async () => {
+    try {
+        const statisticUsers = await db.Order.findAll({
+            attributes: [
+                [sequelize.fn('SUM', sequelize.col('totalCost')), 'totalCostUser']
+            ],
+            where: { status: 'Đã giao' },
+            include: { model: db.User },
+            group: ['userId'],
+        });
+        return statisticUsers;
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
+
 
 module.exports = {
     addOrderService,
@@ -490,4 +507,5 @@ module.exports = {
     monthlyRevenueReport,
     orderStatistics,
     getOrderStatusStatistics,
+    statisticUser,
 }

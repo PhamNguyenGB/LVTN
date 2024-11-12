@@ -15,3 +15,8 @@ export const register = async (data) => {
     const request = await axiosClient.post('/user/register', data);
     return request;
 };
+
+export const fetAllImgHome = async () => {
+    const request = await axiosClient.get('/image/home');
+    return request;
+};

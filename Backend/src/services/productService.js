@@ -339,7 +339,7 @@ const getProductByIDService = async (idProduct) => {
     }
 };
 
-const getSimilarProductService = async (brand, idOldProduct) => {
+const getSimilarProductService = async (brand, idOldProduct, listProductId) => {
     try {
         const data = await db.Product.findAll({
             where: {
@@ -347,6 +347,7 @@ const getSimilarProductService = async (brand, idOldProduct) => {
                     [Op.ne]: idOldProduct
                 },
                 brand: brand,
+                listProductId: listProductId,
             },
             limit: 4,
         })

@@ -7,6 +7,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateAvatar, updateInfo } from '../../store/slice/userSlice';
 import { toast } from 'react-toastify';
+import moment from 'moment';
 
 const Profile = () => {
     const [show, setShow] = useState(false);
@@ -90,7 +91,7 @@ const Profile = () => {
                                 </div>
                                 <div className='data '>
                                     <h4>Sinh nhật</h4>
-                                    <p>{staff.birthday}</p>
+                                    <p>{moment(staff.birthday).format('DD-MM-YYYY')}</p>
                                 </div>
                                 <div className='data '>
                                     <h4>Cấp bậc</h4>

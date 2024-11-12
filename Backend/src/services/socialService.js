@@ -6,7 +6,11 @@ import jwt from 'jsonwebtoken';
 const loginUserSocial = async (email, name, image) => {
     try {
         let user = await db.User.findOne({
-            where: { email: email }
+            where: { email: email },
+            include: {
+                model: db.Level,
+                attributes: ['id', 'name']
+            }
         });
 
         if (user) {
@@ -14,6 +18,7 @@ const loginUserSocial = async (email, name, image) => {
             let payload = {
                 fullname: user.fullname,
                 email: user.email,
+                Level: user.Level,
                 role: 'user',
                 id: user.id,
             }
@@ -29,6 +34,7 @@ const loginUserSocial = async (email, name, image) => {
                 avatar: user.dataValues?.avatar,
                 phone: user.dataValues?.phone,
                 address: user.dataValues?.address,
+                Level: user.dataValues?.Level,
                 imgGG: image,
                 role: 'user',
                 point: user.dataValues.point,
@@ -44,12 +50,14 @@ const loginUserSocial = async (email, name, image) => {
                 fullname: name,
                 email: email,
                 point: 0,
+                levelId: 1,
             });
 
             let payload = {
                 fullname: name,
                 email: email,
                 role: 'user',
+                Level: [{ id: 1 }, { name: 'Đồng' }],
                 id: newUser.id,
             }
 

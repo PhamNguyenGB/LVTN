@@ -3,7 +3,7 @@ import db from '../models/index';
 const createEventService = async (data, staff) => {
     try {
         const event = await db.Event.findOne({
-            where: { name: data.name }
+            where: { name: data.eventData.name }
         });
         if (event) {
             return {
@@ -12,13 +12,22 @@ const createEventService = async (data, staff) => {
             }
         }
 
-        await db.Event.create({
-            name: data.name,
-            description: data.description,
-            discount: data.discount,
-            expiryDate: data.expiryDate,
+        const newEvent = await db.Event.create({
+            name: data.eventData.name,
+            description: data.eventData.description,
+            discount: data.eventData.discount,
+            expiryDate: data.eventData.expiryDate,
+            maximum: data.eventData.maximum,
             staffId: staff.id,
         });
+
+        data.level.forEach(async (item) => {
+            await db.Level_Event.create({
+                levelId: item,
+                eventId: newEvent.id,
+            })
+        });
+
         return {
             mess: 'Tạo sự kiện thành công',
             status: 0,
@@ -35,7 +44,17 @@ const createEventService = async (data, staff) => {
 const getAllEventService = async () => {
     try {
         const data = await db.Event.findAll({
-            include: { model: db.Staff, attributes: ['email'] }
+            include: [
+                {
+                    model: db.Staff,
+                    attributes: ['email'],
+                },
+                {
+                    model: db.Level,
+                    attributes: ['id', 'name'],
+                    through: { attributes: [] },
+                },
+            ],
         });
         return {
             mess: 'Lấy tất cả sự kiện thành công',
@@ -56,6 +75,7 @@ const UpdateEventService = async (data, staff) => {
         const event = await db.Event.findOne({
             where: { id: data.id },
         });
+
         if (event) {
             await event.update({
                 name: data.name,
@@ -117,34 +137,49 @@ const findEventByNameSevice = async (eventName, user) => {
 
         const data = await db.Event.findOne({
             where: { name: eventName },
-            attributes: ['id', 'name', 'discount', 'expiryDate']
+            attributes: ['id', 'name', 'discount', 'expiryDate', 'maximum']
         })
         if (data) {
-            if (data.expiryDate < currentDate)
-                return {
-                    status: 0,
-                    mess: 'Mã giảm giá đã hết hạn'
-                }
-
-            const used_event = await db.Used_Event.findOne({
+            const levelUse = await db.Level_Event.findOne({
                 where: {
                     eventId: data.id,
-                    userId: user.id,
+                    levelId: user.Level.id,
                 }
-            });
+            })
 
-            if (used_event)
+            if (levelUse) {
+                if (data.expiryDate < currentDate)
+                    return {
+                        status: 0,
+                        mess: 'Mã giảm giá đã hết hạn'
+                    }
+
+                const used_event = await db.Used_Event.findOne({
+                    where: {
+                        eventId: data.id,
+                        userId: user.id,
+                    }
+                });
+
+                if (used_event)
+                    return {
+                        status: 0,
+                        mess: 'Bạn đã sử dụng mã giảm giá này rồi'
+                    }
+
+
                 return {
                     status: 0,
-                    mess: 'Bạn đã sử dụng mã giảm giá này rồi'
+                    data: data,
+                    mess: 'Áp dụng mã giảm giá thành công'
                 }
-
-
-            return {
-                status: 0,
-                data: data,
-                mess: 'Áp dụng mã giảm giá thành công'
+            } else {
+                return {
+                    status: 0,
+                    mess: 'Bạn chưa đủ cấp bậc để sử dụng'
+                }
             }
+
         }
         return {
             status: 0,

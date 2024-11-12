@@ -6,6 +6,7 @@ const router = express.Router();
 
 const SoldProductRoute = (app) => {
     router.post('/create', checkVerifyTokenAdmin, SoldProductController.addSoldProduct);
+    router.get('/getAll', checkVerifyTokenAdmin, SoldProductController.getAllSoldProducts);
 
     return app.use('/api/sold/product', router);
 };

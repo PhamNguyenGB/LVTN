@@ -17,6 +17,11 @@ import {
     flexRender,
 } from '@tanstack/react-table';
 
+const formatNumber = (number) => {
+    return numeral(number).format('0,0');
+}
+
+
 const columns = [
     {
         accessorKey: 'index',
@@ -80,7 +85,7 @@ const columns = [
     {
         accessorKey: 'price',
         header: 'Giá',
-        cell: (props) => <p>{props.getValue()}</p>,
+        cell: (props) => <p>{formatNumber(props.getValue())}</p>,
         searchHidden: true,
 
     },
@@ -94,7 +99,7 @@ const columns = [
     {
         accessorKey: 'discount',
         header: 'Giảm giá',
-        cell: (props) => <p>{props.getValue()}</p>,
+        cell: (props) => <p>{formatNumber(props.getValue())}</p>,
         searchHidden: true,
 
     },
@@ -347,7 +352,7 @@ const Product = () => {
                         <footer className="sticky-footer bg-white">
                             <div className="container my-auto">
                                 <div className="copyright text-center my-auto">
-                                    <span>Copyright &copy; Your Website 2021</span>
+                                    <span>TOYMODEL XIN CHÀO BẠN</span>
                                 </div>
                             </div>
                         </footer>

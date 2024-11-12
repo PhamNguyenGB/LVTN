@@ -159,7 +159,10 @@ const statisticUsers = async (req, res) => {
 const getAllUsers = async (req, res) => {
     try {
         const data = await UserService.getAllUsersService();
-        return res.status(200).json({ data });
+        return res.status(200).json({
+            status: data.status,
+            data: data.data
+        });
     } catch (error) {
         console.log(error);
         return res.status(500).json('error from getAllUsers');
@@ -234,6 +237,22 @@ const increatePointUser = async (req, res) => {
     }
 };
 
+const UpdateLevel = async (req, res) => {
+    try {
+        const data = await UserService.UpdateLevel(req.body);
+        return res.status(200).json({
+            status: data.status,
+            mess: data.mess
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: -1,
+            mess: error.message,
+        });
+    }
+}
+
 module.exports = {
     register,
     loginUser,
@@ -247,4 +266,5 @@ module.exports = {
     updateInfoUser,
     getInfoById,
     increatePointUser,
+    UpdateLevel,
 }

@@ -1,5 +1,5 @@
 require("dotenv").config();
-import e from 'express';
+import e, { response } from 'express';
 import staffService from '../services/staffService';
 import jwt from 'jsonwebtoken';
 
@@ -126,10 +126,27 @@ const updateInfoStaff = async (req, res) => {
     }
 };
 
+const chancePassword = async (req, res) => {
+    try {
+        const request = await staffService.chancePassword(req.body.oldPass, req.body.newPass, req.user);
+        return res.status(200).json({
+            status: request.status,
+            mess: request.mess,
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: -1,
+            mess: 'error from chace pass staff',
+        })
+    }
+}
+
 module.exports = {
     reristerStaff,
     login,
     refreshToken,
     updateAvatar,
     updateInfoStaff,
+    chancePassword,
 }

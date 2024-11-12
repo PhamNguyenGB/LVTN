@@ -14,12 +14,13 @@ const UserRoute = (app) => {
     router.post('/refresh', UserController.refreshToken);
     router.post('/decreate/point', checkVerifyTokenUser, UserController.decreasePointUser);
     router.post('/avatar', checkVerifyTokenUser, upload.single('image'), UserController.updateAvatar);
-    router.post('update/info', checkVerifyTokenUser, UserController.updateInfoUser);
+    router.post('/update/info', checkVerifyTokenUser, UserController.updateInfoUser);
     router.get('/get/info', checkVerifyTokenUser, UserController.getInfoById);
     router.post('/update/point', checkVerifyTokenAdmin, UserController.increatePointUser);
+    router.post('/update/level', checkVerifyTokenAdmin, UserController.UpdateLevel);
 
     router.get('/statictis/users', checkVerifyTokenAdmin, UserController.statisticUsers);
-    router.get('/statictis/getAllUsers', checkVerifyTokenAdmin, UserController.getAllUsers);
+    router.get('/getAllUsers', checkVerifyTokenAdmin, UserController.getAllUsers);
 
     return app.use('/api/user', router);
 };
