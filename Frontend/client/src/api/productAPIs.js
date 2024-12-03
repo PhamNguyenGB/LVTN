@@ -5,6 +5,11 @@ export const fetchNew4Products = async () => {
     return request;
 };
 
+export const fetchNewProducts = async () => {
+    const request = await axiosClient.get('/products/newProduct');
+    return request;
+};
+
 export const fetchAllListProducts = async (listId, currentPage, currentLimit) => {
     const request = await axiosClient.get(`/products/fetAllList/${listId}/${currentPage}/${currentLimit}`);
     return request;
@@ -27,6 +32,11 @@ export const getProductsSimilar = async (data) => {
 
 export const topSellingProducts = async () => {
     const request = await axiosClient.get('/Details/top/selling/products');
+    return request;
+}
+
+export const searchProducts = async (name) => {
+    const request = await axiosClient.get(`/products/search/${name}`);
     return request;
 }
 

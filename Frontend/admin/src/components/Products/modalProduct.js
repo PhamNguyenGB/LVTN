@@ -297,6 +297,9 @@ const ModalProduct = (props) => {
                             >
                                 <option selected>Loại sản phẩm</option>
                                 <option value={1}>Xe Ô Tô</option>
+                                <option value={2}>Xe Chuyên dụng</option>
+                                <option value={3}>Máy Bay</option>
+                                <option value={4}>Mô Tô</option>
                             </select>
                             {/* <input
                                 className={validInput.name ? 'form-control' : 'form-control is-invalid'}

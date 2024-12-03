@@ -1,7 +1,7 @@
 import db from '../models/index';
 import path from 'path';
 import fs from 'fs';
-import { Op, where } from 'sequelize';
+import { Op } from 'sequelize';
 
 const getAllProducts = async () => {
     try {
@@ -146,7 +146,7 @@ const updateProductService = async (dataProduct, newFile, staff) => {
             imgOld,
         } = dataProduct;
 
-        const fileNameNew = imgOld.split(',');
+        const fileNameNew = imgOld ? imgOld.split(',') : [];
 
         let product = await db.Product.findOne({
             where: { id: id },
@@ -154,18 +154,21 @@ const updateProductService = async (dataProduct, newFile, staff) => {
         if (product) {
             const getOldFile = JSON.parse(product.images);
             const checkFile = [];
+
             for (let i = 0; i < getOldFile.length; i++) {
                 if (getOldFile[i] !== fileNameNew[i]) {
                     checkFile.push(getOldFile[i]);
                 }
             }
 
-            if (checkFile) {
+            if (checkFile.length > 0) {
                 await deleteFile(JSON.stringify(checkFile));
             }
 
             if (newFile) {
-                const imageUrls = newFile.map(file => 'http://localhost:8080/image/' + file.filename);
+                const imageUrls = newFile && newFile.length > 0
+                    ? newFile.map(file => 'http://localhost:8080/image/' + file.filename)
+                    : [];
 
                 const updateImg = [...fileNameNew, ...imageUrls];
 
@@ -242,12 +245,12 @@ const getNew4Products = async () => {
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
         const products = await db.Product.findAll({
-            // where: {
-            //     createdAt: {
-            //         //gte: lớn hơn hoặc bằng
-            //         [Op.gte]: thirtyDaysAgo
-            //     }
-            // },
+            where: {
+                createdAt: {
+                    //gte: lớn hơn hoặc bằng
+                    [Op.gte]: thirtyDaysAgo
+                }
+            },
             order: [['createdAt', 'DESC']],
             limit: 4
         });
@@ -257,6 +260,7 @@ const getNew4Products = async () => {
         return 'error get new product';
     }
 };
+
 
 const getAllListProducts = async (idList, page, limit) => {
     try {
@@ -407,8 +411,9 @@ const filterProductsPriceService = async (type, price) => {
 const handleSearchProduct = async (name) => {
     try {
         const products = await db.Product.findAll({});
-        const data = await products.filter((item) =>
-            item.name.toLocaleLowerCase().includes(name.toLocaleLowerCase())
+        const data = await products.filter((item) => {
+            return item.dataValues.name.toLocaleLowerCase().includes(name.toLocaleLowerCase());
+        }
         )
         return data;
     } catch (error) {

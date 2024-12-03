@@ -70,7 +70,7 @@ const registerUser = async (userData, providedOtp) => {
         await deleteStoredOtp(userData.email);
 
         let hashPass = await funHashPassWord(userData.password);
-        await db.Staff.create({
+        await db.User.create({
             fullname: userData.fullname,
             sex: userData.sex,
             email: userData.email,
@@ -299,6 +299,10 @@ const getInfoById = async (user) => {
     try {
         const info = await db.User.findOne({
             where: { id: user.id },
+            include: {
+                model: db.Level,
+                attributes: ['id', 'name']
+            },
         });
         return {
             status: 0,

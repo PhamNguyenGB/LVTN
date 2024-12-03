@@ -151,12 +151,12 @@ const SoldProduct = () => {
                             <div className="container-fluid mt-5">
 
                                 {/* <!-- Page Heading --> */}
-                                <h1 className="h3 mb-2 text-gray-800">QUẢN LÍ SỰ KIỆN</h1>
+                                <h1 className="h3 mb-2 text-gray-800">QUẢN LÍ SẢN PHẨM ĐÃ BÁN</h1>
 
                                 {/* <!-- DataTales Example --> */}
                                 <div className="card shadow mb-4">
                                     <div className="card-header py-3">
-                                        <h6 className="m-0 font-weight-bold text-primary">Sự kiện</h6>
+                                        <h6 className="m-0 font-weight-bold text-primary">Sản phẩm đã bán</h6>
                                     </div>
                                     <div className="card-body">
                                         <div className="table-responsive">

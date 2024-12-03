@@ -139,6 +139,7 @@ const findEventByNameSevice = async (eventName, user) => {
             where: { name: eventName },
             attributes: ['id', 'name', 'discount', 'expiryDate', 'maximum']
         })
+
         if (data) {
             const levelUse = await db.Level_Event.findOne({
                 where: {

@@ -65,7 +65,10 @@ const getAllOrdersStaffService = async () => {
                     model: db.Shipper,
                     attributes: ['email'],
                 },
-            ]
+            ],
+            order: [
+                ['id', 'DESC'],
+            ],
         });
         return {
             mess: 'Lấy tất cả đơn hàng thành công',
@@ -124,7 +127,10 @@ const updateStatusPay = async (payOnlineCode) => {
 const findOrderById = async (user) => {
     try {
         let order = await db.Order.findAll({
-            where: { userId: user.id }
+            where: { userId: user.id },
+            order: [
+                ['id', 'DESC'],
+            ],
         });
         return {
             mess: 'Tìm kiếm đơn của người dùng thành công',
@@ -382,7 +388,8 @@ const monthlyRevenueReport = async (year) => {
                 createdAt: {
                     [Op.gte]: new Date(`${currentYear}-01-01`), // Bắt đầu từ đầu năm
                     [Op.lte]: new Date(`${currentYear}-12-31`)  // Kết thúc ở cuối năm
-                }
+                },
+                status: 'Đã giao'
             },
             group: [fn('DATE_FORMAT', col('createdAt'), '%m')], // Nhóm theo tháng
             order: [[fn('DATE_FORMAT', col('createdAt'), '%m'), 'ASC']]

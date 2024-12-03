@@ -142,6 +142,53 @@ const chancePassword = async (req, res) => {
     }
 }
 
+const getAllStaffs = async (req, res) => {
+    try {
+        const request = await staffService.getAllStaffs();
+        return res.status(200).json({
+            data: request.data,
+            status: request.status,
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            data: '',
+            status: -1,
+        });
+    }
+}
+
+const deleteRole = async (req, res) => {
+    try {
+        const request = await staffService.deleteRole(req.body.staffId);
+        return res.status(200).json({
+            status: request.status,
+            mess: request.mess,
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: -1,
+            mess: "Error deleting staff",
+        })
+    }
+}
+const resetRole = async (req, res) => {
+    try {
+        const request = await staffService.resetRole(req.body.staffId);
+        return res.status(200).json({
+            status: request.status,
+            mess: request.mess,
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: -1,
+            mess: "Error reset role staff",
+        })
+    }
+}
+
 module.exports = {
     reristerStaff,
     login,
@@ -149,4 +196,7 @@ module.exports = {
     updateAvatar,
     updateInfoStaff,
     chancePassword,
+    getAllStaffs,
+    deleteRole,
+    resetRole,
 }

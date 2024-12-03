@@ -167,7 +167,7 @@ const ImageHome = () => {
                             <div className="container-fluid mt-5">
 
                                 {/* <!-- Page Heading --> */}
-                                <h1 className="h3 mb-2 text-gray-800">QUẢN LÍ SỰ KIỆN</h1>
+                                <h1 className="h3 mb-2 text-gray-800">QUẢN LÍ HÌNH ẢNH GIỚI THIỆU</h1>
                                 <div className="row">
                                     <div className="col-10"></div>
                                     <button className="col-2 m-3 btn btn-primary" style={{ width: "200px" }}
@@ -181,7 +181,7 @@ const ImageHome = () => {
                                 {/* <!-- DataTales Example --> */}
                                 <div className="card shadow mb-4">
                                     <div className="card-header py-3">
-                                        <h6 className="m-0 font-weight-bold text-primary">Sự kiện</h6>
+                                        <h6 className="m-0 font-weight-bold text-primary">Hình ảnh</h6>
                                     </div>
                                     <div className="card-body">
                                         <div className="table-responsive">

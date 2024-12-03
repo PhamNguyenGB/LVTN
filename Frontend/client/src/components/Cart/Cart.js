@@ -144,7 +144,7 @@ const Cart = () => {
         toast.success('Đặt hàng thành công');
         setTimeout(() => {
             history.push('/');
-        }, 2000);
+        }, 1000);
 
     }
 

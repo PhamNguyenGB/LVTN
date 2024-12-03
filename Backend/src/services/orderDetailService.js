@@ -334,7 +334,7 @@ const topSellingProducts = async () => {
             ],
             group: ['productId'],
             order: [[sequelize.fn('SUM', sequelize.col('Order_Detail.quantity')), 'DESC']],
-            limit: 8,
+            limit: 12,
             include: [
                 {
                     model: db.Order,

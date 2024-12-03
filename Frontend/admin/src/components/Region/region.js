@@ -169,13 +169,13 @@ const Region = () => {
                                             setIsShowModalRegion(true);
                                             setActionModalRegion("CREATE");
                                         }}
-                                    >+Thêm mới sự kiện</button>
+                                    >+Thêm mới địa chỉ</button>
                                 </div>
 
                                 {/* <!-- DataTales Example --> */}
                                 <div className="card shadow mb-4">
                                     <div className="card-header py-3">
-                                        <h6 className="m-0 font-weight-bold text-primary">Sự kiện</h6>
+                                        <h6 className="m-0 font-weight-bold text-primary">Địa chỉ</h6>
                                     </div>
                                     <div className="card-body">
                                         <div className="table-responsive">

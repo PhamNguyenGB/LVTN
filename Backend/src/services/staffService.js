@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { getStoredOtp, deleteStoredOtp } from './sendOTPService';
 import fs from 'fs';
 import path from 'path';
+import { Op } from 'sequelize';
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -291,6 +292,70 @@ const chancePassword = async (oldPass, newPass, staff) => {
     }
 }
 
+const getAllStaffs = async () => {
+    try {
+        const data = await db.Staff.findAll({
+            where: { role: { [Op.ne]: 'admin' } }
+        });
+        return {
+            status: 0,
+            data: data,
+        };
+    } catch (error) {
+        console.log(error);
+        return {
+            status: -1,
+            data: '',
+        };
+    }
+}
+
+const deleteRole = async (staffId) => {
+    try {
+        const staff = await db.Staff.findOne({
+            where: { id: staffId },
+        });
+        if (staff) {
+            staff.update({
+                role: '',
+            });
+        }
+        return {
+            status: 0,
+            mess: 'Xóa quyền quản lý thành công'
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            status: -1,
+            mess: 'Xóa quyền quản lý thất bại'
+        }
+    }
+}
+
+const resetRole = async (staffId) => {
+    try {
+        const staff = await db.Staff.findOne({
+            where: { id: staffId },
+        });
+        if (staff) {
+            staff.update({
+                role: 'staff',
+            });
+        }
+        return {
+            status: 0,
+            mess: 'Reset quyền quản lý thành công'
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            status: -1,
+            mess: 'Reset quyền quản lý thất bại'
+        }
+    }
+}
+
 module.exports = {
     reristerStaff,
     loginStaff,
@@ -299,4 +364,7 @@ module.exports = {
     updateAvatar,
     updateInfo,
     chancePassword,
+    getAllStaffs,
+    deleteRole,
+    resetRole,
 };

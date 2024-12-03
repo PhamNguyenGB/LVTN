@@ -216,7 +216,7 @@ const Product = () => {
                             <div className="container-fluid mt-5">
 
                                 {/* <!-- Page Heading --> */}
-                                <h1 className="h3 mb-2 text-gray-800">QUẢN LÍ SẢN PHẨM</h1>
+                                <h1 className="h3 mb-2 text-gray-800">QUẢN LÍ KHO</h1>
                                 <div className="row">
                                     <div className="col-10"></div>
                                     <button className="col-2 m-3 btn btn-primary" style={{ width: "200px" }}

@@ -77,7 +77,7 @@ const updateProduct = async (req, res) => {
 
 const fetchNewProducts = async (req, res) => {
     try {
-        let data = await ProductService.getAllProducts();
+        let data = await ProductService.getNewProducts();
         return res.status(200).json(data);
     } catch (error) {
         console.log(error);
@@ -170,11 +170,7 @@ const filterProductsPrice = async (req, res) => {
 const searchProduct = async (req, res) => {
     try {
         const data = await ProductService.handleSearchProduct(req.params.name);
-        return res.status(200).json({
-            Mess: data.Mess,
-            ErrC: data.ErrC,
-            Data: data.Data,
-        })
+        return res.status(200).json(data);
     } catch (error) {
         console.log(error);
         return res.status(500).json({

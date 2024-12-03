@@ -15,6 +15,9 @@ const StaffRoute = (app) => {
     router.post('/avatar', checkVerifyTokenAdmin, upload.single('image'), StaffController.updateAvatar);
     router.post('/info', checkVerifyTokenAdmin, StaffController.updateInfoStaff);
     router.post('/chance/pass', checkVerifyTokenAdmin, StaffController.chancePassword);
+    router.get('/all/staff', checkVerifyTokenAd, StaffController.getAllStaffs);
+    router.post('/delete/role', checkVerifyTokenAd, StaffController.deleteRole);
+    router.post('/reset/role', checkVerifyTokenAd, StaffController.resetRole);
 
     return app.use("/api/staff", router);
 }

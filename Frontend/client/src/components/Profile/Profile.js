@@ -70,7 +70,7 @@ const Profile = () => {
                             </div>
 
                             <div class="name">{user.fullname}</div>
-                            <div class="job">Khách hàng</div>
+                            <div class="job">Cấp: {user?.Level.name}</div>
 
                             <div class="actions">
                                 <button class="btn">{user.point} Coin</button>

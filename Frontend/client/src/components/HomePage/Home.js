@@ -10,6 +10,7 @@ import { fetchNew4Products, topSellingProducts } from '../../api/productAPIs';
 import { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { fetAllImgHome } from '../../api/userAPIs';
+import numeral from 'numeral';
 
 const Home = () => {
 
@@ -70,6 +71,10 @@ const Home = () => {
         history.push(`/product/${type}/${idProduct}`);
     };
 
+    const formatNumber = (number) => {
+        return numeral(number).format('0,0');
+    }
+
     useEffect(() => {
         getNew4Products();
         getTopSellingProducts();
@@ -120,12 +125,11 @@ const Home = () => {
 
 
                 {/* <!--featured-cars start --> */}
-                <section id="featured-cars" className="featured-cars">
-                    <div className="container">
+                {/* <section id="featured-cars" className="featured-cars"> */}
+                {/* <div className="container">
                         <div className="section-header">
                             <h2 style={{ color: '#d59073' }}><MdStarRate /> SẢN PHẨM MỚI <MdStarRate /></h2>
                         </div>
-                        {/* <!--/.section-header--> */}
                         <div className="featured-cars-content">
                             <div className="row">
                                 {newFourProducts && newFourProducts.map((item, index) => {
@@ -163,7 +167,11 @@ const Home = () => {
                                                             </>
                                                         }
                                                     </div>
-                                                    <h3>{item.price}</h3>
+                                                    <div className="mb-3">
+                                                        <span className={item.discount ? 'd-none' : 'd-block'} style={{ fontSize: '18px' }}>{formatNumber(item.price)} đ</span>
+                                                        <span className={item.discount ? 'd-block' : 'd-none'} style={{ fontSize: '18px' }}>{formatNumber(item.discount)} đ</span>
+
+                                                    </div>
                                                     <button className='btn add-cart' onClick={() => handleClickCart(item.listProductId, item.id)}>Xem chi tiết</button>
                                                 </div>
                                             </div>
@@ -172,16 +180,16 @@ const Home = () => {
                                 })}
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
-                    <div className="text-center">
+                {/* <div className="text-center">
                         <Link to='/product/new'>
                             <h6 style={{ color: '#d59073' }}>Xem thêm</h6>
                         </Link>
-                    </div>
-                    {/* <!--/.container--> */}
+                    </div> */}
+                {/* <!--/.container--> */}
 
-                </section>
+                {/* </section> */}
                 {/* <!--/.featured-cars--> */}
 
                 {/* <!--featured-cars end --> */}
@@ -233,7 +241,10 @@ const Home = () => {
                                                             </>
                                                         }
                                                     </div>
-                                                    <h3>{item.price}</h3>
+                                                    <div className="mb-3">
+                                                        <span className={item.discount ? 'd-none' : 'd-block'} style={{ fontSize: '18px' }}>{formatNumber(item.price)} đ</span>
+                                                        <span className={item.discount ? 'd-block' : 'd-none'} style={{ fontSize: '18px' }}>{formatNumber(item.discount)} đ</span>
+                                                    </div>
                                                     <button className='btn add-cart' onClick={() => handleClickCart(item.listProductId, item.id)}>Xem chi tiết</button>
                                                 </div>
                                             </div>

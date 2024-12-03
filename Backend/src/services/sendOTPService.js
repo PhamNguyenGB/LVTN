@@ -8,7 +8,7 @@ import db from '../models';
 import bcrypt from 'bcryptjs';
 
 
-// client.connect();
+client.connect();
 
 const generateOTP = () => {
     return randomstring.generate({ length: 4, charset: 'numeric' });

@@ -22,6 +22,7 @@ import SoldProduct from "../components/SoldProduct/SoldProduct";
 import ForgotPass from "../components/ForgotPass/ForgotPass";
 import Level from "../components/Level/level";
 import ImageHome from "../components/ImageHome/imageHome";
+import Staff from "../components/Staff/Staff";
 
 const StaffRoute = () => {
     const staff = useSelector((state) => state.staff.staff);
@@ -43,6 +44,7 @@ const StaffRoute = () => {
                 <Route path="/forgot" exact>
                     <ForgotPass />
                 </Route>
+                <PrivateRoute path="/staff" component={Staff} />
                 <PrivateRoute path="/image/home" component={ImageHome} />
                 <PrivateRoute path="/level" component={Level} />
                 <PrivateRoute path="/sold/product" component={SoldProduct} />

@@ -138,15 +138,14 @@ const Header = () => {
                             </div>
                         </div>
                         <div className="row p-2 pt-3 pb-3 d-flex justify-content-around">
-                            <div className='col-1  header-product'>
+                            {/* <div className='col-1  header-product'>
                                 <Link to='/product/new' className="product-name ">
                                     <MdFiberNew style={{ fontSize: '24px' }} />
                                     <br />
                                     Hàng mới về
-                                </Link>
+                                </Link>/
 
-                                {/* <Link to='/product/Mercedes' className="product-name" onClick={() => handleClickNameProduct('Mercedes')}>Mercedes</Link> */}
-                            </div>
+                            </div> */}
                             <div className='col-1 header-product'>
                                 <Link to='/product/car' className="product-name ">
                                     <IoCarSportSharp style={{ fontSize: '24px' }} />

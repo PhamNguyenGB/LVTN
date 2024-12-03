@@ -66,6 +66,7 @@ const refreshToken = async (req, res) => {
                 email: user.email,
                 id: user.id,
                 role: 'user',
+                Level: user.Level,
             }
             const newAccessToken = UserService.createJWT(payload);
             // const newFrefreshToken = UserService.refreshToken(payload);

@@ -34,7 +34,7 @@ const payOnline = async (req, res) => {
         amount: req.body.totalAmout,
         description: `Mã giao dịch #${transID}`,
         bank_code: "",
-        callback_url: 'https://e751-14-191-78-173.ngrok-free.app/api/payment/online/zaloPay/callback'
+        callback_url: 'https://f735-27-64-223-83.ngrok-free.app/api/payment/online/zaloPay/callback'
     };
 
 

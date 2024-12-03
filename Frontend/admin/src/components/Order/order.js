@@ -67,13 +67,13 @@ const columns = [
         searchHidden: true,
 
     },
-    {
-        accessorKey: 'Shipper',
-        header: 'Người giao hàng',
-        cell: (props) => <p>{props.getValue()?.email}</p>,
-        searchHidden: false,
+    // {
+    //     accessorKey: 'Shipper',
+    //     header: 'Người giao hàng',
+    //     cell: (props) => <p>{props.getValue()?.email}</p>,
+    //     searchHidden: false,
 
-    },
+    // },
     {
         accessorKey: 'Event',
         header: 'Giảm giá',

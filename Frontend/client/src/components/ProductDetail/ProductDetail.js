@@ -23,7 +23,7 @@ import { MdStarRate } from "react-icons/md";
 
 
 const ProductDetail = () => {
-    const { id } = useParams();
+    const { id, name } = useParams();
     const similarProducts = useSelector((state) => state.product.similarProducts);
     const [quantity, setQuantity] = useState(1);
     const [product, setProduct] = useState('');
@@ -74,8 +74,8 @@ const ProductDetail = () => {
         GetAllReviewById();
     }, [id, currentPageReview])
 
-    const handleClickCart = async (type, idProduct) => {
-        history.push(`/product/${type}/${idProduct}`);
+    const handleClickCart = async (idProduct) => {
+        history.push(`/product/${name}/${idProduct}`);
         // await disPatch(getProductByID(idProduct));
         // await disPatch(getSimilarProduct({ type, idProduct }));
         setQuantity(1);
@@ -291,7 +291,7 @@ const ProductDetail = () => {
                                                         <h4>THANH TOÁN TIỆN LỢI</h4>
                                                     </div>
                                                     <div className='col-12'>
-                                                        <p> Chấp nhận thanh toán online bằng VNPay</p>
+                                                        <p> Chấp nhận thanh toán online bằng VNPay và ZaloPay</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -433,10 +433,10 @@ const ProductDetail = () => {
                                     {productSimilar.map((item, index) => {
                                         return (
                                             <>
-                                                <div className="card card-product col-3 m-1" key={`product-${index}`}>
+                                                <div className="card card-product col-3 m-1" key={`product-${index}`} onClick={() => handleClickCart(item.id)}>
                                                     <img role="button" src={item.images[0]} className="card-img-top" alt="..." onClick={() => handleClickCart(item.id)} />
                                                     <div className="card-body" onClick={() => handleClickCart(item.id)}>
-                                                        <h6 className="card-title" role="button" style={{ fontSize: "16px" }}>{item.name}</h6>
+                                                        <h6 className="card-title" role="button" style={{ fontSize: "16px" }} >{item.name}</h6>
                                                         <div className='mb-2'>
                                                             {item.star > 0 ?
                                                                 <>
@@ -461,7 +461,11 @@ const ProductDetail = () => {
                                                                 </>
                                                             }
                                                         </div>
-                                                        <p role="button" className="card-text text-primary">{formatNumber(item.price)} đ</p>
+                                                        <div className="mb-3">
+                                                            <span className={product[0].discount ? 'text-decoration-line-through' : ''} style={{ fontSize: '18px', color: '#ff1414' }}>{formatNumber(product[0].price)} đ</span>
+                                                            <span className={product[0].discount ? 'd-block' : 'd-none'} style={{ fontSize: '18px', color: '#ff1414' }}>{formatNumber(product[0].discount)} đ</span>
+
+                                                        </div>
                                                     </div>
                                                     <button className="btn btn-primary add-cart" style={{ fontSize: "1rem", width: 'auto', fontWeight: 500 }} onClick={() => handleClickAddCart(item)}> Thêm vào giỏ</button>
                                                 </div>

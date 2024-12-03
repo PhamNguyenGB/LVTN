@@ -8,7 +8,7 @@ import numeral from 'numeral';
 import { IoMdSearch } from "react-icons/io";
 import { FaClipboardList } from "react-icons/fa6";
 import { IoMdResize } from "react-icons/io";
-import { fetchAllListProducts, filterProductsByBrandAndSize } from "../../api/productAPIs";
+import { fetchAllListProducts, filterProductsByBrandAndSize, fetchNewProducts } from "../../api/productAPIs";
 // import { fetchAllListProducts } from "../../redux/slices/productSlice";
 import ReactPaginate from "react-paginate";
 import notFoundProduct from '../../assets/images/no_product.png';
@@ -35,7 +35,7 @@ const Products = () => {
     const [btnToggleSize, setBtnToggleSize] = useState('d-none');
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [currentLimit, setCurrentLimit] = useState(12);
+    const [currentLimit, setCurrentLimit] = useState(9);
     const [totalPages, setTotalPages] = useState(0);
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -188,6 +188,7 @@ const Products = () => {
 
     useEffect(() => {
         setProducts('');
+        setCurrentPage(1);
         setIsLoadingFilter(true);
         setTimeout(() => {
             fetAllProducts();
@@ -363,7 +364,11 @@ const Products = () => {
                                                         </>
                                                     }
                                                 </div>
-                                                <p role="button" className="card-text text-primary">{formatNumber(item.price)} đ</p>
+                                                <div className="mb-3">
+                                                    <span className={item.discount ? 'text-decoration-line-through' : ''} style={{ fontSize: '18px', color: '#ff1414' }}>{formatNumber(item.price)} đ</span>
+                                                    <span className={item.discount ? 'd-block' : 'd-none'} style={{ fontSize: '18px', color: '#ff1414' }}>{formatNumber(item.discount)} đ</span>
+
+                                                </div>
                                             </div>
                                             <button className="btn btn-primary add-cart" style={{ fontSize: "1rem", width: 'auto', fontWeight: 500 }} onClick={() => handleClickAddCart(item)}> Thêm vào giỏ</button>
                                         </div>

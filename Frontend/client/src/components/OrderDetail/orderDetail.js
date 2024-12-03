@@ -7,6 +7,7 @@ import { createReviewAndComment } from "../../api/commentReviewAPIs";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { FaStar } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
 const OrderDetail = () => {
     const history = useHistory();
@@ -65,6 +66,8 @@ const OrderDetail = () => {
         await createReviewAndComment({ productId, content, star, OrDId });
         getAllYourOrderDetail();
         setShow(false);
+        setContent('');
+        setStar(5);
     };
 
     useEffect(() => {
@@ -115,7 +118,16 @@ const OrderDetail = () => {
                                                     >
                                                         Đánh giá
                                                     </button>
-                                                    <button className="btn m-1" style={{ backgroundColor: '#f37a27', color: '#fff', padding: '8px 20px' }}>Xem trực tiếp</button>
+                                                    <Link
+                                                        to={`/product/${item.Product.listProductId === 1 ? 'car' :
+                                                            (item.Product.listProductId === 2 ? 'specializedVehicle' :
+                                                                (item.Product.listProductId === 3 ? 'plane' :
+                                                                    'motor'))}/${item.Product.id}`}
+                                                        className=" m-1 "
+                                                        style={{ backgroundColor: '#f37a27', color: '#fff', padding: '8px 20px', fontSize: '16px', textDecoration: 'none', borderRadius: '5px' }}
+                                                    >
+                                                        Xem trực tiếp
+                                                    </Link>
                                                 </div>
                                             </div>
                                         )

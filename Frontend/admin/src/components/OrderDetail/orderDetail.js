@@ -191,7 +191,11 @@ const OrderDetail = () => {
                                                 <div className="col-md-10">
                                                     <div className="progress" style={{ height: "6px", borderRadius: "16px" }}>
                                                         <div className="progress-bar" role="progressbar"
-                                                            style={{ width: "65%", borderRadius: "16px", backgroundColor: "#d59476" }} aria-valuenow="65"
+                                                            style={{
+                                                                width: `${info.status === 'Chưa xác nhận' ? '0%' :
+                                                                    (info.status === 'Đã xác nhận' ? '25%' :
+                                                                        (info.status === 'Đang vận chuyển' ? '60%' : '100%'))}`, borderRadius: "16px", backgroundColor: "#d59476"
+                                                            }} aria-valuenow="65"
                                                             aria-valuemin="0" aria-valuemax="100"></div>
                                                     </div>
                                                     <div className="d-flex justify-content-around mb-1">

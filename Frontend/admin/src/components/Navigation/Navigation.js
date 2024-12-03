@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
 import { MdOutlineEventNote, MdOutlineRateReview } from "react-icons/md";
-import { FaBorderAll } from "react-icons/fa6";
+import { FaBorderAll, FaUserAstronaut } from "react-icons/fa6";
 import { TbBrandProducthunt } from "react-icons/tb";
 import { FcStatistics } from "react-icons/fc";
 import { HiMiniClipboardDocumentList } from "react-icons/hi2";
@@ -10,8 +10,11 @@ import { PiTrainRegionalFill } from "react-icons/pi";
 import { AiFillProduct } from "react-icons/ai";
 import { SiLevelsdotfyi } from "react-icons/si";
 import { IoHome } from "react-icons/io5";
+import { useSelector } from 'react-redux';
 
 const Navigation = () => {
+    const staff = useSelector((state) => state.staff.staff);
+
     return (
         <>
             {/* <!-- Sidebar --> */}
@@ -42,7 +45,7 @@ const Navigation = () => {
                 <li li className="nav-item active" >
                     <NavLink className="nav-link" to="/product">
                         <TbBrandProducthunt fontSize={18} />
-                        <span className='ml-1'>Quản lý sản phẩm</span></NavLink>
+                        <span className='ml-1'>Quản lý kho</span></NavLink>
                 </li >
 
                 <hr className="sidebar-divider my-0" />
@@ -127,6 +130,13 @@ const Navigation = () => {
                     <NavLink className="nav-link" to="/image/home">
                         <IoHome fontSize={18} />
                         <span className='ml-1'>Hình ảnh trang chủ</span></NavLink>
+                </li>
+
+                <hr className="sidebar-divider my-0" />
+                <li className={staff && staff.role === 'admin' ? 'nav-item active' : 'nav-item active d-none'}>
+                    <NavLink className="nav-link" to="/staff">
+                        <FaUserAstronaut fontSize={18} />
+                        <span className='ml-1'>Quản lý nhân viên</span></NavLink>
                 </li>
 
                 <hr className="sidebar-divider my-0" />
